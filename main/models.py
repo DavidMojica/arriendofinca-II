@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission, BaseUserManager
+from essentials import validate_file_size
 
 class TipoUsuario(models.Model):
     id = models.AutoField(primary_key=True)
@@ -60,7 +61,14 @@ class Municipio(models.Model):
     def __str__(self):
         return self.desc
     
+class Imagenes(models.Model):
+    id = models.AutoField(primary_key=True)
+    img = models.ImageField(upload_to='images/', validators=[validate_file_size])
     
+    def __str__(self):
+        return self.desc
+
+
 # Login Model #
 class Usuario(AbstractUser):
     groups = models.ManyToManyField(Group, related_name="customuser_set")
@@ -92,3 +100,9 @@ class Inmueble(models.Model):
     habitaciones = models.CharField(max_length=3)
     banios = models.CharField(max_length=3)
     certificado = models.ForeignKey(Certificado, on_delete=models.CASCADE)
+
+# Many to many #
+class InmuebleImg(models.Model):
+    id_img = models.ForeignKey(Imagenes, on_delete=models.CASCADE)
+    id_inmueble = models.ForeignKey(Inmueble, on_delete=models.CASCADE)
+
