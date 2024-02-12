@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission, BaseUserManager
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from essentials import validate_file_size
 
 class TipoUsuario(models.Model):
@@ -66,7 +66,7 @@ class Imagenes(models.Model):
     img = models.ImageField(upload_to='images/', validators=[validate_file_size])
     
     def __str__(self):
-        return self.desc
+        return self.id
 
 
 # Login Model #
