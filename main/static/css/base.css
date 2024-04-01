@@ -27,6 +27,10 @@
     background: var(--tt-wheat);
 }
 
+.bg-tt-blue{
+    background: var(--tt-blue);
+}
+
 .text-violet{
     color: var(--tt-violet);
 }
