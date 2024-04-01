@@ -7,6 +7,12 @@
     --tt-green:#9af4c2;
     --tt-wheat:#fff1bf;
 }
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
 
 .bg-tt-orange{
     background: var(--tt-orange);
@@ -17,16 +23,19 @@
     color: white;
 }
 
-.text-violet{
-    color: var(--tt-violet);
-}
-
 .bg-tt-wheat{
     background: var(--tt-wheat);
 }
 
+.text-violet{
+    color: var(--tt-violet);
+}
+.text-blue{
+    color: var(--tt-blue);
+}
+
 .logo-header {
-    width: 175px; /* Tamaño predeterminado */
+    width: 175px; 
     height: auto;
     border-radius: 3em 1em;
     object-fit: cover;
@@ -37,18 +46,17 @@
     height: auto;
     border-radius: 1em 3em;
     object-fit: contain;
-    aspect-ratio:1/1;
 }
 
 @media (min-width: 768px) {
     .logo-header {
-        width: 200px; /* Ajuste para pantallas medianas y grandes */
+        width: 200px;
     }
 }
 .nav-link{
     color: inherit;
 }
 
-i{
-    color:var(--tt-blue)
+.min-main{
+    min-height: 80vh;
 }

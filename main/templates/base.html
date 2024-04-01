@@ -12,10 +12,11 @@
         {% bootstrap_javascript %}
         <!-- fa fa -->
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bg-grid.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="{% static 'js/base.js' %}" defer></script>
     </head>
-    <body>
+    <body class="bg-grid">
         <header class="p-3 bg-light">
             <section class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
@@ -26,8 +27,8 @@
                         </button>
                         <article class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class="fa fa-search"></i> Buscar inmuebles</a></li>
-                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class="fa fa-plus"></i> Publicar inmueble</a></li>
+                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class="fa fa-search text-blue"></i> Buscar inmuebles</a></li>
+                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class="fa fa-plus text-blue"></i> Publicar inmueble</a></li>
                             </ul>
                             <article class="d-flex align-items-center">
                                 <a href="" class="btn bg-tt-orange text-white me-2">Editar cuenta</a>
@@ -38,34 +39,32 @@
                 </nav>
             </section>
         </header>
-        
         {% block content %}
         {% endblock %}
         <footer class="bg-body-tertiary text-center text-lg-start bg-tt-orange text-white py-4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <h4 class="text-violet mb-3">Arriendofinca.com</h4>
+            <section class="container">
+                <section class="row">
+                    <article class="col-lg-4">
+                        <h4 class="mb-3 fw-bold">Arriendofinca.com</h4>
                         <p>
-                            <strong>William Montoya</strong><br>
-                            <strong>David Mojíca</strong><br>
+                            <i class="fa fa-user-o"></i><strong> William Montoya</strong><br>
+                            <i class="fa fa-code"></i><strong> David Mojíca</strong><br>
                             <i class="fa fa-phone"></i> 300 6159008 <br>
                             <i class="fa fa-envelope"></i> arriendofinca@gmail.com
                         </p>
-                    </div>
-                    <div class="col-lg-4 mt-4 mt-lg-0">
-                        <h4 class="text-violet mb-3">Somos empresa de desarrollo</h4>
+                    </article>
+                    <article class="col-lg-4 mt-4 mt-lg-0">
+                        <h4 class="mb-3 fw-bold">Somos empresa de desarrollo</h4>
                         <p>
                             Cotice sus sitios y aplicaciones web con nosotros.<br>
                             Solicite información en cualquiera de los correos dados.
                         </p>
-                    </div>
-                    <div class="col-lg-4 mt-4 mt-lg-0 text-center">
+                    </article>
+                    <article class="col-lg-4 mt-4 mt-lg-0 text-center">
                         <img src="{% static 'img/logo.png' %}" alt="" class="img-thumbnail logo-footer">
-                    </div>
-                </div>
-            </div>
+                    </article>
+                </section>
+            </section>
         </footer>
-        
     </body>
 </html>
