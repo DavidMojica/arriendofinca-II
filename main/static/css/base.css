@@ -4,5 +4,51 @@
     --tt-aqua: #3fc1b4;
     --tt-violet:#2e1377;
     --tt-blue:#4089ce;
-    --tt-green-:#9af4c2;
+    --tt-green:#9af4c2;
+    --tt-wheat:#fff1bf;
+}
+
+.bg-tt-orange{
+    background: var(--tt-orange);
+}
+
+.bg-tt-violet{
+    background: var(--tt-violet);
+    color: white;
+}
+
+.text-violet{
+    color: var(--tt-violet);
+}
+
+.bg-tt-wheat{
+    background: var(--tt-wheat);
+}
+
+.logo-header {
+    width: 175px; /* Tamaño predeterminado */
+    height: auto;
+    border-radius: 3em 1em;
+    object-fit: cover;
+    aspect-ratio: 2/1;
+}
+.logo-footer{
+    width: 200px;
+    height: auto;
+    border-radius: 1em 3em;
+    object-fit: contain;
+    aspect-ratio:1/1;
+}
+
+@media (min-width: 768px) {
+    .logo-header {
+        width: 200px; /* Ajuste para pantallas medianas y grandes */
+    }
+}
+.nav-link{
+    color: inherit;
+}
+
+i{
+    color:var(--tt-blue)
 }
