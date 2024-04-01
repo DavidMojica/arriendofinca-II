@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap');
+
 :root{
     /*Tetrade*/
     --tt-orange:#ffa500;
@@ -11,6 +13,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box; 
+    font-family: "Maven Pro", sans-serif;
+    font-optical-sizing: auto;
 }
 
 
@@ -29,6 +33,9 @@
 
 .bg-tt-blue{
     background: var(--tt-blue);
+}
+.text-orange{
+    color: var(--tt-orange);
 }
 
 .text-violet{

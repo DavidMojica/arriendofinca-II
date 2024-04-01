@@ -1,5 +1,11 @@
 from django.shortcuts import render
 
+from .forms import BusquedaInmuebleForm
+
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    data = {
+        'form': BusquedaInmuebleForm()
+    }
+    
+    return render(request, 'home.html', {**data})
