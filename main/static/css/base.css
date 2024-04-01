@@ -30,6 +30,9 @@
 .bg-tt-wheat{
     background: var(--tt-wheat);
 }
+.bg-tt-green{
+    background: var(--tt-green);
+}
 
 .bg-tt-blue{
     background: var(--tt-blue);
