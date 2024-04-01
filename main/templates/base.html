@@ -1,16 +1,34 @@
 <!DOCTYPE html>
 <html>
     <head>
-        {% load static %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>arriendofinca | Home</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="{% static 'js/src.js' %}" defer></script>
+        {% load static %}
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        <!-- fa fa -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="{% static 'js/base.js' %}" defer></script>
     </head>
     <body>
-        <h1>Desde Base</h1>
+        <header class="p-3 bg-ligth">
+            <section class="container">
+                <section class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a href="" class=""><img src="{% static 'img/logo.png' %}" alt="Logo.png"></a>
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="" class="nav-link px-2"><i class="fa fa-search"></i> Buscar inmuebles</a></li>
+                        <li><a href="" class="nav-link px-2"><i class=""></i> Publicar inmueble</a></li>
+                    </ul>
+                    <article class="text-end">
+                        <a href="" class="">Cerrar sesión</a>
+                    </article>
+                </section>
+            </section>
+        </header>
         {% block content %}
         {% endblock %}
     </body>
