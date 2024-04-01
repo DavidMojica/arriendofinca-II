@@ -4,14 +4,14 @@ from django.db import models
 
 class BusquedaInmuebleForm(forms.Form):
     tipo_inmueble = forms.ModelChoiceField(
-        label="Busco un(a): ",
+        label="Busco un(a)",
         widget=forms.Select(attrs={'class':'form-select'}),
         queryset=TipoInmueble.objects.all(),
         empty_label="Seleccionar",
         required=True
     )
     arriendo_venta = forms.ModelChoiceField(
-        label="para: ",
+        label="Para",
         widget=forms.Select(attrs={'class':'form-select'}),
         queryset=ArriendoVenta.objects.all(),
         empty_label="Seleccionar",
@@ -25,7 +25,7 @@ class BusquedaInmuebleForm(forms.Form):
         required=True
     )
     solo_certificados = forms.BooleanField(
-        label="Buscar sólo inmuebles certificados",
-        widget=forms.CheckboxInput(attrs={'class': 'green-switch'}),
+        label="Sólo inmuebles certificados",
+        widget=forms.CheckboxInput(attrs={'class': ''}),
         required=False
     )

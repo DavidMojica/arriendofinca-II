@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<script src="https://cdn.jsdelivr.net/npm/atropos@2.0.2/atropos.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/atropos@2.0.2/atropos.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="{% static 'css/summer-card.css' %}">
 <link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
-<main class=" d-flex justify-content-center">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<main class="d-flex justify-content-center">
     <section class="bg-light my-5">
-        <section class="card">
-            <section class="card-header">
-                <h3 class="text-orange fw-bold card-title">Descubre tu proximo hogar</h3>
+        <section class="card p-3">
+            <section class="card-header bg-tt-orange text-white">
+                <h3 class=" fw-bold card-title">Descubre tu proximo hogar</h3>
             </section>
-            <section class="card-body row">
-                <form action="" class="col-md-8">
+            <section class="card-body row ">
+                <form action="" class="col-md-6">
                     <p>
                         {{form.tipo_inmueble.label}}
                         {{form.tipo_inmueble}}
@@ -23,16 +27,16 @@
                         {{form.municipio.label}}
                         {{form.municipio}}
                     </p>
-                    <p>
+                    <p class="text-center">
                         {{form.solo_certificados.label}}
                         <label class="green-switch">
                             {{form.solo_certificados}}
                             <span class="slider"></span>
                         </label>
+                        <button type="submit" class="btn bg-tt-orange mt-2">Búsqueda</button>
                     </p>
-                    <button type="submit" class="btn bg-tt-orange mt-2">Búsqueda</button>
                 </form>
-                <aside class="col-md-4">
+                <aside class="col-md-6 overflow-visible">
                     <div class="summer-card">
                         <div class="summer-card__content">
                           <div class="summer-card-details">
@@ -287,6 +291,77 @@
             </section>
         </section>
     </section>
-    
 </main>
+<section class="bg-tt-orange p-4 text-center">
+    <h2 class="fw-bold text-white">Inmuebles más recientes</h2>
+
+    <section class="container">
+        <article class="row">
+            <!-- Propiedad -->
+            <article class="col-md-3 p-4">
+                <article class="card bg-white">
+                    <section class="photo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
+                    </section>
+                    <section>
+                        <h4 class="fw-bold">Casa en arriendo</h4>
+                        <p class="fw-bold">Puerto peralta, Amazonas</p>
+                        <blockquote>
+                            42Mt 3 Habitaciones 2 Baños
+                        </blockquote>
+                    </section>
+                </article>
+            </article>
+            <!-- End Propiedad -->
+            <article class="col-md-3 p-4">
+                <article class="card bg-white">
+                    <section class="photo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
+                    </section>
+                    <section>
+                        <h4 class="fw-bold">Casa en arriendo</h4>
+                        <p class="fw-bold">Puerto peralta, Amazonas</p>
+                        <blockquote>
+                            42Mt 3 Habitaciones 2 Baños
+                        </blockquote>
+                    </section>
+                </article>
+            </article>
+            <article class="col-md-3 p-4">
+                <article class="card bg-white">
+                    <section class="photo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
+                    </section>
+                    <section>
+                        <h4 class="fw-bold">Casa en arriendo</h4>
+                        <p class="fw-bold">Puerto peralta, Amazonas</p>
+                        <blockquote>
+                            42Mt 3 Habitaciones 2 Baños
+                        </blockquote>
+                    </section>
+                </article>
+            </article>
+            <article class="col-md-3 p-4">
+                <article class="card bg-white">
+                    <section class="photo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
+                    </section>
+                    <section>
+                        <h4 class="fw-bold">Casa en arriendo</h4>
+                        <p class="fw-bold">Puerto peralta, Amazonas</p>
+                        <blockquote>
+                            42Mt 3 Habitaciones 2 Baños
+                        </blockquote>
+                    </section>
+                </article>
+            </article>
+
+        </article>
+    </section>
+</section>
+
+<section>
+
+</section>
+
 {% endblock %}
