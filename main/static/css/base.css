@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap');
+
+:root{
+    /*Tetrade*/
+    --tt-orange:#ffa500;
+    --tt-aqua: #3fc1b4;
+    --tt-violet:#2e1377;
+    --tt-blue:#4089ce;
+    --tt-green:#9af4c2;
+    --tt-wheat:#fff1bf;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+    font-family: "Maven Pro", sans-serif;
+    font-optical-sizing: auto;
+}
+
+
+.bg-tt-orange{
+    background: var(--tt-orange);
+}
+
+.bg-tt-violet{
+    background: var(--tt-violet);
+    color: white;
+}
+
+.bg-tt-wheat{
+    background: var(--tt-wheat);
+}
+.bg-tt-green{
+    background: var(--tt-green);
+}
+
+.bg-tt-blue{
+    background: var(--tt-blue);
+}
+.text-orange{
+    color: var(--tt-orange);
+}
+
+.text-violet{
+    color: var(--tt-violet);
+}
+.text-blue{
+    color: var(--tt-blue);
+}
+
+.logo-header {
+    width: 175px; 
+    height: auto;
+    border-radius: 3em 1em;
+    object-fit: cover;
+    aspect-ratio: 2/1;
+}
+.logo-footer{
+    width: 200px;
+    height: auto;
+    border-radius: 1em 3em;
+    object-fit: contain;
+}
+
+@media (min-width: 768px) {
+    .logo-header {
+        width: 200px;
+    }
+}
+.nav-link{
+    color: inherit;
+}
+
+.min-main{
+    min-height: 80vh;
+}
