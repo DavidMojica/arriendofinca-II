@@ -78,16 +78,16 @@ WSGI_APPLICATION = 'arriendofinca.wsgi.application'
 
 AUTH_USER_MODEL = 'main.Usuario'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'arriendofinca',
-#         'USER': 'postgres',
-#         'PASSWORD': '12345',
-#         'HOST': 'localhost', #Nombre del host o IP
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'arriendofinca',
+        'USER': 'postgres',
+        'PASSWORD': '12345',
+        'HOST': 'localhost', #Nombre del host o IP
+        'PORT': '5432',
+    }
+}
 
 
 # Password validation

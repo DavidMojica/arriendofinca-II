@@ -6,24 +6,21 @@ class BusquedaInmuebleForm(forms.Form):
     tipo_inmueble = forms.ModelChoiceField(
         label="Busco un(a)",
         widget=forms.Select(attrs={'class':'form-select'}),
-        # queryset=TipoInmueble.objects.all(),
-        queryset=None,
+        queryset=TipoInmueble.objects.all(),
         empty_label="Seleccionar",
         required=True
     )
     arriendo_venta = forms.ModelChoiceField(
         label="Para",
         widget=forms.Select(attrs={'class':'form-select'}),
-        # queryset=ArriendoVenta.objects.all(),
-        queryset=None,
+        queryset=ArriendoVenta.objects.all(),
         empty_label="Seleccionar",
         required=True
     )
     municipio = forms.ModelChoiceField(
         label="Ubicación",
         widget=forms.Select(attrs={'class':'form-select'}),
-        # queryset=Municipio.objects.all(),
-        queryset=None,
+        queryset=Municipio.objects.all(),
         empty_label="Seleccionar",
         required=True
     )
