@@ -15,6 +15,9 @@
         <link rel="stylesheet" href="{% static 'css/bg-grid.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="{% static 'js/base.js' %}" defer></script>
+        <!-- boxi -->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     </head>
     <body class="bg-grid">
         <header class="p-3 bg-light">
@@ -48,7 +51,8 @@
                                     <a href="" class="btn bg-tt-orange text-white me-2">Editar cuenta</a>
                                     <a href="" class="btn bg-tt-violet">Cerrar sesión</a>
                                 {% else %}
-                                    <a href="" class="btn bg-tt-orange text-white me-2">Iniciar sesión <i class="fa fa-user"></i></a>
+                                    <a href="/login" class="btn bg-tt-orange text-white me-2">Iniciar sesión <i class="fa fa-user"></i></a>
+                                    <a href="/login" class="btn bg-tt-orange text-white me-2">Registrarse <i class="fa fa-user"></i></a>
                                 {% endif %}
                             </article>
                         </article>
