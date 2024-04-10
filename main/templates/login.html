@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+<main>
+    <section class="wrapper">
+        <article class="form-box login">
+            <h2>Login</h2>
+            <form action="#">
+                <fieldset class="input-box">
+                    <input type="text" name="" id="" required>
+                    <label for="">Username</label>
+                    <i class='bx bx-user-pin'></i>
+                </fieldset>
+                <fieldset class="input-box"> 
+                    <input type="password" name="" id="" required>
+                    <label for="passwornd">Password</label>
+                    <i class='bx bx-lock-alt' ></i>
+                </fieldset>
+                <button type="submit">Login</button>
+                <caption class="logreg-link">
+                    <p>
+                        Don't have an account?
+                        <a href="#" class="register-link">Sign up</a>
+                    </p>
+                </caption>
+            </form>
+        </article>
+    </section>
+
+
+</main>
+
+{% endblock %}
