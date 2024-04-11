@@ -43,7 +43,7 @@ def home(request):
 def Login(request):
     data = {
         'LoginForm': LoginForm(),
-        'RegisterForm': RegisterForm()
+        'RegisterForm': RegisterForm(),
     }
 
     if request.method == 'POST':

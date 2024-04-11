@@ -5,8 +5,14 @@
 
 }
 :root{
-    --custom-cyan: #0ef;
     --custom-dark: #081b29;
+    --tt-orange:#ffa500;
+    --tt-aqua: #3fc1b4;
+    --tt-violet:#2e1377;
+    --tt-violet-dark:#12192C;
+    --tt-blue:#4089ce;
+    --tt-green:#9af4c2;
+    --tt-wheat:#fff1bf;
 }
 
 main{
@@ -14,18 +20,40 @@ main{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: var(--custom-dark);
+    
 }
 
 .wrapper{
     position: relative;
-    width: 750px;
-    height: 450px;
-    background: transparent;
-    border: 2px solid var(--custom-cyan);
+    width: 100vw;
+    height: 100vh;
+    max-width: 750px;
+    max-height: 450px;
+    background: var(--tt-orange);
+    border: 2px solid var(--tt-orange);
     overflow: hidden;
-    box-shadow: 0 0 25px var(--custom-cyan);
+    box-shadow: 0 0 25px var(--tt-orange);
 }
+
+@media (max-width: 768px){
+    .wrapper{
+        max-height: 100vh;
+    }
+    .wrapper .form-box.login{
+        width: 100%;
+    }
+    .wrapper .info-text.log{
+        display: none;
+    }
+    .wrapper .form-box.register{
+        width: 0;
+    }
+
+    .wrapper.active .info-text.reg{
+        display: none;
+    }
+}
+
 
 .wrapper .form-box{
     position: absolute;
@@ -109,7 +137,7 @@ main{
 
 .input-box input:focus,
 .input-box input:valid{
-    border-bottom-color: var(--custom-cyan);
+    border-bottom-color: var(--tt-violet);
 }
 
 .input-box label{
@@ -126,7 +154,7 @@ main{
 .input-box input:focus~label,
 .input-box input:valid~label {
     top: -5px;
-    color: #0ef;
+    color: var(--tt-violet);
 }
 
 .input-box i{
@@ -139,7 +167,7 @@ main{
 
 .input-box input:focus~i,
 .input-box input:valid~i{
-    color: var(--custom-cyan);
+    color: var(--tt-violet);
 }
 
 .btn-login{
@@ -147,7 +175,7 @@ main{
     width: 100%;
     height: 45px;
     background: transparent;
-    border: 2px solid var(--custom-cyan);
+    border: 2px solid var(--tt-violet);
     border-radius:40px;
     outline: none;
     cursor: pointer;
@@ -165,7 +193,7 @@ main{
     left: 0;
     width: 100%;
     height: 300%;
-    background: linear-gradient(var(--custom-dark), var(--custom-cyan),var(--custom-dark), var(--custom-cyan));
+    background: linear-gradient(var(--custom-dark), var(--tt-violet),var(--custom-dark), var(--tt-violet));
     z-index: -1;
     transition: .5s;
 }
@@ -181,7 +209,7 @@ main{
 }
 
 .form-box .logreg-link p a{
-    color: var(--custom-cyan);
+    color: var(--tt-violet);
     text-decoration: none;
     font-weight: 600;
     text-align: center;
@@ -268,11 +296,11 @@ main{
     right: 0;
     width: 850px;
     height: 600px;
-    background: linear-gradient(45deg, var(--custom-dark), var(--custom-cyan));
+    background: linear-gradient(45deg, var(--custom-dark), var(--tt-violet-dark));
     transform: rotate(10deg) skewY(40deg);
     /* transform: rotate(0) skewY(0); */
     transform-origin: bottom right;
-    border-bottom:3px solid var(--custom-cyan);
+    border-bottom:3px solid #fff;
     transition: 1.5s ease;
     transition-delay: 1.6s;
 }
@@ -287,8 +315,8 @@ main{
     left: 250px;
     width: 850px;
     height: 700px;
-    background: var(--custom-dark);
-    border-top:3px solid var(--custom-cyan);
+    background: var(--tt-orange);
+    border-top:3px solid #fff;
     /* transform: rotate(-11deg) skewY(-41deg); */
     transform: rotate(0) skewY(0);
     transform-origin: bottom left;

@@ -9,9 +9,9 @@
     <section class="wrapper">
         <span class="bg-animate"></span>
         <span class="bg-animate2"></span>
-
+        
         <article class="form-box login">
-            <h2 class="animation" style="--i:0; --j:21;">Login</h2>
+            <h2 class="animation" style="--i:0; --j:21;">Iniciar Sesión</h2>
             <form action="#" method="POST">
                 <fieldset class="input-box animation" style="--i:1; --j:22;">
                     {{LoginForm.username}}
@@ -26,25 +26,25 @@
                 </fieldset>
                 {% csrf_token %}
                 <input type="hidden" name="login">
-                <button type="submit" class="btn-login animation" style="--i:3; --j:24;">Login</button>
+                <button type="submit" class="btn-login animation" style="--i:3; --j:24;">Iniciar Sesión</button>
                 <article class="logreg-link animation" style="--i:4; --j:25;">
                     <p>
                         {{error}}
                     </p>
                     <p>
-                        Don't have an account?
-                        <a href="#main" class="register-link">Sign up</a>
+                        No tienes una cuenta?
+                        <a href="#main" class="register-link">Regístrate</a>
                     </p>
                 </article>
             </form>
         </article>
         <article class="info-text log">
-            <h2 class="animation" style="--i:0; --j:20;">Welcome back!</h2>
-            <p class="animation" style="--i:1; --j:21;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia vitae modi ipsam libero sint deserunt commodi mollitia consectetur facere. </p>
+            <h2 class="animation" style="--i:0; --j:20;">Hola de nuevo!</h2>
+            <p class="animation" style="--i:1; --j:21;">Te estábamos esperando :)</p>
         </article>
 
         <article class="form-box register">
-            <h2 class="animation mt-5" style="--i:17; --j:0;">Sign up</h2>
+            <h2 class="animation mt-5" style="--i:17; --j:0;">Registro</h2>
             <form action="#" method="POST" class="row" id="form-register">
                 {% csrf_token %}
                 <input type="hidden" name="register">
@@ -103,7 +103,7 @@
                     </fieldset>
                 </article>
                 <article class="col-md-5 mb-3">
-                    <fieldset class="animation" style="--i:20; --j:3;"> 
+                    <fieldset class="animation" style="--i:24; --j:7;"> 
                         <small>{{RegisterForm.permitir_whatsapp.label}}</small>
                         <label class="green-switch">
                             {{RegisterForm.permitir_whatsapp}}
@@ -111,19 +111,19 @@
                         </label>
                     </fieldset>
                 </article>
-                <button type="submit" class="btn-login animation" style="--i:21; --j:4;">Register</button>
+                <button type="submit" class="btn-login animation" style="--i:21; --j:4;">Registrarse</button>
                 <article class="logreg-link animation" style="--i:22; --j:5;">
                     <p>
-                        Already have an account?
-                        <a href="#main" class="login-link">Login</a>
+                        ¿Ya tienes una cuenta?
+                        <a href="#main" class="login-link">Iniciar Sesión</a>
                     </p>
                 </article>
             </form>
         </article>
 
         <article class="info-text reg">
-            <h2 class="animation" style="--i:17; --j:0;">Welcome back!</h2>
-            <p class="animation" style="--i:18; --j:1;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia vitae modi ipsam libero sint deserunt commodi mollitia consectetur facere. </p>
+            <h2 class="animation" style="--i:17; --j:0;">Arriendofinca te da la bienvenida</h2>
+            <p class="animation" style="--i:18; --j:1;">La plataforma donde se darán a conocer tus inmuebles :).</p>
         </article>
     </section>
 
