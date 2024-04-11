@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from .forms import BusquedaInmuebleForm, LoginForm, RegisterForm
 from django.contrib.auth import authenticate, login, logout
 
@@ -38,26 +39,30 @@ def home(request):
 
 def login(request):
     data = {
-        'newLoginForm': LoginForm(),
-        'newRegisterForm': RegisterForm()
+        'LoginForm': LoginForm(),
+        'RegisterForm': RegisterForm()
     }
 
     if request.method == 'POST':
         if 'login' in request.POST:
             form = LoginForm(request.POST)
+            print(form)
             if form.is_valid():
                 username = form.cleaned_data['username']
                 password = form.cleaned_data['password']
 
                 if len(username) < USERLENGTHMIN or len(password) < PASSLENGTHMIN:
-                    recycledForm = LoginForm(initial={'username': username})
-                    return render(request, HTMLLOGIN, {'form': recycledForm,'error': ERROR_6})        
+                    data['LoginForm'] = LoginForm(initial={'username': username})
+                    data['error'] = ERROR_6
+                    return render(request, HTMLLOGIN, {**data})        
                 
                 logedUser = authenticate(request, username=username, password=password)
 
+                print(logedUser)
                 if logedUser is None:
-                    recycledForm = LoginForm(initial={'username': username})
-                    return render(request, HTMLLOGIN, {'form': recycledForm,'error':ERROR_4})
+                    data['LoginForm'] = LoginForm(initial={'username': username})
+                    data['error'] = ERROR_6
+                    return render(request, HTMLLOGIN, {**data})
     
                 login(request, logedUser)
             else:
@@ -94,3 +99,8 @@ def login(request):
     #Get
     else:
         return render(request, HTMLLOGIN, {**data})
+    
+@login_required
+def Logout(request):
+    logout(request)
+    return redirect(reverse('home'))

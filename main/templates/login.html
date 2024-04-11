@@ -11,19 +11,24 @@
 
         <article class="form-box login">
             <h2 class="animation" style="--i:0; --j:21;">Login</h2>
-            <form action="#">
+            <form action="#" method="POST">
                 <fieldset class="input-box animation" style="--i:1; --j:22;">
-                    <input type="text" name="" id="username" required>
-                    <label for="">Username</label>
+                    {{LoginForm.username}}
+                    {{LoginForm.username.label_tag}}
                     <i class='bx bx-user-pin'></i>
                 </fieldset>
                 <fieldset class="input-box animation" style="--i:2; --j:23;"> 
-                    <input type="password" name="" id="password" required>
-                    <label for="passwornd">Password</label>
+                    {{LoginForm.password}}
+                    {{LoginForm.password.label_tag}}
                     <i class='bx bx-lock-alt' ></i>
                 </fieldset>
+                {% csrf_token %}
+                <input type="hidden" name="login">
                 <button type="submit" class="btn-login animation" style="--i:3; --j:24;">Login</button>
                 <article class="logreg-link animation" style="--i:4; --j:25;">
+                    <p>
+                        {{error}}
+                    </p>
                     <p>
                         Don't have an account?
                         <a href="#" class="register-link">Sign up</a>
@@ -38,22 +43,68 @@
 
         <article class="form-box register">
             <h2 class="animation" style="--i:17; --j:0;">Sign up</h2>
-            <form action="#">
-                <fieldset class="input-box animation" style="--i:18; --j:1;">
-                    <input type="text" name="" id="username" required>
-                    <label for="">Username</label>
-                    <i class='bx bx-user-pin'></i>
-                </fieldset>
-                <fieldset class="input-box animation" style="--i:19; --j:2;">
-                    <input type="text" name="" id="username" required>
-                    <label for="">Email</label>
-                    <i class='bx bxs-envelope'></i>
-                </fieldset>
-                <fieldset class="input-box animation" style="--i:20; --j:3;"> 
-                    <input type="password" name="" id="password" required>
-                    <label for="password">Password</label>
-                    <i class='bx bx-lock-alt' ></i>
-                </fieldset>
+            <form action="#" method="POST" class="row" id="form-register">
+                <article class="col-md-6">
+                    <fieldset class="input-box animation" style="--i:18; --j:1;">
+                        {{RegisterForm.first_name}}
+                        {{RegisterForm.first_name.label_tag}}
+                        <i class='bx bx-user-pin'></i>
+                    </fieldset>
+                </article>
+                <article class="col-md-6">
+                    <fieldset class="input-box animation" style="--i:18; --j:1;">
+                        {{RegisterForm.last_name}}
+                        {{RegisterForm.last_name.label_tag}}
+                        <i class='bx bxs-envelope'></i>
+                    </fieldset>
+                </article>
+                <article>
+                    <fieldset class="input-box animation" style="--i:19; --j:2;"> 
+                        {{RegisterForm.documento}}
+                        {{RegisterForm.documento.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article>
+                    <fieldset class="animation" style="--i:19; --j:2;"> 
+                        {{RegisterForm.tipo_documento}}
+                    </fieldset>
+                </article>
+                <article class="">
+                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                        {{RegisterForm.username}}
+                        {{RegisterForm.username.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="">
+                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                        {{RegisterForm.password}}
+                        {{RegisterForm.password.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="">
+                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                        {{RegisterForm.email}}
+                        {{RegisterForm.email.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="col-md-8">
+                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                        {{RegisterForm.celular}}
+                        {{RegisterForm.celular.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="col-md-4">
+                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                        {{RegisterForm.permitir_whatsapp}}
+                        {{RegisterForm.permitir_whatsapp.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
                 <button type="submit" class="btn-login animation" style="--i:21; --j:4;">Register</button>
                 <article class="logreg-link animation" style="--i:22; --j:5;">
                     <p>
