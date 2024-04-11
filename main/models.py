@@ -76,7 +76,6 @@ class Usuario(AbstractUser):
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE)
     user_permissions = models.ManyToManyField(Permission, related_name="customuser_set")
     tipo_usuario = models.ForeignKey(TipoUsuario, on_delete = models.CASCADE, default = 1)
-    fecha_nacimiento = models.DateField()
     celular = models.CharField(max_length=20, null=True, blank=True)
     permitir_whatsapp = models.BooleanField(default=False)
     

@@ -3,8 +3,9 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
 <script src="{% static 'js/login.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
 
-<main>
+<main id="main">
     <section class="wrapper">
         <span class="bg-animate"></span>
         <span class="bg-animate2"></span>
@@ -18,6 +19,7 @@
                     <i class='bx bx-user-pin'></i>
                 </fieldset>
                 <fieldset class="input-box animation" style="--i:2; --j:23;"> 
+                    
                     {{LoginForm.password}}
                     {{LoginForm.password.label_tag}}
                     <i class='bx bx-lock-alt' ></i>
@@ -31,7 +33,7 @@
                     </p>
                     <p>
                         Don't have an account?
-                        <a href="#" class="register-link">Sign up</a>
+                        <a href="#main" class="register-link">Sign up</a>
                     </p>
                 </article>
             </form>
@@ -42,8 +44,10 @@
         </article>
 
         <article class="form-box register">
-            <h2 class="animation" style="--i:17; --j:0;">Sign up</h2>
+            <h2 class="animation mt-5" style="--i:17; --j:0;">Sign up</h2>
             <form action="#" method="POST" class="row" id="form-register">
+                {% csrf_token %}
+                <input type="hidden" name="register">
                 <article class="col-md-6">
                     <fieldset class="input-box animation" style="--i:18; --j:1;">
                         {{RegisterForm.first_name}}
@@ -66,50 +70,52 @@
                     </fieldset>
                 </article>
                 <article>
-                    <fieldset class="animation" style="--i:19; --j:2;"> 
+                    <fieldset class="animation" style="--i:20; --j:3;"> 
                         {{RegisterForm.tipo_documento}}
                     </fieldset>
                 </article>
                 <article class="">
-                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                    <fieldset class="input-box animation" style="--i:21; --j:4;"> 
                         {{RegisterForm.username}}
                         {{RegisterForm.username.label_tag}}
                         <i class='bx bx-lock-alt' ></i>
                     </fieldset>
                 </article>
                 <article class="">
-                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                    <fieldset class="input-box animation" style="--i:22; --j:5;"> 
                         {{RegisterForm.password}}
                         {{RegisterForm.password.label_tag}}
                         <i class='bx bx-lock-alt' ></i>
                     </fieldset>
                 </article>
                 <article class="">
-                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                    <fieldset class="input-box animation" style="--i:23; --j:6;"> 
                         {{RegisterForm.email}}
                         {{RegisterForm.email.label_tag}}
                         <i class='bx bx-lock-alt' ></i>
                     </fieldset>
                 </article>
-                <article class="col-md-8">
-                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
+                <article class="col-md-7">
+                    <fieldset class="input-box animation" style="--i:24; --j:7;"> 
                         {{RegisterForm.celular}}
                         {{RegisterForm.celular.label_tag}}
                         <i class='bx bx-lock-alt' ></i>
                     </fieldset>
                 </article>
-                <article class="col-md-4">
-                    <fieldset class="input-box animation" style="--i:20; --j:3;"> 
-                        {{RegisterForm.permitir_whatsapp}}
-                        {{RegisterForm.permitir_whatsapp.label_tag}}
-                        <i class='bx bx-lock-alt' ></i>
+                <article class="col-md-5 mb-3">
+                    <fieldset class="animation" style="--i:20; --j:3;"> 
+                        <small>{{RegisterForm.permitir_whatsapp.label}}</small>
+                        <label class="green-switch">
+                            {{RegisterForm.permitir_whatsapp}}
+                            <span class="slider"></span>
+                        </label>
                     </fieldset>
                 </article>
                 <button type="submit" class="btn-login animation" style="--i:21; --j:4;">Register</button>
                 <article class="logreg-link animation" style="--i:22; --j:5;">
                     <p>
                         Already have an account?
-                        <a href="#" class="login-link">Login</a>
+                        <a href="#main" class="login-link">Login</a>
                     </p>
                 </article>
             </form>

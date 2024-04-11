@@ -301,3 +301,18 @@ main{
     transition-delay: 1.2s;
 }
 
+/*Scrollbar*/
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color de fondo del track */
+  }
+  
+  /* Thumb */
+  ::-webkit-scrollbar-thumb {
+    background: #888; /* Color del scrollbar */
+  }
+  
+  /* Al pasar el mouse sobre el thumb */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color del scrollbar al pasar el mouse sobre él */
+  }

@@ -26,7 +26,7 @@ class BusquedaInmuebleForm(forms.Form):
     )
     solo_certificados = forms.BooleanField(
         label="Sólo inmuebles certificados",
-        widget=forms.CheckboxInput(attrs={'class': ''}),
+        widget=forms.CheckboxInput(),
         required=False
     )
 
@@ -98,7 +98,7 @@ class RegisterForm(forms.ModelForm):
     permitir_whatsapp = forms.BooleanField(
         label="Permitir contacto por WhatsApp",
         required=False,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxInput()
     )
 
     class Meta:

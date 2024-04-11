@@ -5,8 +5,10 @@ const registerForm = document.querySelector('#form-register');
 
 registerLink.addEventListener('click', ()=>{
     wrapper.classList.add('active');
-    registerForm.style.overflowX = 'hidden';
-    registerForm.style.overflowY = 'auto';
+    setTimeout(()=>{
+        registerForm.style.overflowX = 'hidden';
+        registerForm.style.overflowY = 'auto';
+    }, 2000);
 
 });
 
