@@ -1,0 +1,8 @@
+insert into main_tipousuario (id, description) values(0, 'Usuario');
+insert into main_tipousuario (id, description) values(1, 'Administrador');
+
+/*---Tipos de documento---*/
+insert into main_tipodocumento (id, description) values(0, 'Cedula de ciudadania (C.C)');
+insert into main_tipodocumento (id, description) values(1, 'Cedula de extranjería (C.E)');
+insert into main_tipodocumento (id, description) values(2, 'Registro civil (R.C)');
+insert into main_tipodocumento (id, description) values(3, 'Pasaporte');

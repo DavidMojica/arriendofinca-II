@@ -3,70 +3,127 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
 <script src="{% static 'js/login.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
 
-<main>
+<main id="main">
     <section class="wrapper">
         <span class="bg-animate"></span>
         <span class="bg-animate2"></span>
-
+        
         <article class="form-box login">
-            <h2 class="animation" style="--i:0; --j:21;">Login</h2>
-            <form action="#">
+            <h2 class="animation" style="--i:0; --j:21;">Iniciar Sesión</h2>
+            <form action="#" method="POST">
                 <fieldset class="input-box animation" style="--i:1; --j:22;">
-                    <input type="text" name="" id="username" required>
-                    <label for="">Username</label>
+                    {{LoginForm.username}}
+                    {{LoginForm.username.label_tag}}
                     <i class='bx bx-user-pin'></i>
                 </fieldset>
                 <fieldset class="input-box animation" style="--i:2; --j:23;"> 
-                    <input type="password" name="" id="password" required>
-                    <label for="passwornd">Password</label>
+                    
+                    {{LoginForm.password}}
+                    {{LoginForm.password.label_tag}}
                     <i class='bx bx-lock-alt' ></i>
                 </fieldset>
-                <button type="submit" class="btn-login animation" style="--i:3; --j:24;">Login</button>
+                {% csrf_token %}
+                <input type="hidden" name="login">
+                <button type="submit" class="btn-login animation" style="--i:3; --j:24;">Iniciar Sesión</button>
                 <article class="logreg-link animation" style="--i:4; --j:25;">
                     <p>
-                        Don't have an account?
-                        <a href="#" class="register-link">Sign up</a>
+                        {{error}}
+                    </p>
+                    <p>
+                        No tienes una cuenta?
+                        <a href="#main" class="register-link">Regístrate</a>
                     </p>
                 </article>
             </form>
         </article>
         <article class="info-text log">
-            <h2 class="animation" style="--i:0; --j:20;">Welcome back!</h2>
-            <p class="animation" style="--i:1; --j:21;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia vitae modi ipsam libero sint deserunt commodi mollitia consectetur facere. </p>
+            <h2 class="animation" style="--i:0; --j:20;">Hola de nuevo!</h2>
+            <p class="animation" style="--i:1; --j:21;">Te estábamos esperando :)</p>
         </article>
 
         <article class="form-box register">
-            <h2 class="animation" style="--i:17; --j:0;">Sign up</h2>
-            <form action="#">
-                <fieldset class="input-box animation" style="--i:18; --j:1;">
-                    <input type="text" name="" id="username" required>
-                    <label for="">Username</label>
-                    <i class='bx bx-user-pin'></i>
-                </fieldset>
-                <fieldset class="input-box animation" style="--i:19; --j:2;">
-                    <input type="text" name="" id="username" required>
-                    <label for="">Email</label>
-                    <i class='bx bxs-envelope'></i>
-                </fieldset>
-                <fieldset class="input-box animation" style="--i:20; --j:3;"> 
-                    <input type="password" name="" id="password" required>
-                    <label for="password">Password</label>
-                    <i class='bx bx-lock-alt' ></i>
-                </fieldset>
-                <button type="submit" class="btn-login animation" style="--i:21; --j:4;">Register</button>
+            <h2 class="animation mt-5" style="--i:17; --j:0;">Registro</h2>
+            <form action="#" method="POST" class="row" id="form-register">
+                {% csrf_token %}
+                <input type="hidden" name="register">
+                <article class="col-md-6">
+                    <fieldset class="input-box animation" style="--i:18; --j:1;">
+                        {{RegisterForm.first_name}}
+                        {{RegisterForm.first_name.label_tag}}
+                        <i class='bx bx-user-pin'></i>
+                    </fieldset>
+                </article>
+                <article class="col-md-6">
+                    <fieldset class="input-box animation" style="--i:18; --j:1;">
+                        {{RegisterForm.last_name}}
+                        {{RegisterForm.last_name.label_tag}}
+                        <i class='bx bxs-envelope'></i>
+                    </fieldset>
+                </article>
+                <article>
+                    <fieldset class="input-box animation" style="--i:19; --j:2;"> 
+                        {{RegisterForm.documento}}
+                        {{RegisterForm.documento.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article>
+                    <fieldset class="animation" style="--i:20; --j:3;"> 
+                        {{RegisterForm.tipo_documento}}
+                    </fieldset>
+                </article>
+                <article class="">
+                    <fieldset class="input-box animation" style="--i:21; --j:4;"> 
+                        {{RegisterForm.username}}
+                        {{RegisterForm.username.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="">
+                    <fieldset class="input-box animation" style="--i:22; --j:5;"> 
+                        {{RegisterForm.password}}
+                        {{RegisterForm.password.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="">
+                    <fieldset class="input-box animation" style="--i:23; --j:6;"> 
+                        {{RegisterForm.email}}
+                        {{RegisterForm.email.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="col-md-7">
+                    <fieldset class="input-box animation" style="--i:24; --j:7;"> 
+                        {{RegisterForm.celular}}
+                        {{RegisterForm.celular.label_tag}}
+                        <i class='bx bx-lock-alt' ></i>
+                    </fieldset>
+                </article>
+                <article class="col-md-5 mb-3">
+                    <fieldset class="animation" style="--i:24; --j:7;"> 
+                        <small>{{RegisterForm.permitir_whatsapp.label}}</small>
+                        <label class="green-switch">
+                            {{RegisterForm.permitir_whatsapp}}
+                            <span class="slider"></span>
+                        </label>
+                    </fieldset>
+                </article>
+                <button type="submit" class="btn-login animation" style="--i:21; --j:4;">Registrarse</button>
                 <article class="logreg-link animation" style="--i:22; --j:5;">
                     <p>
-                        Already have an account?
-                        <a href="#" class="login-link">Login</a>
+                        ¿Ya tienes una cuenta?
+                        <a href="#main" class="login-link">Iniciar Sesión</a>
                     </p>
                 </article>
             </form>
         </article>
 
         <article class="info-text reg">
-            <h2 class="animation" style="--i:17; --j:0;">Welcome back!</h2>
-            <p class="animation" style="--i:18; --j:1;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia vitae modi ipsam libero sint deserunt commodi mollitia consectetur facere. </p>
+            <h2 class="animation" style="--i:17; --j:0;">Arriendofinca te da la bienvenida</h2>
+            <p class="animation" style="--i:18; --j:1;">La plataforma donde se darán a conocer tus inmuebles :).</p>
         </article>
     </section>
 

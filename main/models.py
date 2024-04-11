@@ -3,62 +3,62 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from essentials import validate_file_size
 
 class TipoUsuario(models.Model):
-    id = models.AutoField(primary_key=True)
-    desc = models.CharField(max_length=25)
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=25)
     
     def __str__(self):
-        return self.desc
+        return self.description
 
 class TipoDocumento(models.Model):
-    id = models.AutoField(primary_key=True)
-    desc = models.CharField(max_length=20)
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=40)
     
     def __str__(self):
-        return self.desc
+        return self.description
 
 class TipoInmueble(models.Model):
-    id = models.AutoField(primary_key=True)
-    desc = models.CharField(max_length=25)
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=25)
     
     def __str__(self):
-        return self.desc
+        return self.description
     
 class ArriendoVenta(models.Model):
-    id = models.AutoField(primary_key=True)
-    desc = models.CharField(max_length=10)
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=10)
     
     def __str__(self):
-        return self.desc
+        return self.description
     
 class Certificado(models.Model):
     id = models.CharField(primary_key=True, max_length=100)
-    desc = models.CharField(max_length=25)
+    description = models.CharField(max_length=25)
     
     def __str__(self):
-        return self.desc
+        return self.description
 
 class Pais(models.Model):
     id = models.AutoField(primary_key=True)
-    desc = models.CharField(max_length=10)
+    description = models.CharField(max_length=10)
     
     def __str__(self):
-        return self.desc
+        return self.description
     
 class Departamento(models.Model):
     id = models.AutoField(primary_key=True)
-    desc = models.CharField(max_length=10)
+    description = models.CharField(max_length=10)
     pais = models.ForeignKey(Pais, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.desc
+        return self.description
 
 class Municipio(models.Model):
     id = models.AutoField(primary_key=True)
-    desc = models.CharField(max_length=10)
+    description = models.CharField(max_length=10)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.desc}, {self.departamento}, {self.departamento.pais}"
+        return f"{self.description}, {self.departamento}, {self.departamento.pais}"
     
 class Imagenes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -76,7 +76,8 @@ class Usuario(AbstractUser):
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE)
     user_permissions = models.ManyToManyField(Permission, related_name="customuser_set")
     tipo_usuario = models.ForeignKey(TipoUsuario, on_delete = models.CASCADE, default = 1)
-    fecha_nacimiento = models.DateField()
+    celular = models.CharField(max_length=20, null=True, blank=True)
+    permitir_whatsapp = models.BooleanField(default=False)
     
     def save(self, *args, **kwargs):
         if not self.password:
@@ -94,7 +95,7 @@ class Inmueble(models.Model):
     tipo_inmueble = models.ForeignKey(TipoInmueble, on_delete = models.CASCADE)
     precio = models.CharField(max_length=20)
     direccion = models.CharField(max_length=80)
-    descripcion = models.CharField(max_length=300)
+    descriptionripcion = models.CharField(max_length=300)
     duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
     area = models.CharField(max_length=7)
     area_construida = models.CharField(max_length=7)
