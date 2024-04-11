@@ -13,6 +13,7 @@ PASSLENGTHMIN = 8
 #HTTDOCS
 HTMLHOME = 'home.html'
 HTMLLOGIN = 'login.html'
+HTMLUSERAREA = 'user_area.html'
 
 #MENSAJES
 ERROR_1 = "El nombre de usuario ya existe."
@@ -39,7 +40,7 @@ def home(request):
     
     return render(request, HTMLHOME, {**data})
 
-
+@unloginRequired
 def Login(request):
     data = {
         'LoginForm': LoginForm(),
@@ -69,7 +70,7 @@ def Login(request):
                 login(request, logedUser)
                 
                 #--Redirigir a area del usuario
-                return redirect('home')
+                return redirect('userarea')
             else:
                 data['error'] = ERROR_2
                 return render(request, HTMLLOGIN, {**data})
@@ -85,7 +86,6 @@ def Login(request):
             if form.is_valid():
                 data['recycledRegisterForm'] = form
                 try:
-                    event = None
                     username_str = form.cleaned_data['username']
                     password_str = form.cleaned_data['password']
                     tipo_usuario_instancia = get_object_or_404(TipoUsuario, pk=0)
@@ -119,3 +119,8 @@ def Login(request):
 def Logout(request):
     logout(request)
     return redirect(reverse('home'))
+
+
+@login_required
+def UserArea(request):
+    return render(request, HTMLUSERAREA)
