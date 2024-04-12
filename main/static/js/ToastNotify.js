@@ -102,5 +102,3 @@ const createToastNotify =(opc,head,msg) =>{
         };
     };
 }
-
-export { createToastNotify }
