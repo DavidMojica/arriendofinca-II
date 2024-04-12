@@ -14,6 +14,7 @@ PASSLENGTHMIN = 8
 HTMLHOME = 'home.html'
 HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
+HTMLUSEREDIT = 'user_edit.html'
 
 #MENSAJES
 ERROR_1 = "El nombre de usuario ya existe."
@@ -74,6 +75,7 @@ def Login(request):
             else:
                 data['error'] = ERROR_2
                 return render(request, HTMLLOGIN, {**data})
+            
         ##--------------REGISTRO----------------##
         elif 'register' in request.POST:    
             form = RegisterForm(request.POST)
@@ -111,6 +113,10 @@ def Login(request):
             else:
                 data['error'] = ERROR_2
                 return render(request, HTMLLOGIN, {**data})
+    
+        else:
+            data['error'] = ERROR_3
+            return render, HTMLLOGIN, {**data}
     #Get
     else:
         return render(request, HTMLLOGIN, {**data})
@@ -124,3 +130,7 @@ def Logout(request):
 @login_required
 def UserArea(request):
     return render(request, HTMLUSERAREA)
+
+@login_required
+def UserEdit(request):
+    return render(request, HTMLUSEREDIT)

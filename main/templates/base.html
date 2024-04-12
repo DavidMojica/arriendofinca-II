@@ -13,7 +13,6 @@
         <!-- fa fa -->
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
         <link rel="stylesheet" href="{% static 'css/bg-grid.css' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="{% static 'js/base.js' %}" defer></script>
         <!-- boxi -->
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -30,30 +29,30 @@
                         </button>
                         <article class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class="fa fa-search text-blue"></i> Buscar inmuebles</a></li>
-                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class="fa fa-plus text-blue"></i> Publicar inmueble</a></li>
-                                <li class="nav-item"><a class="nav-link px-2" href="/userarea"><i class="fa fa-plus text-blue"></i>Area de usuario</a></li>
+                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class='bx bx-search text-orange' ></i> Buscar inmuebles</a></li>
+                                <li class="nav-item"><a class="nav-link px-2" href="#"><i class='bx bx-plus-circle text-orange' ></i> Publicar inmueble</a></li>
+                                <li class="nav-item"><a class="nav-link px-2" href="/userarea"><i class='bx bx-intersect text-orange'></i> Area de usuario</a></li>
                                 {% if isAdmin %}
                                 <li class="dropdown">
                                     <button type="button" class="btn bg-tt-orange dropdown-toggle" id="dropdownMenuAdmin" data-bs-toggle="dropdown" aria-expanded="false">
                                         Administración
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuAdmin">
-                                        <li><a href="" class="dropdown-item"><i class="fa fa-user"></i> Usuarios</a></li>
-                                        <li><a href="" class="dropdown-item"><i class="fa fa-product-hunt"></i> Inmuebles</a></li>
+                                        <li><a href="" class="dropdown-item"><i class='bx bxs-user-detail text-orange' ></i> Usuarios</a></li>
+                                        <li><a href="" class="dropdown-item"><i class='bx bx-buildings text-orange' ></i> Inmuebles</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a href="" class="dropdown-item"><i class="fa fa-database"></i> Estadísticas</a></li>
+                                        <li><a href="" class="dropdown-item"><i class='bx bxs-dashboard text-orange' ></i> Estadísticas</a></li>
                                     </ul>
                                 </li>
                                 {% endif %}
                             </ul>
                             <article class="d-flex align-items-center">
                                 {% if user.is_authenticated %}
-                                    <a href="" class="btn bg-tt-orange text-white me-2">Editar cuenta</a>
+                                    <a href="/useredit" class="btn bg-tt-orange text-white me-2">Editar cuenta</a>
                                     <a href="/logout" class="btn bg-tt-violet">Cerrar sesión</a>
                                 {% else %}
-                                    <a href="/login" class="btn bg-tt-orange text-white me-2">Iniciar sesión <i class="fa fa-user"></i></a>
-                                    <a href="/login" class="btn bg-tt-orange text-white me-2">Registrarse <i class="fa fa-user"></i></a>
+                                    <a href="/login" class="btn bg-tt-orange text-white me-2">Iniciar sesión <i class='bx bx-log-in-circle' ></i></a>
+                                    <a href="/login" class="btn bg-tt-orange text-white me-2">Registrarse <i class='bx bxs-registered' ></i></a>
                                 {% endif %}
                             </article>
                         </article>
@@ -69,10 +68,10 @@
                     <article class="col-lg-4">
                         <h4 class="mb-3 fw-bold">Arriendofinca.com</h4>
                         <p>
-                            <i class="fa fa-user-o"></i><strong> William Montoya</strong><br>
-                            <i class="fa fa-code"></i><strong> David Mojíca</strong><br>
-                            <i class="fa fa-phone"></i> 300 6159008 <br>
-                            <i class="fa fa-envelope"></i> arriendofinca@gmail.com
+                            <i class='bx bx-user-pin'></i><strong> William Montoya</strong><br>
+                            <i class='bx bx-code-alt' ></i><strong> David Mojíca</strong><br>
+                            <i class='bx bxs-phone' ></i> 300 6159008 <br>
+                            <i class='bx bxs-envelope' ></i> arriendofinca@gmail.com
                         </p>
                     </article>
                     <article class="col-lg-4 mt-4 mt-lg-0">
