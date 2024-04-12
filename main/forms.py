@@ -2,6 +2,9 @@ from .models import TipoDocumento, TipoInmueble, ArriendoVenta, Municipio, Usuar
 from django import forms
 from django.db import models
 
+#-------------------------------------------------
+#----------------------HOME-----------------------
+#-------------------------------------------------
 class BusquedaInmuebleForm(forms.Form):
     tipo_inmueble = forms.ModelChoiceField(
         label="Busco un(a)",
@@ -30,6 +33,9 @@ class BusquedaInmuebleForm(forms.Form):
         required=False
     )
 
+#-------------------------------------------------
+#----------------------LOGIN----------------------
+#-------------------------------------------------
 class LoginForm(forms.Form):
     username = forms.CharField(
         label="Usuario",
@@ -55,8 +61,8 @@ class RegisterForm(forms.ModelForm):
     
     last_name = forms.CharField(
         label="Apellidos",
-        widget=forms.TextInput(attrs={'id':'new_apellidos'})
-   
+        widget=forms.TextInput(attrs={'id':'new_apellidos'}),
+        required=True
     )
     documento = forms.CharField(
         required=True,
@@ -104,3 +110,64 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = Usuario
         fields = ('first_name', 'last_name', 'documento', 'tipo_documento', 'username', 'password', 'email', 'celular', 'permitir_whatsapp')
+
+#-------------------------------------------------
+#-------------------EDIT ACCOUNT------------------
+#-------------------------------------------------
+class EditAccountBasics(forms.ModelForm):
+    first_name = forms.CharField(
+        label="Nombre",
+        widget=forms.TextInput(attrs={'id': 'edit_nombre', 'class': 'form-control'}),
+        required=True
+    )
+    
+    last_name = forms.CharField(
+        label="Apellidos",
+        widget=forms.TextInput(attrs={'id':'edit_apellidos', 'class': 'form-control'}),
+        required=True
+    )
+    
+    email = forms.EmailField(
+        required=True,
+        label="Correo electrónico",
+        widget=forms.EmailInput(attrs={ 'id': 'edit_email', 'class': 'form-control'})
+    )
+    
+    celular = forms.CharField(
+        required=True,
+        label='Celular',
+        widget=forms.TextInput(attrs={'id':'edit_celular', 'class': 'form-control'})
+    )
+    
+    permitir_whatsapp = forms.BooleanField(
+        label="Permitir contacto por WhatsApp",
+        required=False,
+        widget=forms.CheckboxInput()
+    )
+    
+    class Meta:
+        model=Usuario
+        fields = ('first_name', 'last_name', 'email', 'celular', 'permitir_whatsapp')
+       
+class EditAccountDangerZone(forms.Form):
+    password_old = forms.CharField(
+        required=False,
+        label="Contraseña antigua",
+        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_old', 'class': 'form-control', 'placeholder': 'Tu contraseña anterior'})
+    )
+    
+    password = forms.CharField(
+        required=False,
+        label="Contraseña nueva",
+        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_1', 'class': 'form-control', 'placeholder':'Tu contraseña nueva'})
+    )
+    
+    password2 = forms.CharField(
+        required=False,
+        label="Confirmar contraseña",
+        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_2', 'class': 'form-control', 'placeholder': 'Confirma tu contraseña nueva'})
+    )
+    
+    
+    class Meta:
+        fields = ('password_old', 'password', 'password2')

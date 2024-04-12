@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
-from main.models import TipoDocumento, TipoUsuario
-from .forms import BusquedaInmuebleForm, LoginForm, RegisterForm
+from main.models import TipoDocumento, TipoUsuario, Usuario
+from .forms import BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #Variables
@@ -14,13 +14,21 @@ PASSLENGTHMIN = 8
 HTMLHOME = 'home.html'
 HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
+HTMLUSEREDIT = 'user_edit.html'
 
 #MENSAJES
+SUCCESS_1 = "Guardado con éxito"
+
 ERROR_1 = "El nombre de usuario ya existe."
 ERROR_3 = "Error desconocido."
 ERROR_2 = "Formulario inválido."
 ERROR_4 = "Usuario o contraseña incorrecta."
 ERROR_5 = "Usuario o documento demasiado corto(s)."
+ERROR_6 = f"Nombre de usuario muy corto. Minimo {USERLENGTHMIN} caracteres"
+ERROR_8 = "La contraseña anterior no es la correcta."
+ERROR_9 = "Alguna(s) de las contraseñas no cumplen con la longitud minima."
+ERROR_10 = "Las contraseñas nuevas no coinciden"
+ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
 
 #Funcitions
 #Decorador que valida que el usuario no esté logueado para hacer algo.
@@ -74,6 +82,7 @@ def Login(request):
             else:
                 data['error'] = ERROR_2
                 return render(request, HTMLLOGIN, {**data})
+            
         ##--------------REGISTRO----------------##
         elif 'register' in request.POST:    
             form = RegisterForm(request.POST)
@@ -111,6 +120,10 @@ def Login(request):
             else:
                 data['error'] = ERROR_2
                 return render(request, HTMLLOGIN, {**data})
+    
+        else:
+            data['error'] = ERROR_3
+            return render, HTMLLOGIN, {**data}
     #Get
     else:
         return render(request, HTMLLOGIN, {**data})
@@ -124,3 +137,69 @@ def Logout(request):
 @login_required
 def UserArea(request):
     return render(request, HTMLUSERAREA)
+
+@login_required
+def UserEdit(request):
+    user = request.user
+    data = {}
+    
+    if request.method == 'POST':
+        if 'acc_data' in request.POST:
+            form = EditAccountBasics(request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+                data['acc_data_event'] = SUCCESS_1
+                data['acc_badge_bg'] = 'bg-success'
+            else:
+                data['acc_data_event'] = ERROR_2
+                data['acc_badge_bg'] = 'bg-danger'
+        elif 'username_data' in request.POST:
+            nuevo_username = request.POST.get('username', '').strip()
+            data['us_badge_bg'] = 'bg-danger'
+            
+            if len(nuevo_username) == 0:
+                data['username_data_event'] = ERROR_6
+            elif len(nuevo_username) < USERLENGTHMIN:
+                data['username_data_event'] = ERROR_11     
+            elif Usuario.objects.filter(username=nuevo_username).exists():
+                data['username_data_event'] = ERROR_1
+            else:
+                usuario_actual = request.user
+                usuario_actual.username = nuevo_username
+                usuario_actual.save()
+                data['us_badge_bg'] = 'bg-success'
+                data['username_data_event'] = SUCCESS_1
+                
+        elif 'dz_data' in request.POST:
+            form = EditAccountDangerZone(request.POST)
+            if form.is_valid():
+                if form.has_error("username", code="unique"):
+                    data['evento'] = ERROR_1
+                    return render(request, HTMLUSEREDIT, {**data})
+
+                data['dz_badge_bg'] = 'bg-danger'
+                password_old = form.cleaned_data['password_old']
+                password = form.cleaned_data['password']
+                password2 = form.cleaned_data['password2']
+           
+                if user.check_password(password_old):
+                    if len(password) >= PASSLENGTHMIN or len(password2) >= PASSLENGTHMIN:
+                        if password == password2:
+                            user.set_password(password)
+                            user.save()
+                            data['dz_badge_bg'] = 'bg-success'
+                            data['dz_data_event'] = SUCCESS_1
+                        else:
+                            data['dz_data_event'] = ERROR_10
+                    else:
+                        data['dz_data_event'] = ERROR_9
+                else:
+                    data['dz_data_event'] = ERROR_8
+            else:
+                data['dz_data_event'] = ERROR_2
+                
+    initial_danger_form = {'username': user.username}
+    data['edit_account_basics'] = EditAccountBasics(instance=user)
+    data['edit_account_dangerzone'] = EditAccountDangerZone(initial=initial_danger_form)
+    return render(request, HTMLUSEREDIT, {**data})
+        
