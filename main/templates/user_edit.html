@@ -1,9 +1,92 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
+<main class="d-flex justify-content-center align-items-center my-4">
+    <section class="card p-4">
+        <h5 class="card-title text-center">Su id es: <span class="badge bg-primary">{{user.id}}</span></h5>
+        <p class="text-center">Creado en: <span class="badge bg-info">{{user.date_joined}}</span></p>
+        <p class="text-center">Último acceso: <span class="badge bg-info">{{user.last_login}}</span></p>
+        <form action="" method="POST" id="formAccount" class="card p-4">
+            {% csrf_token %}
+            <h2 class="text-primary text-bold text-center">Editar perfil</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="badge bg-danger mb-1">
+                        <label for="nombre">{{ edit_account_basics.first_name.label_tag }}</label>
+                    </span>
+                    {{ edit_account_basics.first_name }} 
+                </li>
+                <li class="list-group-item">
+                    <span class="badge bg-danger mb-1">
+                        <label for="apellidos">{{ edit_account_basics.last_name.label_tag }}</label>
+                    </span>
+                    {{ edit_account_basics.last_name }}
+                </li>
+                <li class="list-group-item">
+                    <span class="badge bg-danger mb-1">
+                        <label for="email">{{ edit_account_basics.email.label_tag }}</label>
+                    </span>
+                    {{ edit_account_basics.email }}
+                </li>
+                <li class="list-group-item">
+                    <span class="badge bg-danger mb-1">{{ edit_account_basics.celular.label_tag }}</span>
+                    {{ edit_account_basics.celular }}
+                </li>
+                <li class="list-group-item text-center">
+                    <small>{{ edit_account_basics.permitir_whatsapp.label_tag }}</small>
+                    <label class="green-switch">
+                        {{ edit_account_basics.permitir_whatsapp }}
+                        <span class="slider"></span>
+                    </label>
+                </li>
+            </ul>
+            <input type="hidden" name="acc_data">
+            <input type="submit" value="Guardar cambios" class="btn btn-success mt-3">
+            <span class="badge {{acc_badge_bg}} mt-2" id="account_event">{{acc_data_event}}</span>
+        </form>
 
+        <section class="card p-4 bg-danger">
+            <h2 class="text-center text-white">Zona de cuidado</h2>
+              
+            <span class="badge bg-danger">Cambiar nombre de usuario</span>  
+            <form action="" method="POST" id="formUsername" class="text-center">
+                {% csrf_token %}
+                <ul class="list-group text-start">
+                    <li class="list-group-item">
+                        <span class="badge bg-danger mb-1">Nombre de usuario</span>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Nombre de usuario" value="{{request.user.username}}">
+                    </li>
+                </ul>
+                <input type="hidden" name="username_data">
+                <input type="submit" value="Guardar nombre de usuario" name="" class="btn btn-warning my-3 text-center"> <br>
+                <span class="badge {{us_badge_bg}}">{{username_data_event}}</span>
+            </form>
 
+            <span class="badge bg-danger">Cambiar contraseña<br>
+            (Si actualiza la contraseña, se cerrará su sesión)</span>  
+            <form action="" method="POST" id="formPass" class="text-center">
+                {% csrf_token %}
+                <ul class="list-group text-start">
+                    <li class="list-group-item">
+                        <span class="badge bg-danger mb-1">{{ edit_account_dangerzone.password_old.label_tag }}</span>
+                        {{ edit_account_dangerzone.password_old }}
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge bg-danger mb-1">{{ edit_account_dangerzone.password.label_tag }}</span>
+                        {{ edit_account_dangerzone.password}}
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge bg-danger mb-1">{{ edit_account_dangerzone.password2.label_tag }}</span>
+                        {{ edit_account_dangerzone.password2 }}
+                    </li>
+                </ul>    
+                <input type="hidden" name="dz_data">
+                <input type="submit" value="Guardar contraseña" name="" class="btn btn-warning mt-3 "> <br>
+                <span class="badge {{dz_badge_bg}} mt-2" id="pass_event">{{dz_data_event}}</span>
+            </form>
+        </section>
 
-
-
+    </section>
+</main>
 {% endblock %}

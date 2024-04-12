@@ -117,26 +117,26 @@ class RegisterForm(forms.ModelForm):
 class EditAccountBasics(forms.ModelForm):
     first_name = forms.CharField(
         label="Nombre",
-        widget=forms.TextInput(attrs={'id': 'edit_nombre'}),
+        widget=forms.TextInput(attrs={'id': 'edit_nombre', 'class': 'form-control'}),
         required=True
     )
     
     last_name = forms.CharField(
         label="Apellidos",
-        widget=forms.TextInput(attrs={'id':'edit_apellidos'}),
+        widget=forms.TextInput(attrs={'id':'edit_apellidos', 'class': 'form-control'}),
         required=True
     )
     
     email = forms.EmailField(
         required=True,
         label="Correo electrónico",
-        widget=forms.EmailInput(attrs={ 'id': 'edit_email'})
+        widget=forms.EmailInput(attrs={ 'id': 'edit_email', 'class': 'form-control'})
     )
     
     celular = forms.CharField(
         required=True,
         label='Celular',
-        widget=forms.TextInput(attrs={'id':'edit_celular'})
+        widget=forms.TextInput(attrs={'id':'edit_celular', 'class': 'form-control'})
     )
     
     permitir_whatsapp = forms.BooleanField(
@@ -150,29 +150,24 @@ class EditAccountBasics(forms.ModelForm):
         fields = ('first_name', 'last_name', 'email', 'celular', 'permitir_whatsapp')
        
 class EditAccountDangerZone(forms.Form):
-    username=forms.CharField(
-        required=True,
-        label='Nombre de usuario',
-        widget=forms.TextInput(attrs={'id':'edit_username'})
-    )
-    
     password_old = forms.CharField(
         required=False,
         label="Contraseña antigua",
-        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_old'})
+        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_old', 'class': 'form-control', 'placeholder': 'Tu contraseña anterior'})
     )
     
     password = forms.CharField(
         required=False,
         label="Contraseña nueva",
-        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_1'})
+        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_1', 'class': 'form-control', 'placeholder':'Tu contraseña nueva'})
     )
     
     password2 = forms.CharField(
         required=False,
         label="Confirmar contraseña",
-        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_2'})
+        widget=forms.PasswordInput(attrs={ 'id': 'edit_password_2', 'class': 'form-control', 'placeholder': 'Confirma tu contraseña nueva'})
     )
     
+    
     class Meta:
-        fields = ('username', 'password_old', 'password', 'password2')
+        fields = ('password_old', 'password', 'password2')
