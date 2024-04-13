@@ -171,3 +171,31 @@ class EditAccountDangerZone(forms.Form):
     
     class Meta:
         fields = ('password_old', 'password', 'password2')
+        
+#-------------------------------------------------
+#-------------------Propiedades-------------------
+#-------------------------------------------------
+
+class FiltrarInmuebles(forms.Form):
+    id = forms.IntegerField(
+        label="ID de inmobiliario",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'class':'form-control'})
+    )
+    
+    tipo_inmueble = forms.ModelChoiceField(
+        label="Tipo de inmueble",
+        required=False,
+        queryset=TipoInmueble.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble_filter'}),
+        empty_label="Todos"
+    )
+    
+    municipio = forms.ModelChoiceField(
+        label="Municipio",
+        required=False,
+        queryset=Municipio.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble_filter'}),
+        empty_label="Cualquiera"
+    )

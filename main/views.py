@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 from main.models import TipoDocumento, TipoUsuario, Usuario
-from .forms import BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from .forms import FiltrarInmuebles, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #Variables
@@ -136,7 +136,9 @@ def Logout(request):
 
 @login_required
 def UserArea(request):
-    return render(request, HTMLUSERAREA)
+    data = {'form': FiltrarInmuebles(),
+            'event': ''}
+    return render(request, HTMLUSERAREA, {**data})
 
 @login_required
 def UserEdit(request):
