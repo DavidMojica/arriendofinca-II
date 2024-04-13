@@ -1,5 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<main>
+    <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
+        <form action="" method="GET" class="text-center filter-form">
+            <h2 class="text-primary font-weight-bold">Filtrar inmueble</h2>
+            <article class="input-group mb-3">
+                <span class="badge bg-info">{{form.id.label_tag}}</span>
+                {{form.id}}
+            </article>
+            <article class="input-group mb-3">
+                <span class="badge bg-info">{{form.tipo_inmueble.label_tag}}</span>
+                {{form.tipo_inmueble}}
+            </article>
+            <article class="input-group mb-3">
+                <span class="badge bg-info">{{form.municipio.label_tag}}</span>
+                {{form.municipio}}
+            </article>
+            <button type="submit" class="btn btn-primary col-md-5">Filtrar <i class="bx bx-search"></i></button>
+        </form>
+    </section>
+
+    <section class="bg-light bg-gradient">
+        <section class="container">
+            <h1 class="text-center text-primary mt-4">Propiedades</h1>
+
+
+        </section>
+    </section>
+</main>
 
 {% endblock %}
