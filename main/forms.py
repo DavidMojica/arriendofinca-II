@@ -71,7 +71,7 @@ class RegisterForm(forms.ModelForm):
     )
     tipo_documento = forms.ModelChoiceField(
         label="Tipo de documento",
-        widget=forms.Select(attrs={'class': 'form-select'}),
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'new_tipo_documento'}),
         queryset=TipoDocumento.objects.all(),
         empty_label="Tipo documento",
         required=True
@@ -104,7 +104,7 @@ class RegisterForm(forms.ModelForm):
     permitir_whatsapp = forms.BooleanField(
         label="Permitir contacto por WhatsApp",
         required=False,
-        widget=forms.CheckboxInput()
+        widget=forms.CheckboxInput(attrs={'id': 'new_whatsapp'})
     )
 
     class Meta:
