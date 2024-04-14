@@ -16,6 +16,17 @@ class TipoDocumento(models.Model):
     def __str__(self):
         return self.description
 
+class TipoCobro(models.Model):
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=40)
+    
+    def temporizar(self):
+        map_tiempo = {0: 'Año', 1: 'Mes', 2: 'Semana', 3: 'Dia', 4:'Noche'}
+        return map_tiempo[self.id]
+    
+    def __str__(self):
+        return self.description
+
 class TipoInmueble(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=25)
@@ -102,6 +113,7 @@ class Inmueble(models.Model):
     habitaciones = models.CharField(max_length=3)
     banios = models.CharField(max_length=3)
     certificado = models.ForeignKey(Certificado, on_delete=models.CASCADE)
+    tipo_cobro = models.ForeignKey(TipoCobro, on_delete=models.CASCADE, default=1)
 
 # Many to many #
 class InmuebleImg(models.Model):

@@ -4,7 +4,7 @@
 <main>
     <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
         <form action="" method="GET" class="text-center filter-form">
-            <h2 class="text-primary font-weight-bold">Filtrar inmueble</h2>
+            <h2 class="text-primary font-weight-bold">Encontrar inmueble</h2>
             <article class="input-group mb-3">
                 <span class="badge bg-info">{{form.id.label_tag}}</span>
                 {{form.id}}
@@ -19,14 +19,75 @@
             </article>
             <button type="submit" class="btn btn-primary col-md-5">Filtrar <i class="bx bx-search"></i></button>
         </form>
+        <section class="text-center">
+            <h4 class="fw-bold">-- O --</h4>
+            <a href="" class="btn btn-success">Añadir propiedad <i class="bx bx-plus"></i></a>
+        </section>
     </section>
 
     <section class="bg-light bg-gradient">
-        <section class="container">
-            <h1 class="text-center text-primary mt-4">Propiedades</h1>
+        <!-- Inmueble -->
+        {% if inmuebles %}
+            {% for inmueble in inmuebles %}
+                <section class="container">
+                    <h1 class="text-center text-primary mt-4">Tus propiedades publicadas</h1>
 
+                    <section class="row">
+                        <article class="card col-md-4" style="width:400px;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="Example" class="card-img-top mt-2">
+                            <section class="card-body">
+                                <h4 class="card-title">{{ inmueble.tipo_inmueble }} en {{inmueble.arriendo_venta}}</h4>
+                                <p class="card-text">
+                                    {{inmueble.municipio}}
+                                    <strong>${{inmueble.precio}} / {{inmueble.tipo_cobro.temporizar}}</strong>
+                                </p>
+                                <span class="badge bg-primary">ID Propiedad: {{inmueble.id}}</span>
+                            </section> 
+                            <section class="card-footer justify-content-evenly d-flex">
+                                <aside>
+                                    <!-- trigger -->
+                                    <button class="btn btn-danger btn-sm" title="Borrar inmueble" data-bs-toggle="modal" data-bs-target="#borrarPropiedad-"><i class="bx bx-trash"></i></button>
+                                    <!-- modal -->
+                                    <section class="modal fade" id="borrarPropiedad-" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                                        <article class="modal-dialog modal-dialog-centered">
+                                            <article class="modal-content">
+                                                <section class="modal-header">
+                                                    <h5 class="modal-title">Confirmar borrar</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </section>
+                                                <section class="modal-body">
+                                                    <p>Al usted borrar esta propiedad, se eliminarán todos los datos relacionados a ella. Si la vuelve a crear despues, se creará con un ID distinto</p>
+                                                </section>
+                                                <section class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                                                    <form action="" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="eliminarPropiedad">   
+                                                        <button type="submit" class="btn btn-danger">Borrar</button>                             
+                                                    </form>
+                                                </section>
+                                            </article>
+                                        </article>
+                                    </section>
+                                    <a href="" class="btn bg-tt-orange btn-sm" title="Editar inmueble"><i class='bx bx-edit-alt' ></i></a>
+                                </aside>
+                                <a href="" class="btn btn-success fw-bold btn-sm">Certificar propiedad</a>
 
-        </section>
+                            </section>
+                        </article>
+                    </section>
+
+                </section>
+            {% endfor %}
+        {% else %}
+            <section class="container text-center py-4">
+                <h4 class="fw-bold">No tienes propiedades registradas todavía...</h4>
+                <button class="btn btn-success">
+                    Añade tu primera propiedad! <i class="bx bx-plus"></i>
+                </button>
+            </section>
+        {% endif %}
+        <!-- Inmueble end -->
     </section>
 </main>
 

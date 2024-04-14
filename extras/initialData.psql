@@ -6,3 +6,10 @@ insert into main_tipodocumento (id, description) values(0, 'Cedula de ciudadania
 insert into main_tipodocumento (id, description) values(1, 'Cedula de extranjería (C.E)');
 insert into main_tipodocumento (id, description) values(2, 'Registro civil (R.C)');
 insert into main_tipodocumento (id, description) values(3, 'Pasaporte');
+
+/*---Tipos de cobro---*/
+insert into main_tipocobro (id, description) values(0, 'Anual');
+insert into main_tipocobro (id, description) values(1, 'Mensual');
+insert into main_tipocobro (id, description) values(2, 'Semanal');
+insert into main_tipocobro (id, description) values(3, 'Diario');
+insert into main_tipocobro (id, description) values(4, 'Por noche');
