@@ -4,6 +4,10 @@ const loginLink = document.querySelector('.login-link');
 const registerForm = document.querySelector('#form-register');
 const wrapperFormRegister = document.querySelector('.wrapper .form-box.register');
 
+
+//----------------------------------------//
+//---------------Animations---------------//
+//----------------------------------------//
 registerLink.addEventListener('click', ()=>{
     wrapper.classList.add('active');
     if (window.innerWidth < 768) wrapperFormRegister.style.width = "100%";
@@ -24,4 +28,6 @@ loginLink.addEventListener('click', ()=>{
     }
 });
 
-//311 311 0647
+//----------------------------------------//
+//--------------Validations---------------//
+//----------------------------------------//
