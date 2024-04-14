@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-
-from main.models import TipoDocumento, TipoUsuario, Usuario
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from main.models import Inmueble, TipoDocumento, TipoUsuario, Usuario
 from .forms import FiltrarInmuebles, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
@@ -138,6 +138,40 @@ def Logout(request):
 def UserArea(request):
     data = {'form': FiltrarInmuebles(),
             'event': ''}
+    
+    INMUEBLES_POR_PAGINA = 12
+    inmuebles_usuario = Inmueble.objects.filter(duenio=request.user.id)
+    form = FiltrarInmuebles(request.GET)
+    
+    if form.is_valid():
+        id_inmueble = form.cleaned_data.get('id')
+        tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
+        municipio = form.cleaned_data.get('municipio')
+        
+        if id_inmueble:
+            inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
+        
+        if tipo_inmueble:
+            inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
+    
+        if municipio:
+            inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion=municipio)
+            
+    paginator = Paginator(inmuebles_usuario, INMUEBLES_POR_PAGINA)
+    page_number = request.GET.get('page')
+    
+    try:
+        inmuebles_paginados = paginator.page(page_number)
+    except PageNotAnInteger:
+        inmuebles_paginados = paginator.page(1)
+    except EmptyPage:
+        inmuebles_paginados = paginator.page(paginator.num_pages)
+        
+    data['inmuebles'] = inmuebles_paginados
+    
+    if request.method == 'POST':
+        pass
+
     return render(request, HTMLUSERAREA, {**data})
 
 @login_required

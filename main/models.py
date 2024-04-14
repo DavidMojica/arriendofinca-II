@@ -16,9 +16,20 @@ class TipoDocumento(models.Model):
     def __str__(self):
         return self.description
 
+class TipoCobro(models.Model):
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=40)
+    
+    def __str__(self):
+        return self.description
+
 class TipoInmueble(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=25)
+    
+    def temporizar(self):
+        map_tiempo = {0: 'Año', 1: 'Mes', 2: 'Semana', 3: 'Dia', 4:'Noche'}
+        return map_tiempo[self.id]
     
     def __str__(self):
         return self.description
