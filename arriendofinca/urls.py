@@ -25,5 +25,6 @@ urlpatterns = [
     path('logout/', views.Logout, name='logout'),
     path('userarea/',views.UserArea, name='userarea'),
     path('useredit/', views.UserEdit, name='useredit'),
+    path('crear_inmueble/', views.CrearInmueble, name="crear_inmueble"),
     
 ]

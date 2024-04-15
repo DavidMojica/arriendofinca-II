@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from main.models import Inmueble, TipoDocumento, TipoUsuario, Usuario
-from .forms import FiltrarInmuebles, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #Variables
@@ -15,6 +15,7 @@ HTMLHOME = 'home.html'
 HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
 HTMLUSEREDIT = 'user_edit.html'
+HTMLCREARINMUEBLE = 'inmueble_crear.html'
 
 #MENSAJES
 SUCCESS_1 = "Guardado con éxito"
@@ -133,6 +134,11 @@ def Logout(request):
     logout(request)
     return redirect(reverse('home'))
 
+@login_required
+def CrearInmueble(request):
+    data = {'form': CrearInmuebleForm()}
+    
+    return render(request, HTMLCREARINMUEBLE, {**data})
 
 @login_required
 def UserArea(request):

@@ -113,7 +113,7 @@ class Inmueble(models.Model):
 class Imagenes(models.Model):
     id = models.AutoField(primary_key=True)
     img = models.ImageField(upload_to='inmuebles_img')
-    inmueble = models.ForeignKey(Inmueble, on_delete=models.CASCADE)
+    inmueble = models.ForeignKey(Inmueble, on_delete=models.CASCADE, blank=True, null=True)
     
     def __str__(self):
         return self.id

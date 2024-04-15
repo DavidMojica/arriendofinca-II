@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/ToastNotify.css' %}">
+<script src="{% static 'js/ToastNotify.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/input_box.css' %}">
+<link rel="stylesheet" href="{% static 'css/crear_inmueble.css' %}">
+<main>
+    <section class="card p-4 w-50">
+        <article class="card-header bg-white">
+            <h2 class="card-title fw-bold text-orange">Agregar nuevo inmueble</h2>
+        </article>
+        <article class="card-body">
+            <form action="" id="" class="row justify-content-center">
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.tipo_inmueble.label_tag}}</span>
+                    {{form.tipo_inmueble}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.arriendo_venta.label_tag}}</span>
+                    {{form.arriendo_venta}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.municipio.label_tag}}</span>
+                    {{form.municipio}}
+                </fieldset>
+                
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.tipo_cobro.label_tag}}</span>
+                    {{form.tipo_cobro}}
+                </fieldset>
+                <fieldset class="input-default col-md-10 col-lg-6">
+                    {{form.precio}}
+                    {{form.precio.label_tag}}
+                </fieldset>
+                <fieldset class="input-default col-md-10 col-lg-6">
+                    {{form.direccion}}
+                    {{form.direccion.label_tag}}
+                </fieldset class="input-default col-md-10 col-lg-6">
+                <fieldset class="input-default col-md-10 col-lg-6">
+                    {{form.area}}
+                    {{form.area.label_tag}}
+                </fieldset>
+                <fieldset class="input-default col-md-10 col-lg-6">
+                    {{form.area_construida}}
+                    {{form.area_construida.label_tag}}
+                </fieldset>
+                <fieldset class="input-default col-md-10 col-lg-6">
+                    {{form.habitaciones}}
+                    {{form.habitaciones.label_tag}}
+                </fieldset>
+                <fieldset class="input-default col-md-10 col-lg-6">
+                    {{form.banios}}
+                    {{form.banios.label_tag}}
+                </fieldset>
+                <input type="hidden" name="agregar_inmueble">
+                <input type="submit" value="Publicar nuevo inmueble" class="btn btn-success  p-4">
+                {% csrf_token %}
+            </form>
+        </article>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,49 @@
+:root{
+    --custom-dark: #081b29;
+    --tt-orange:#ffa500;
+    --tt-aqua: #3fc1b4;
+    --tt-violet:#2e1377;
+    --tt-violet-dark:#12192C;
+    --tt-blue:#4089ce;
+    --tt-green:#9af4c2;
+    --tt-wheat:#fff1bf;
+}
+
+.input-default {
+    margin: 1em 0 1em 0;
+    position: relative;
+  }
+  
+  .input-default input {
+    font-size: 100%;
+    padding: 0.4em;
+    outline: none;
+    border: 2px solid var(--tt-orange);
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
+  }
+  
+  .input-default label {
+    font-size: 100%;
+    position: absolute;
+    left: 0;
+    padding: 0.4em;
+    margin-left: 1.8em;
+    pointer-events: none;
+    transition: all 0.3s ease;
+   
+  }
+  
+  .input-default :is(input:focus, input:valid)~label {
+    transform: translateY(-50%) scale(.9);
+    margin: 0em;
+    margin-left: 1.3em;
+    padding: 0.4em;
+    background-color: #212121;
+    color: white;
+  }
+  
+  .inputGroup :is(input:focus, input:valid) {
+    border-color: rgb(37, 37, 211);
+  }
