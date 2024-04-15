@@ -1,4 +1,4 @@
-from .models import Imagenes, Inmueble, TipoCobro, TipoDocumento, TipoInmueble, ArriendoVenta, Municipio, Usuario
+from .models import Departamento, Imagenes, Inmueble, TipoCobro, TipoDocumento, TipoInmueble, ArriendoVenta, Municipio, Usuario
 from django import forms
 from django.db import models
 
@@ -240,11 +240,17 @@ class CrearInmuebleForm(forms.ModelForm):
         widget=forms.Select(attrs={'class':'form-select'}),
     )
     
-    municipio = forms.ModelChoiceField(
-        label="Municipio de ubicación",
-        widget=forms.Select(attrs={'class':'form-select'}),
-        queryset=Municipio.objects.all(),
+    departamento = forms.ModelChoiceField(
+        label="Departamento de ubicación",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
+        queryset=Departamento.objects.all(),
         empty_label=TEXT_SELECCIONAR,
+        required=True
+    )
+    
+    municipio = forms.ChoiceField(
+        label="Municipio de ubicación",
+        widget=forms.Select(attrs={'class':'form-select', 'id':'municipio_select'}),
         required=True
     )
     

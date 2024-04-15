@@ -69,10 +69,8 @@ class Municipio(models.Model):
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.description}, {self.departamento}, {self.departamento.pais}"
+        return f"{self.departamento} - {self.description} - {self.departamento.pais}"
     
-
-
 
 # Login Model #
 class Usuario(AbstractUser):

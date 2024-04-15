@@ -3,6 +3,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/ToastNotify.css' %}">
 <script src="{% static 'js/ToastNotify.js' %}" defer></script>
+<script src="{% static 'js/API_municipios.js' %}" defer></script>
 <link rel="stylesheet" href="{% static 'css/input_box.css' %}">
 <link rel="stylesheet" href="{% static 'css/crear_inmueble.css' %}">
 <main>
@@ -19,6 +20,10 @@
                 <fieldset class="col-md-10 col-lg-6">
                     <span class="badge bg-primary my-2">{{form.arriendo_venta.label_tag}}</span>
                     {{form.arriendo_venta}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.departamento.label_tag}}</span>
+                    {{form.departamento}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
                     <span class="badge bg-primary my-2">{{form.municipio.label_tag}}</span>

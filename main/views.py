@@ -1,8 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, TipoDocumento, TipoUsuario, Usuario
+from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario
 from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
@@ -255,3 +256,10 @@ def UserEdit(request):
     data['edit_account_dangerzone'] = EditAccountDangerZone(initial=initial_danger_form)
     return render(request, HTMLUSEREDIT, {**data})
         
+#--------------APIS-------------#
+def municipios_por_departamento(request):
+    departamento_id = request.GET.get('departamento_id')
+    print(departamento_id)
+    municipios = Municipio.objects.filter(departamento_id=departamento_id).values('id','description')
+    print(municipios)
+    return JsonResponse(list(municipios), safe=False)
