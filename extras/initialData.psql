@@ -13,3 +13,4 @@ insert into main_tipocobro (id, description) values(1, 'Mensual');
 insert into main_tipocobro (id, description) values(2, 'Semanal');
 insert into main_tipocobro (id, description) values(3, 'Diario');
 insert into main_tipocobro (id, description) values(4, 'Por noche');
+insert into main_tipocobro (id, description) values(5, 'Total');

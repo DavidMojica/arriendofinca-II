@@ -72,7 +72,7 @@ def Login(request):
                 
                 if logedUser is None:
                     data['LoginForm'] = LoginForm(initial={'username': username})
-                    data['error'] = ERROR_5
+                    data['error'] = ERROR_4
                     return render(request, HTMLLOGIN, {**data})
     
                 login(request, logedUser)
