@@ -138,6 +138,16 @@ def Logout(request):
 def CrearInmueble(request):
     data = {'form': CrearInmuebleForm()}
     
+    if request.method == 'POST':
+        if 'agregar_inmueble' in request.POST:
+            form = CrearInmuebleForm(request.POST)
+            if form.is_valid():
+                form.save()
+            else:
+                data['event'] = ERROR_2
+        else:
+            data['event'] = ERROR_3
+    
     return render(request, HTMLCREARINMUEBLE, {**data})
 
 @login_required

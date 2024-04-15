@@ -53,6 +53,7 @@
                     {{form.banios}}
                     {{form.banios.label_tag}}
                 </fieldset>
+                <span class="badge bg-danger mb-3">{{event}}</span>
                 <input type="hidden" name="agregar_inmueble">
                 <input type="submit" value="Publicar nuevo inmueble" class="btn btn-success  p-4">
                 {% csrf_token %}

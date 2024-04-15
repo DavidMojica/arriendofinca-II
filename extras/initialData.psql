@@ -14,3 +14,26 @@ insert into main_tipocobro (id, description) values(2, 'Semanal');
 insert into main_tipocobro (id, description) values(3, 'Diario');
 insert into main_tipocobro (id, description) values(4, 'Por noche');
 insert into main_tipocobro (id, description) values(5, 'Total');
+
+/*----Tipos de inmueble----*/
+insert into main_tipoinmueble (id, description) values(0, 'Fincas');
+insert into main_tipoinmueble (id, description) values(1, 'Cabañas');
+insert into main_tipoinmueble (id, description) values(2, 'Lotes');
+insert into main_tipoinmueble (id, description) values(3, 'Casas');
+insert into main_tipoinmueble (id, description) values(4, 'Apartamentos');
+insert into main_tipoinmueble (id, description) values(5, 'Oficinas');
+insert into main_tipoinmueble (id, description) values(6, 'Consultorios');
+insert into main_tipoinmueble (id, description) values(7, 'Hotel');
+insert into main_tipoinmueble (id, description) values(8, 'Locales');
+insert into main_tipoinmueble (id, description) values(9, 'Apartaestudios');
+insert into main_tipoinmueble (id, description) values(10, 'Habitaciones');
+insert into main_tipoinmueble (id, description) values(11, 'Gamplings');
+
+/*-----Arriendo Venta-----*/
+insert into main_arriendoventa (id, description) values(0,'Arriendo');
+insert into main_arriendoventa (id, description) values(1,'Venta');
+
+/*----Paises: 2024 abril 15----*/
+insert into main_pais (description) values('Colombia');
+
+/*-----Departamentos con municipios: Ejecutar proceso ETLColombia.py-----*/
