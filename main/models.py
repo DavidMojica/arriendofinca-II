@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
-from essentials import validate_file_size
 
 class TipoUsuario(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -50,34 +49,27 @@ class Certificado(models.Model):
 
 class Pais(models.Model):
     id = models.AutoField(primary_key=True)
-    description = models.CharField(max_length=10)
+    description = models.CharField(max_length=50)
     
     def __str__(self):
         return self.description
     
 class Departamento(models.Model):
-    id = models.AutoField(primary_key=True)
-    description = models.CharField(max_length=10)
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=50)
     pais = models.ForeignKey(Pais, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.description
+        return f"{self.description}"
 
 class Municipio(models.Model):
     id = models.AutoField(primary_key=True)
-    description = models.CharField(max_length=10)
+    description = models.CharField(max_length=50)
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.description}, {self.departamento}, {self.departamento.pais}"
+        return f"{self.description}"
     
-class Imagenes(models.Model):
-    id = models.AutoField(primary_key=True)
-    img = models.ImageField(upload_to='images/', validators=[validate_file_size])
-    
-    def __str__(self):
-        return self.id
-
 
 # Login Model #
 class Usuario(AbstractUser):
@@ -102,21 +94,25 @@ class Usuario(AbstractUser):
 class Inmueble(models.Model):
     id = models.AutoField(primary_key=True)
     arriendo_venta = models.ForeignKey(ArriendoVenta, on_delete = models.CASCADE)
-    municipio_ubicacion = models.ForeignKey(Municipio, on_delete = models.CASCADE)
     tipo_inmueble = models.ForeignKey(TipoInmueble, on_delete = models.CASCADE)
     precio = models.CharField(max_length=20)
+    tipo_cobro = models.ForeignKey(TipoCobro, on_delete=models.CASCADE, default=1)
+    municipio_ubicacion = models.ForeignKey(Municipio, on_delete = models.CASCADE, null=True, blank=True)
     direccion = models.CharField(max_length=80)
-    descriptionripcion = models.CharField(max_length=300)
-    duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
     area = models.CharField(max_length=7)
     area_construida = models.CharField(max_length=7)
     habitaciones = models.CharField(max_length=3)
     banios = models.CharField(max_length=3)
-    certificado = models.ForeignKey(Certificado, on_delete=models.CASCADE)
-    tipo_cobro = models.ForeignKey(TipoCobro, on_delete=models.CASCADE, default=1)
+    description = models.CharField(max_length=300)
+    duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
+    certificado = models.ForeignKey(Certificado, on_delete=models.CASCADE, null=True, blank=True)
 
-# Many to many #
-class InmuebleImg(models.Model):
-    id_img = models.ForeignKey(Imagenes, on_delete=models.CASCADE)
-    id_inmueble = models.ForeignKey(Inmueble, on_delete=models.CASCADE)
+class Imagenes(models.Model):
+    id = models.AutoField(primary_key=True)
+    img = models.ImageField(upload_to='inmuebles_img')
+    inmueble = models.ForeignKey(Inmueble, on_delete=models.CASCADE, blank=True, null=True)
+    
+    def __str__(self):
+        return self.id
+
 

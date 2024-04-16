@@ -21,7 +21,7 @@
         </form>
         <section class="text-center">
             <h4 class="fw-bold">-- O --</h4>
-            <a href="" class="btn btn-success">Añadir propiedad <i class="bx bx-plus"></i></a>
+            <a href="/crear_inmueble" class="btn btn-success">Añadir propiedad <i class="bx bx-plus"></i></a>
         </section>
     </section>
 
@@ -82,9 +82,9 @@
         {% else %}
             <section class="container text-center py-4">
                 <h4 class="fw-bold">No tienes propiedades registradas todavía...</h4>
-                <button class="btn btn-success">
+                <a href="/crear_inmueble" class="btn btn-success">
                     Añade tu primera propiedad! <i class="bx bx-plus"></i>
-                </button>
+                </a>
             </section>
         {% endif %}
         <!-- Inmueble end -->

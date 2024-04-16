@@ -25,5 +25,7 @@ urlpatterns = [
     path('logout/', views.Logout, name='logout'),
     path('userarea/',views.UserArea, name='userarea'),
     path('useredit/', views.UserEdit, name='useredit'),
-    
+    path('crear_inmueble/', views.CrearInmueble, name="crear_inmueble"),
+    #APIS#
+    path('municipios_por_departamento/', views.municipios_por_departamento, name='municipios_por_departamento')
 ]

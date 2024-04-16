@@ -1,9 +1,10 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, TipoDocumento, TipoUsuario, Usuario
-from .forms import FiltrarInmuebles, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario
+from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #Variables
@@ -15,6 +16,7 @@ HTMLHOME = 'home.html'
 HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
 HTMLUSEREDIT = 'user_edit.html'
+HTMLCREARINMUEBLE = 'inmueble_crear.html'
 
 #MENSAJES
 SUCCESS_1 = "Guardado con éxito"
@@ -58,7 +60,6 @@ def Login(request):
     if request.method == 'POST':
         if 'login' in request.POST:
             form = LoginForm(request.POST)
-            print(form)
             if form.is_valid():
                 username = form.cleaned_data['username']
                 password = form.cleaned_data['password']
@@ -72,7 +73,7 @@ def Login(request):
                 
                 if logedUser is None:
                     data['LoginForm'] = LoginForm(initial={'username': username})
-                    data['error'] = ERROR_5
+                    data['error'] = ERROR_4
                     return render(request, HTMLLOGIN, {**data})
     
                 login(request, logedUser)
@@ -133,6 +134,41 @@ def Logout(request):
     logout(request)
     return redirect(reverse('home'))
 
+@login_required
+def CrearInmueble(request):
+    data = {'form': CrearInmuebleForm()}
+    
+    if request.method == 'POST':
+        if 'agregar_inmueble' in request.POST:
+            form = CrearInmuebleForm(request.POST)
+            municipio = request.POST.get('municipio_ubicacion')
+            #Cuando se hace fetch, se tiene que actualizar el form desde la raiz--
+            form.fields['municipio_ubicacion'].choices = [(municipio, municipio)]
+            if form.is_valid():
+                try:
+                    inmueble_nuevo = form.save(commit=False)
+                    duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
+                    inmueble_nuevo.duenio = duenio_inmueble
+                    inmueble_nuevo.save()                
+                except Exception as e:
+                    print(e)
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        print(f"Error Campo ->{field}: {error}")
+                        
+                data['form'] = form
+                data['event'] = ERROR_2
+        else:
+            data['form'] = form
+            data['event'] = ERROR_3
+    
+    else:
+        form = CrearInmuebleForm()
+        departamento_id = request.GET.get('departamento_id')
+        if departamento_id:
+            form.fields['municipio_ubicacion'].queryset = Municipio.objects.filter(departamento_id=departamento_id)
+    return render(request, HTMLCREARINMUEBLE, {**data})
 
 @login_required
 def UserArea(request):
@@ -239,3 +275,6 @@ def UserEdit(request):
     data['edit_account_dangerzone'] = EditAccountDangerZone(initial=initial_danger_form)
     return render(request, HTMLUSEREDIT, {**data})
         
+#--------------APIS-------------#
+def municipios_por_departamento(request):
+    return JsonResponse(list(Municipio.objects.filter(departamento_id=request.GET.get('departamento_id')).values('id','description')), safe=False)
