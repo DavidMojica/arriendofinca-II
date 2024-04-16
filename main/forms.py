@@ -237,7 +237,7 @@ class CrearInmuebleForm(forms.ModelForm):
         label="Precio (en COP)",
         required=True,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id': 'precio'})
+        widget=forms.NumberInput(attrs={'id': 'precio', 'class': 'form-control', 'placeholder': '¿Cuanto?'})
     )
     
     tipo_cobro = forms.ModelChoiceField(
@@ -265,7 +265,7 @@ class CrearInmuebleForm(forms.ModelForm):
     
     direccion = forms.CharField(
         label="Dirección del inmueble",
-        widget=forms.TextInput(attrs={'id': 'direccion'}),
+        widget=forms.TextInput(attrs={'id': 'direccion', 'class': 'form-control', 'placeholder': 'Kilómetro 3 Via...'}),
         required=True,
         strip=True
     )
@@ -274,28 +274,28 @@ class CrearInmuebleForm(forms.ModelForm):
         label="Area",
         required=True,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id':'area'})
+        widget=forms.NumberInput(attrs={'id':'area', 'class': 'form-control', 'placeholder': 'Área total del terreno/inmueble'})
     )
     
     area_construida = forms.IntegerField(
         label="Area construida",
         required=True,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id':'area_construida'})
+        widget=forms.NumberInput(attrs={'id':'area_construida', 'class': 'form-control', 'placeholder': 'Área construida en el terreno/inmueble'}),
     )
     
     habitaciones = forms.IntegerField(
         label="# de Habitaciones",
         required=True,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id': 'habitaciones'})
+        widget=forms.NumberInput(attrs={'id': 'habitaciones', 'class': 'form-control', 'placeholder': 'Entre 0 y 999 habitaciones'})
     )
     
     banios = forms.IntegerField(
         label="# de baños",
         required=True,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id': 'banios'}),
+        widget=forms.NumberInput(attrs={'id': 'banios', 'class': 'form-control', 'placeholder': 'Entre 0 y 999 baños'}),
     )
     
     
@@ -304,9 +304,9 @@ class CrearInmuebleForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Describa las carácteristicas del inmueble (opcional)'}),
         max_length=500,
-        strip=True
+        strip=True,
+        
     )
-    
     
     def clean_municipio_ubicacion(self):
         municipio_id = self.cleaned_data['municipio_ubicacion']
