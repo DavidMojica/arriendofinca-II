@@ -245,13 +245,8 @@ class CrearInmuebleForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
         queryset=Departamento.objects.all(),
         empty_label=TEXT_SELECCIONAR,
-        required=True
-    )
-    
-    municipio = forms.ChoiceField(
-        label="Municipio de ubicación",
-        widget=forms.Select(attrs={'class':'form-select', 'id':'municipio_select'}),
-        required=True
+        required=True,
+        initial=0
     )
     
     direccion = forms.CharField(
@@ -297,6 +292,23 @@ class CrearInmuebleForm(forms.ModelForm):
         strip=True
     )
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['municipio_ubicacion'] = forms.ChoiceField(
+            label="Municipio de ubicacion",
+            choices=[],
+            widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
+            required=True,
+        )
+    
+    def clean_municipio_ubicacion(self):
+        municipio_id = self.cleaned_data['municipio_ubicacion']
+        try:
+            municipio = Municipio.objects.get(pk=municipio_id)
+            return municipio
+        except Municipio.DoesNotExist:
+            raise forms.ValidationError("El municipio seleccionado no es válido")
+        
     class Meta:
         model = Inmueble
         fields = ('tipo_inmueble', 'arriendo_venta', 'precio', 'tipo_cobro', 'municipio_ubicacion', 'direccion', 'area', 'area_construida', 'habitaciones', 'banios', 'description')

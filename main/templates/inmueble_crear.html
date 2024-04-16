@@ -12,7 +12,7 @@
             <h2 class="card-title fw-bold text-orange">Agregar nuevo inmueble</h2>
         </article>
         <article class="card-body">
-            <form action="" id="" class="row justify-content-center">
+            <form action="" class="row justify-content-center" method="POST" id="form-crear">
                 <fieldset class="col-md-10 col-lg-6">
                     <span class="badge bg-primary my-2">{{form.tipo_inmueble.label_tag}}</span>
                     {{form.tipo_inmueble}}
@@ -26,14 +26,15 @@
                     {{form.departamento}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.municipio.label_tag}}</span>
-                    {{form.municipio}}
+                    <span class="badge bg-primary my-2">{{form.municipio_ubicacion.label_tag}}</span>
+                    {{form.municipio_ubicacion}}
                 </fieldset>
                 
                 <fieldset class="col-md-10 col-lg-6">
                     <span class="badge bg-primary my-2">{{form.tipo_cobro.label_tag}}</span>
                     {{form.tipo_cobro}}
                 </fieldset>
+                <hr class="mt-3">
                 <fieldset class="input-default col-md-10 col-lg-6">
                     {{form.precio}}
                     {{form.precio.label_tag}}

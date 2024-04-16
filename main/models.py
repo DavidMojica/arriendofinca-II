@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
-from essentials import validate_file_size
 
 class TipoUsuario(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -61,7 +60,7 @@ class Departamento(models.Model):
     pais = models.ForeignKey(Pais, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.description
+        return f"{self.description}"
 
 class Municipio(models.Model):
     id = models.AutoField(primary_key=True)
@@ -69,7 +68,7 @@ class Municipio(models.Model):
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.departamento} - {self.description} - {self.departamento.pais}"
+        return f"{self.description}"
     
 
 # Login Model #
@@ -98,7 +97,7 @@ class Inmueble(models.Model):
     tipo_inmueble = models.ForeignKey(TipoInmueble, on_delete = models.CASCADE)
     precio = models.CharField(max_length=20)
     tipo_cobro = models.ForeignKey(TipoCobro, on_delete=models.CASCADE, default=1)
-    municipio_ubicacion = models.ForeignKey(Municipio, on_delete = models.CASCADE)
+    municipio_ubicacion = models.ForeignKey(Municipio, on_delete = models.CASCADE, null=True, blank=True)
     direccion = models.CharField(max_length=80)
     area = models.CharField(max_length=7)
     area_construida = models.CharField(max_length=7)
