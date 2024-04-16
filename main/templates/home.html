@@ -4,7 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/atropos@2.0.2/atropos.min.js" defer></script>
 <script src="{% static 'js/home.js' %}" defer></script>
 <link href="https://cdn.jsdelivr.net/npm/atropos@2.0.2/atropos.min.css" rel="stylesheet">
-
+<script src="{% static 'js/API_municipios.js' %}" defer></script>
 <link rel="stylesheet" href="{% static 'css/summer-card.css' %}">
 <link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
@@ -17,26 +17,30 @@
             </section> 
             <section class="card-body row ">
                 <form action="" class="col-md-6">
-                    <p>
-                        {{form.tipo_inmueble.label}}
+                    <fieldset>
+                        <span class="badge bg-primary mb-1 mt-2">{{form.tipo_inmueble.label}} <i class='bx bx-building-house'></i></span>
                         {{form.tipo_inmueble}}
-                    </p>
-                    <p>
-                        {{form.arriendo_venta.label}}
+                    </fieldset>
+                    <fieldset>
+                        <span class="badge bg-primary mb-1 mt-2">{{form.arriendo_venta.label}} <i class='bx bxs-time'></i></span>
                         {{form.arriendo_venta}}
-                    </p>
-                    <p>
-                        {{form.municipio.label}}
-                        {{form.municipio}}
-                    </p>
-                    <p class="text-center">
+                    </fieldset>
+                    <fieldset>
+                        <span class="badge bg-primary mb-1 mt-2">{{form.departamento.label}} <i class='bx bxs-map-alt' ></i></span>
+                        {{form.departamento}}
+                    </fieldset>
+                    <fieldset>
+                        <span class="badge bg-primary mb-1 mt-2">{{form.municipio_ubicacion.label}} <i class='bx bx-map'></i></span>
+                        {{form.municipio_ubicacion}}
+                    </fieldset>
+                    <fieldset class="text-center mt-4">
                         {{form.solo_certificados.label}}
                         <label class="green-switch">
                             {{form.solo_certificados}}
                             <span class="slider"></span>
                         </label>
-                        <button type="submit" class="btn bg-tt-orange mt-2">Búsqueda</button>
-                    </p>
+                        <button type="submit" class="btn bg-tt-orange mt-3">Búsqueda</button>
+                    </fieldset>
                 </form>
                 <aside class="col-md-6 overflow-visible">
                     <div class="summer-card">

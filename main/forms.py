@@ -27,13 +27,21 @@ class BusquedaInmuebleForm(forms.Form):
         empty_label=TEXT_SELECCIONAR,
         required=True
     )
-    municipio = forms.ModelChoiceField(
-        label="Ubicación",
-        widget=forms.Select(attrs={'class':'form-select'}),
-        queryset=Municipio.objects.all(),
+    departamento = forms.ModelChoiceField(
+        label="Departamento",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
+        queryset=Departamento.objects.all(),
         empty_label=TEXT_SELECCIONAR,
         required=True
     )
+    
+    municipio_ubicacion = forms.ChoiceField(
+        label="Municipio",
+        choices=[('', 'Selecciona un departamento...')],
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
+        required=True,
+    )
+    
     solo_certificados = forms.BooleanField(
         label="Sólo inmuebles certificados",
         widget=forms.CheckboxInput(),
@@ -245,8 +253,14 @@ class CrearInmuebleForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
         queryset=Departamento.objects.all(),
         empty_label=TEXT_SELECCIONAR,
+        required=True
+    )
+    
+    municipio_ubicacion = forms.ChoiceField(
+        label="Municipio de ubicacion",
+        choices=[('', 'Selecciona un departamento...')],
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
         required=True,
-        initial=0
     )
     
     direccion = forms.CharField(
@@ -284,6 +298,7 @@ class CrearInmuebleForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'id': 'banios'}),
     )
     
+    
     description = forms.CharField(
         label="Descipcion del inmueble",
         required=False,
@@ -292,14 +307,6 @@ class CrearInmuebleForm(forms.ModelForm):
         strip=True
     )
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['municipio_ubicacion'] = forms.ChoiceField(
-            label="Municipio de ubicacion",
-            choices=[],
-            widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
-            required=True,
-        )
     
     def clean_municipio_ubicacion(self):
         municipio_id = self.cleaned_data['municipio_ubicacion']
