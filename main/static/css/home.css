@@ -72,6 +72,10 @@
     .btn-schematic{
         font-size: 0.7em;
     }
+    .aside{
+        margin-top: 5vh;
+    }
+    
 }
 @media (max-width: 576px) {
     .atropos-img-up {
@@ -83,3 +87,11 @@
     }
 }
 
+fieldset .badge{
+    width: 120px;
+}
+
+.aside{
+    display: grid;
+    place-items: center;
+}
