@@ -229,7 +229,7 @@ class CrearInmuebleForm(forms.ModelForm):
         label="Precio (en COP)",
         required=True,
         min_value=0,
-        widget=forms.NumberInput()
+        widget=forms.NumberInput(attrs={'id': 'precio'})
     )
     
     tipo_cobro = forms.ModelChoiceField(
@@ -251,7 +251,7 @@ class CrearInmuebleForm(forms.ModelForm):
     
     direccion = forms.CharField(
         label="Dirección del inmueble",
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'id': 'direccion'}),
         required=True,
         strip=True
     )
@@ -260,28 +260,28 @@ class CrearInmuebleForm(forms.ModelForm):
         label="Area",
         required=True,
         min_value=0,
-        widget=forms.NumberInput()
+        widget=forms.NumberInput(attrs={'id':'area'})
     )
     
     area_construida = forms.IntegerField(
         label="Area construida",
         required=True,
         min_value=0,
-        widget=forms.NumberInput()
+        widget=forms.NumberInput(attrs={'id':'area_construida'})
     )
     
     habitaciones = forms.IntegerField(
         label="# de Habitaciones",
         required=True,
         min_value=0,
-        widget=forms.NumberInput()
+        widget=forms.NumberInput(attrs={'id': 'habitaciones'})
     )
     
     banios = forms.IntegerField(
         label="# de baños",
         required=True,
         min_value=0,
-        widget=forms.NumberInput(),
+        widget=forms.NumberInput(attrs={'id': 'banios'}),
     )
     
     description = forms.CharField(

@@ -6,13 +6,6 @@ const view = "municipios_por_departamento";
 //-----------DOM--------//
 const departamento_select = document.getElementById('departamento-select');
 const municipio_select = document.getElementById('municipio_select');
-const form_crear = document.getElementById('form-crear');
-
-// form_crear.addEventListener('submit', e=>{
-//     e.preventDefault();
-//     municipio_select.value = parseInt(municipio_select.value);
-//     form_crear.submit();
-// });
 
 departamento_select.addEventListener('change',async function(){
     let departamento_id = departamento_select.value;
