@@ -221,13 +221,13 @@ class CrearInmuebleForm(forms.ModelForm):
         label="Tipo de inmueble",
         required=True,
         queryset=TipoInmueble.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble_filter'}),
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble'}),
         empty_label= TEXT_SELECCIONAR
     )
     
     arriendo_venta = forms.ModelChoiceField(
         label="¿Arrendar o vender?",
-        widget=forms.Select(attrs={'class':'form-select'}),
+        widget=forms.Select(attrs={'class':'form-select', 'id': 'arriendo_venta'}),
         queryset=ArriendoVenta.objects.all(),
         empty_label= TEXT_SELECCIONAR,
         required=True
@@ -245,7 +245,7 @@ class CrearInmuebleForm(forms.ModelForm):
         required=True,
         queryset=TipoCobro.objects.all(),
         empty_label=TEXT_SELECCIONAR,
-        widget=forms.Select(attrs={'class':'form-select'}),
+        widget=forms.Select(attrs={'class':'form-select', 'id': 'tipo_cobro'}),
     )
     
     departamento = forms.ModelChoiceField(

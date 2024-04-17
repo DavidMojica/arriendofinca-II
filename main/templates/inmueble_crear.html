@@ -74,14 +74,16 @@
                 <!-- Imágenes del inmueble --> 
                 <h3 class="display-5 col-md-10 text-center mt-3">Imágenes del inmueble <i class='bx bx-info-square'></i></h3>
                 
-                <fieldset class="col-md-10 col-lg-10">
-                    <input type="file" name="imagenes" id="imagenes" multiple class="form-control">
-                    <small class="form-text text-muted"><i class='bx bxs-info-circle'></i> Subir imágenes es opcional, pero tus inmuebles atraerán más clientes potenciales. Después de crear el inmueble con o sin imagenes, podrás subir imágenes de este inmueble, modificarlas o borrarlas.</small>
+                <fieldset class="col-md-10 col-lg-10 mb-3">
+                    <input type="file" name="imagenes" id="imagenes" multiple class="form-control mb-2">
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-blue '></i> Máximo 5 imágenes, 2Mb como máximo en cada una. <br>
+                        <i class='bx bxs-info-circle text-blue'></i> Subir imágenes es opcional, pero tus inmuebles atraerán más clientes potenciales. Después de crear el inmueble con o sin imagenes, podrás subir imágenes de este inmueble, modificarlas o borrarlas.</small>
                 </fieldset>
 
                 <span class="badge bg-danger mb-3">{{event}}</span>
                 <input type="hidden" name="agregar_inmueble">
-                <input type="submit" value="Publicar nuevo inmueble" class="btn btn-success  p-4">
+                <input type="submit" value="Publicar nuevo inmueble" class="btn btn-success p-4">
                 {% csrf_token %}
             </form>
         </article>
