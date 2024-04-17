@@ -39,6 +39,9 @@ imagenes.addEventListener('change', e=>{
 
 const img_validators = files =>{
     const img_maxMB_size = 2;
+    
+
+
     //-----Cantidad de imágenes------//
     if (files.length > 5) return "Sólo se permiten un máximo de 5 imágenes.";
     
@@ -46,7 +49,16 @@ const img_validators = files =>{
     for (let i = 0; i < files.length; i++){
         let fileSizeInMB = files[i].size / (1024*1024);
         if (fileSizeInMB > img_maxMB_size) return "El tamaño máximo para cada imagen es de 2MB";
+        //-------Tipo de archivo-------//
+        const file = files[i];
+        const fileType = file.type;
+
+        // Validar el tipo de archivo
+        if (!fileType.startsWith('image/')) {
+            return 'El archivo "' + file.name + '" no es una imagen válida.';
+        }
     }
+
 
     return "0";
 }
