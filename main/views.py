@@ -11,6 +11,10 @@ from django.contrib.auth import authenticate, login, logout
 USERLENGTHMIN = 4
 PASSLENGTHMIN = 8
 
+#-Imagenes de inmueble-#
+MAX_IMAGE_MB = 2 #MB
+MAX_IMAGES_PER_POST = 5 #Máximo de imágenes por inmueble
+
 #HTTDOCS
 HTMLHOME = 'home.html'
 HTMLLOGIN = 'login.html'
@@ -31,6 +35,8 @@ ERROR_8 = "La contraseña anterior no es la correcta."
 ERROR_9 = "Alguna(s) de las contraseñas no cumplen con la longitud minima."
 ERROR_10 = "Las contraseñas nuevas no coinciden"
 ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
+ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes."
+ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb por imágen"
 
 #Funcitions
 #Decorador que valida que el usuario no esté logueado para hacer algo.
@@ -136,29 +142,43 @@ def Logout(request):
 
 @login_required
 def CrearInmueble(request):
-    data = {'form': CrearInmuebleForm()}
+    data = {'form': CrearInmuebleForm(),
+            'event': ''}
     
     if request.method == 'POST':
         if 'agregar_inmueble' in request.POST:
             form = CrearInmuebleForm(request.POST)
+            ban_images = True
+            
             municipio = request.POST.get('municipio_ubicacion')
             #Cuando se hace fetch, se tiene que actualizar el form desde la raiz--
             form.fields['municipio_ubicacion'].choices = [(municipio, municipio)]
-            if form.is_valid():
-                try:
-                    inmueble_nuevo = form.save(commit=False)
-                    duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
-                    inmueble_nuevo.duenio = duenio_inmueble
-                    inmueble_nuevo.save()                
-                except Exception as e:
-                    print(e)
+            
+            #Procesamiento de imágenes
+            files = request.FILES.getlist('imagenes')
+            if len(files) > MAX_IMAGES_PER_POST:
+                data['event'] = ERROR_12
+                ban_images = False
             else:
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        print(f"Error Campo ->{field}: {error}")
-                        
+                for f in files:
+                    if f.size > MAX_IMAGE_MB * 1024 * 1024:
+                        data['event'] = ERROR_13
+                        ban_images = False
+                
+            if ban_images:
+                if form.is_valid():
+                    try:
+                        inmueble_nuevo = form.save(commit=False)
+                        duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
+                        inmueble_nuevo.duenio = duenio_inmueble
+                        inmueble_nuevo.save()                
+                    except Exception as e:
+                        print(e)
+                else:                    
+                    data['form'] = form
+                    data['event'] = ERROR_2
+            else:
                 data['form'] = form
-                data['event'] = ERROR_2
         else:
             data['form'] = form
             data['event'] = ERROR_3

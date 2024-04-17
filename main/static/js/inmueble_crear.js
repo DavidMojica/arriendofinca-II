@@ -34,7 +34,7 @@ imagenes.addEventListener('change', e=>{
         createToastNotify(1, "Error en imágenes", validationResult);
         imagenes.value = '';
     }
-    createToastNotify(0, "Operación exitosa", "Las imagenes fueron cargadas correctamente.")
+    else createToastNotify(0, "Operación exitosa", "Las imagenes fueron cargadas correctamente.")
 });
 
 const img_validators = files =>{
