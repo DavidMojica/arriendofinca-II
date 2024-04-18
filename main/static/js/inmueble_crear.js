@@ -39,9 +39,6 @@ imagenes.addEventListener('change', e=>{
 
 const img_validators = files =>{
     const img_maxMB_size = 2;
-    
-
-
     //-----Cantidad de imágenes------//
     if (files.length > 5) return "Sólo se permiten un máximo de 5 imágenes.";
     
@@ -58,8 +55,6 @@ const img_validators = files =>{
             return 'El archivo "' + file.name + '" no es una imagen válida.';
         }
     }
-
-
     return "0";
 }
 

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario
+from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario, Imagenes
 from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
@@ -37,6 +37,7 @@ ERROR_10 = "Las contraseñas nuevas no coinciden"
 ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
 ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes."
 ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb por imágen"
+ERROR_14 = "Algún archivo cargado NO es una imagen."
 
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
@@ -250,19 +251,30 @@ def CrearInmueble(request):
             if len(files) > MAX_IMAGES_PER_POST:
                 data['event'] = ERROR_12
                 ban_images = False
-            else:
-                for f in files:
-                    if f.size > MAX_IMAGE_MB * 1024 * 1024:
-                        data['event'] = ERROR_13
-                        ban_images = False
-            
+           
+            for f in files:
+                if f.size > MAX_IMAGE_MB * 1024 * 1024:
+                    data['event'] = ERROR_13
+                    ban_images = False
+                    
+                if not f.content_type.startswith('image/'):
+                    data['event'] = ERROR_14
+                    ban_images = False
+                    
             if ban_images:
                 if form.is_valid():
                     try:
                         inmueble_nuevo = form.save(commit=False)
                         duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
                         inmueble_nuevo.duenio = duenio_inmueble
-                        inmueble_nuevo.save()                
+                        inmueble_nuevo.save()     
+                        
+                        for file in files:
+                            imagen = Imagenes()
+                            imagen.img = file
+                            imagen.inmueble = inmueble_nuevo
+                            imagen.save()
+                               
                     except Exception as e:
                         print(e)
                 else:                    
