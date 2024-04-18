@@ -182,28 +182,37 @@ def UserArea(request):
     """
     
     #--Variables--#
-    INMUEBLES_POR_PAGINA = 12
-    data = {'form': FiltrarInmuebles(),
-            'event': ''}
+    INMUEBLES_POR_PAGINA = 9
+    data = {'form': FiltrarInmuebles(), 'event': ''}
     inmuebles_usuario = Inmueble.objects.filter(duenio=request.user.id)
+    
+    
     form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
     
+    if 'municipio' in request.GET:
+        municipio_id = request.GET.get('municipio')
+        municipio_nombre = Municipio.objects.get(pk=municipio_id).description
+        form.fields['municipio'].choices = [(municipio_id, municipio_nombre)]
     #--Procesamiento de formularios--#
     if form.is_valid():
+        data['form'] = form
         #--Form de filtro--#
         id_inmueble = form.cleaned_data.get('id')
         tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
+        departamento = form.cleaned_data.get('departamento')
         municipio = form.cleaned_data.get('municipio')
-        
+
         if id_inmueble:
             inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
         
         if tipo_inmueble:
             inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
     
-        if municipio:
-            inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion=municipio)
+        if departamento and municipio:
+            inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion_id=municipio)
             
+    else:
+        print("no valido")   
     paginator = Paginator(inmuebles_usuario, INMUEBLES_POR_PAGINA)
     page_number = request.GET.get('page')
     

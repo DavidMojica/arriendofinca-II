@@ -3,23 +3,28 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/user_area.css' %}">
 <script src="{% static 'js/user_area.js' %}" defer></script>
+<script src="{% static 'js/API_municipios.js' %}" defer></script>
 
 <main>
     <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
         <form action="" method="GET" class="text-center filter-form">
             <h2 class="text-primary font-weight-bold">Encontrar inmueble</h2>
-            <article class="input-group mb-3">
-                <span class="badge bg-info">{{form.id.label_tag}}</span>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">{{form.id.label_tag}}</span>
                 {{form.id}}
-            </article>
-            <article class="input-group mb-3">
-                <span class="badge bg-info">{{form.tipo_inmueble.label_tag}}</span>
+            </fieldset>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">{{form.tipo_inmueble.label_tag}}</span>
                 {{form.tipo_inmueble}}
-            </article>
-            <article class="input-group mb-3">
-                <span class="badge bg-info">{{form.municipio.label_tag}}</span>
+            </fieldset>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">{{form.departamento.label_tag}}</span>
+                {{form.departamento}}
+            </fieldset>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">{{form.municipio.label_tag}}</span>
                 {{form.municipio}}
-            </article>
+            </fieldset>
             <button type="submit" class="btn btn-primary col-md-5">Filtrar <i class="bx bx-search"></i></button>
         </form>
         <section class="text-center">
@@ -31,9 +36,51 @@
     <section class="bg-light bg-gradient">
         <!-- Inmueble -->
         {% if inmuebles %}
-        <section class="container">
+        <section class="container py-3" id="seccion-inmuebles">
             <h1 class="text-center text-primary mt-4">Tus propiedades publicadas</h1>
             <section class="row justify-content-center">
+            <!-- Paginacion -->
+            <article class="pagination justify-content-center mt-2">
+                <ul class="pagination">
+                    {% if inmuebles.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ inmuebles.previous_page_number }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Página {{ inmuebles.number }} de {{ inmuebles.paginator.num_pages }}</span>
+                    </li>
+
+                    {% for i in inmuebles.paginator.page_range %}
+                        {% if i >= inmuebles.number|add:"-3" and i <= inmuebles.number|add:"3" %}
+                            <li class="page-item {% if inmuebles.number == i %}active{% endif %}">
+                                <a class="page-link" href="?page={{ i }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if inmuebles.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ inmuebles.next_page_number }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ inmuebles.paginator.num_pages }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </article>
+            <!-- End paginación -->
             {% for inmueble in inmuebles %}
                 <article class="card col-md-4 m-3" style="width:400px;">
                     <section class="text-center pic-container">
@@ -53,7 +100,7 @@
                         </p>
                         <span class="badge bg-primary">ID Propiedad: {{inmueble.id}}</span>
                     </section> 
-                    <section class="card-footer justify-content-evenly d-flex">
+                    <section class="card-footer bg-white justify-content-evenly d-flex">
                         <aside>
                             <!-- trigger -->
                             <button class="btn btn-danger btn-sm" title="Borrar inmueble" data-bs-toggle="modal" data-bs-target="#borrarPropiedad-"><i class="bx bx-trash"></i></button>
@@ -68,7 +115,7 @@
                                         <section class="modal-body">
                                             <p>Al usted borrar esta propiedad, se eliminarán todos los datos relacionados a ella. Si la vuelve a crear despues, se creará con un ID distinto</p>
                                         </section>
-                                        <section class="modal-footer">
+                                        <section class="modal-footer ">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
                                             <form action="" method="POST">
                                                 {% csrf_token %}
@@ -87,6 +134,48 @@
                 </article>
             {% endfor %}
             </section>
+            <!-- Paginacion -->
+            <article class="pagination justify-content-center mt-2">
+                <ul class="pagination">
+                    {% if inmuebles.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ inmuebles.previous_page_number }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Página {{ inmuebles.number }} de {{ inmuebles.paginator.num_pages }}</span>
+                    </li>
+
+                    {% for i in inmuebles.paginator.page_range %}
+                        {% if i >= inmuebles.number|add:"-3" and i <= inmuebles.number|add:"3" %}
+                            <li class="page-item {% if inmuebles.number == i %}active{% endif %}">
+                                <a class="page-link" href="?page={{ i }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if inmuebles.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ inmuebles.next_page_number }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ inmuebles.paginator.num_pages }}{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio %}&municipio={{request.GET.municipio}}{% endif %}#seccion-inmuebles" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </article>
+            <!-- End paginación -->
         </section>
         {% else %}
             <section class="container text-center py-4">
