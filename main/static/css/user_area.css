@@ -1,0 +1,14 @@
+.default-inmueble-pic{
+    font-size: 16rem;
+}
+
+.inmueble-pic {
+    object-fit: contain;
+    display: grid;
+    place-items: center;
+    height: 320px;
+}
+
+.pic-container{
+    height: 320px;
+}

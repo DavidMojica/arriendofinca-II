@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/user_area.css' %}">
+<script src="{% static 'js/user_area.js' %}" defer></script>
+
 <main>
     <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
         <form action="" method="GET" class="text-center filter-form">
@@ -30,14 +33,22 @@
         {% if inmuebles %}
         <section class="container">
             <h1 class="text-center text-primary mt-4">Tus propiedades publicadas</h1>
-            <section class="row">
+            <section class="row justify-content-center">
             {% for inmueble in inmuebles %}
-                <article class="card col-md-4" style="width:400px;">
-                    <img src="{{inmueble.imagenes.url}}" alt="Example" class="card-img-top mt-2">
+                <article class="card col-md-4 m-3" style="width:400px;">
+                    <section class="text-center pic-container">
+                        {% if inmueble.imagenes.all %}
+                            {% for imagen in inmueble.imagenes.all %}
+                                <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                            {% endfor %}
+                        {% else %}
+                            <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
+                        {% endif %}    
+                    </section>
                     <section class="card-body">
                         <h4 class="card-title">{{ inmueble.tipo_inmueble }} en {{inmueble.arriendo_venta}}</h4>
+                        <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
                         <p class="card-text">
-                            {{inmueble.municipio}}
                             <strong>${{inmueble.precio}} / {{inmueble.tipo_cobro.temporizar}}</strong>
                         </p>
                         <span class="badge bg-primary">ID Propiedad: {{inmueble.id}}</span>
