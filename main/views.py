@@ -7,7 +7,7 @@ from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario
 from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
-#Variables
+#--Variables--#
 USERLENGTHMIN = 4
 PASSLENGTHMIN = 8
 
@@ -15,14 +15,14 @@ PASSLENGTHMIN = 8
 MAX_IMAGE_MB = 2 #MB
 MAX_IMAGES_PER_POST = 5 #Máximo de imágenes por inmueble
 
-#HTTDOCS
+#--HTTDOCS--#
 HTMLHOME = 'home.html'
 HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
 HTMLUSEREDIT = 'user_edit.html'
 HTMLCREARINMUEBLE = 'inmueble_crear.html'
 
-#MENSAJES
+#--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
 
 ERROR_1 = "El nombre de usuario ya existe."
@@ -38,9 +38,17 @@ ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
 ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes."
 ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb por imágen"
 
-#Funcitions
-#Decorador que valida que el usuario no esté logueado para hacer algo.
+#-----------------------------------------------------------------------------------------#
+#-------------------------------------DECORADORES-----------------------------------------#
+#-----------------------------------------------------------------------------------------#
 def unloginRequired(view_func):
+    """
+    El usuario no puede tener la sesion iniciada para poder acceder a las funciones de una vista.
+    Author: DavidMojica (Github)
+    Usage: @unloginRequired sobre la vista.
+    Args:
+        view_func (ViewController): Vista controlada
+    """
     def wrapper(request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('home')
@@ -48,22 +56,49 @@ def unloginRequired(view_func):
             return view_func(request, *args, **kwargs)
     return wrapper
 
-# Create your views here.
+#-----------------------------------------------------------------------------------------#
+#----------------------------------------FUNCIONES----------------------------------------#
+#-----------------------------------------------------------------------------------------#
+@login_required
+def Logout(request):
+    """
+    Cierra la sesión a un usuario logueado. No devuelve vista, redirige.
+    Args:
+        request (HttpRequest): Petición de http realizada por el usuario.
+    Returns:
+        Redirect: Redirecciona al home.
+    """
+    logout(request)
+    return redirect(reverse('home'))
+
+#-----------------------------------------------------------------------------------------#
+#-----------------------------------------VISTAS------------------------------------------#
+#-----------------------------------------------------------------------------------------#
+#--HOME o Index--#
 def home(request):
-    data = {
-        'form': BusquedaInmuebleForm()
-    }
-    
+    data = { 'form': BusquedaInmuebleForm() }
     return render(request, HTMLHOME, {**data})
 
+#--Inicio de sesión - Registro--#
 @unloginRequired
 def Login(request):
+    """
+    Vista de login/register
+    Args:
+        request (HttpRequest): Petición de http realizada por el usuario.
+    Returns:
+        HttpResponse: Renderizado gráfico de documento HTML con datos desde el servidor.
+    """
+    #--Variables--#
     data = {
         'LoginForm': LoginForm(),
         'RegisterForm': RegisterForm(),
     }
 
+    #--Procesamiento de petición--#
     if request.method == 'POST':
+        #--Procesamiento de formularios--#
+        ##---------------LOGIN---------------##
         if 'login' in request.POST:
             form = LoginForm(request.POST)
             if form.is_valid():
@@ -84,10 +119,9 @@ def Login(request):
     
                 login(request, logedUser)
                 
-                #--Redirigir a area del usuario
-                return redirect('userarea')
+                return redirect('userarea') #--Redirigir a area del usuario si se verifica la autenticidad del usuario --#
             else:
-                data['error'] = ERROR_2
+                data['error'] = ERROR_2 #--No redirigir y devolver mensaje de error--#
                 return render(request, HTMLLOGIN, {**data})
             
         ##--------------REGISTRO----------------##
@@ -121,7 +155,6 @@ def Login(request):
                     return render(request, HTMLLOGIN, {**data})
 
                 except Exception as e:
-                    print(e)
                     data['error'] = ERROR_3
                     return render(request, HTMLLOGIN, {**data})
             else:
@@ -130,31 +163,89 @@ def Login(request):
     
         else:
             data['error'] = ERROR_3
-            return render, HTMLLOGIN, {**data}
+            return render(request, HTMLLOGIN, {**data})
     #Get
     else:
         return render(request, HTMLLOGIN, {**data})
-    
-@login_required
-def Logout(request):
-    logout(request)
-    return redirect(reverse('home'))
 
+#--Área del usuario--#
+@login_required
+def UserArea(request):
+    """
+    Vista que muestra ordenadamente los inmuebles del usuario. Desdea qui se puede añadir, modificar y borrar datos de los inmuebles.
+    Después de iniciar sesion, se redirige automáticamente a esta vista.
+    Args:
+        request (HttpRequest): Petición de http realizada por el usuario.
+    Returns:
+        HttpResponse: Renderizado gráfico de documento HTML con datos desde el servidor.
+    """
+    
+    #--Variables--#
+    INMUEBLES_POR_PAGINA = 12
+    data = {'form': FiltrarInmuebles(),
+            'event': ''}
+    inmuebles_usuario = Inmueble.objects.filter(duenio=request.user.id)
+    form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
+    
+    #--Procesamiento de formularios--#
+    if form.is_valid():
+        #--Form de filtro--#
+        id_inmueble = form.cleaned_data.get('id')
+        tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
+        municipio = form.cleaned_data.get('municipio')
+        
+        if id_inmueble:
+            inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
+        
+        if tipo_inmueble:
+            inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
+    
+        if municipio:
+            inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion=municipio)
+            
+    paginator = Paginator(inmuebles_usuario, INMUEBLES_POR_PAGINA)
+    page_number = request.GET.get('page')
+    
+    try:
+        inmuebles_paginados = paginator.page(page_number)
+    except PageNotAnInteger:
+        inmuebles_paginados = paginator.page(1)
+    except EmptyPage:
+        inmuebles_paginados = paginator.page(paginator.num_pages)
+        
+    data['inmuebles'] = inmuebles_paginados
+    if request.method == 'POST':
+        pass #Aún no se le ha dado ninguna implementación a POST.
+
+    return render(request, HTMLUSERAREA, {**data})
+
+#--Controles para usuarios--#
 @login_required
 def CrearInmueble(request):
-    data = {'form': CrearInmuebleForm(),
-            'event': ''}
+    """
+    Vista de creación de un inmueble. Puede ser accedido por cualquier tipo de usuario.
+    Args:
+        request (HttpRequest): Petición de http realizada por el usuario.
+    Returns:
+        HttpResponse: Renderizado gráfico de documento HTML con datos desde el servidor.
+    """
+    #--Variables---#
+    data = { 'form': CrearInmuebleForm(),
+             'event': ''}
     
+    #---Procesamiento de petición---#
     if request.method == 'POST':
+        #--Procesamiento de formularios--#
+        ##-------------Crear inmueble------------##
         if 'agregar_inmueble' in request.POST:
             form = CrearInmuebleForm(request.POST)
             ban_images = True
             
+            #--Procesar elementos de un select fetcheado asincrónicamente--#
             municipio = request.POST.get('municipio_ubicacion')
-            #Cuando se hace fetch, se tiene que actualizar el form desde la raiz--
             form.fields['municipio_ubicacion'].choices = [(municipio, municipio)]
             
-            #Procesamiento de imágenes
+            #--Validación de imágenes--#
             files = request.FILES.getlist('imagenes')
             if len(files) > MAX_IMAGES_PER_POST:
                 data['event'] = ERROR_12
@@ -164,7 +255,7 @@ def CrearInmueble(request):
                     if f.size > MAX_IMAGE_MB * 1024 * 1024:
                         data['event'] = ERROR_13
                         ban_images = False
-                
+            
             if ban_images:
                 if form.is_valid():
                     try:
@@ -191,52 +282,22 @@ def CrearInmueble(request):
     return render(request, HTMLCREARINMUEBLE, {**data})
 
 @login_required
-def UserArea(request):
-    data = {'form': FiltrarInmuebles(),
-            'event': ''}
-    
-    INMUEBLES_POR_PAGINA = 12
-    inmuebles_usuario = Inmueble.objects.filter(duenio=request.user.id)
-    form = FiltrarInmuebles(request.GET)
-    
-    if form.is_valid():
-        id_inmueble = form.cleaned_data.get('id')
-        tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
-        municipio = form.cleaned_data.get('municipio')
-        
-        if id_inmueble:
-            inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
-        
-        if tipo_inmueble:
-            inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
-    
-        if municipio:
-            inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion=municipio)
-            
-    paginator = Paginator(inmuebles_usuario, INMUEBLES_POR_PAGINA)
-    page_number = request.GET.get('page')
-    
-    try:
-        inmuebles_paginados = paginator.page(page_number)
-    except PageNotAnInteger:
-        inmuebles_paginados = paginator.page(1)
-    except EmptyPage:
-        inmuebles_paginados = paginator.page(paginator.num_pages)
-        
-    data['inmuebles'] = inmuebles_paginados
-    
-    if request.method == 'POST':
-        pass
-
-    return render(request, HTMLUSERAREA, {**data})
-
-@login_required
 def UserEdit(request):
+    """
+    Vista que permite modificar los atos personales del usuario y también modificar sus datos de sesión, como su nombre de usuario o contraseña.
+    Args:
+        request (HttpRequest): Petición de http realizada por el usuario.
+    Returns:
+        HttpResponse: Renderizado gráfico de documento HTML con datos desde el servidor.
+    """
+    #--Variables--#
     user = request.user
     data = {}
     
+    #--Procesamiento de petición--#
     if request.method == 'POST':
-        if 'acc_data' in request.POST:
+        #--Procesamiento de formularios--#
+        if 'acc_data' in request.POST: #Cambiar datos personales
             form = EditAccountBasics(request.POST, instance=user)
             if form.is_valid():
                 form.save()
@@ -245,7 +306,7 @@ def UserEdit(request):
             else:
                 data['acc_data_event'] = ERROR_2
                 data['acc_badge_bg'] = 'bg-danger'
-        elif 'username_data' in request.POST:
+        elif 'username_data' in request.POST: #Cambiar nombre de usuario
             nuevo_username = request.POST.get('username', '').strip()
             data['us_badge_bg'] = 'bg-danger'
             
@@ -262,7 +323,7 @@ def UserEdit(request):
                 data['us_badge_bg'] = 'bg-success'
                 data['username_data_event'] = SUCCESS_1
                 
-        elif 'dz_data' in request.POST:
+        elif 'dz_data' in request.POST: #Cambiar datos de la zona de pelicro (contraseña)
             form = EditAccountDangerZone(request.POST)
             if form.is_valid():
                 if form.has_error("username", code="unique"):
