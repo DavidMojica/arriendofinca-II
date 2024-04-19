@@ -12,6 +12,9 @@
 
 
 <main>
+    {% if event %}
+        <section class="alert alert-{{alert_type}} text-center w-75 m-auto mt-4" role="alert">{{event}}</section>
+    {% endif %}
     <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
         <form action="" method="GET" class="text-center filter-form">
             <h2 class="text-primary font-weight-bold">Encontrar inmueble</h2>
@@ -123,9 +126,9 @@
                     <section class="card-footer bg-white justify-content-evenly d-flex">
                         <aside>
                             <!-- trigger -->
-                            <button class="btn btn-danger btn-sm" title="Borrar inmueble" data-bs-toggle="modal" data-bs-target="#borrarPropiedad-"><i class="bx bx-trash"></i></button>
+                            <button class="btn btn-danger btn-sm" title="Borrar inmueble" data-bs-toggle="modal" data-bs-target="#borrarPropiedad-{{ inmueble.id }}"><i class="bx bx-trash"></i></button>
                             <!-- modal -->
-                            <section class="modal fade" id="borrarPropiedad-" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                            <section class="modal fade" id="borrarPropiedad-{{ inmueble.id }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                                 <article class="modal-dialog modal-dialog-centered">
                                     <article class="modal-content">
                                         <section class="modal-header">
@@ -140,6 +143,7 @@
                                             <form action="" method="POST">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="eliminarPropiedad">   
+                                                <input type="hidden" name="propiedad_id" value="{{inmueble.id}}">
                                                 <button type="submit" class="btn btn-danger">Borrar</button>                             
                                             </form>
                                         </section>

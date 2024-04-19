@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.dispatch import receiver
+from django.db.models.signals import pre_delete
+from django.core.files.storage import default_storage
 
 class TipoUsuario(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -114,5 +117,13 @@ class Imagenes(models.Model):
     
     def __str__(self):
         return self.id
+    
+@receiver(pre_delete, sender=Inmueble)
+def eliminar_imagenes_inmueble(sender, instance, **kwargs):
+    imagenes = Imagenes.objects.filter(inmueble=instance)
+    for imagen in imagenes:
+        if imagen.img:
+            default_storage.delete(imagen.img.name)
+        imagen.delete()
 
 
