@@ -1,0 +1,93 @@
+:root{
+    /*Tetrade*/
+    --tt-orange:#ffa500;
+    --tt-aqua: #3fc1b4;
+    --tt-violet:#2e1377;
+    --tt-violet-dark:#12192C;
+    --tt-blue:#4089ce;
+    --tt-green:#9af4c2;
+    --tt-wheat:#fff1bf;
+}
+
+.image:hover{
+    transition: .2s linear;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.popup{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 80%;
+    max-width: 1600px;
+    height: 90vh;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    overflow: hidden;
+    transition: .3s ease;
+    opacity: 0;
+}
+
+.popup.active{
+    transform: translate(-50%,-50%) scale(1);
+    opacity: 1;
+}
+
+.popup.active .close-btn,
+.popup.active .image-name,
+.popup.active .index,
+.popup.active .large-image{
+    opacity: 1;
+    transition: opacity .3;
+    transition-delay: .3s;
+}
+
+.top-bar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: var(--tt-violet);
+    color: #fff;
+    text-align: center;
+    line-height: 50px;
+    font-weight: 300;
+}
+
+.imgae-name{
+    opacity: 0;
+}
+
+.close-btn{
+    opacity: 0;
+    position: absolute;
+    top: 4px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 2.2rem;
+    color: var(--tt-orange);
+}
+
+.index{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 80px;
+    font-weight: 100;
+    color: rgba(255, 255, 255, .4);
+}
+
+.large-image{
+    margin-top: 5%;
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    opacity: 0;
+}

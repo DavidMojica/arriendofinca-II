@@ -196,7 +196,7 @@ class FiltrarInmuebles(forms.Form):
         label="ID de inmobiliario",
         required=False,
         min_value=0,
-        widget=forms.NumberInput(attrs={'class':'form-control'})
+        widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder': 'ID de inmueble'})
     )
     
     tipo_inmueble = forms.ModelChoiceField(
@@ -207,12 +207,19 @@ class FiltrarInmuebles(forms.Form):
         empty_label="Todos"
     )
     
-    municipio = forms.ModelChoiceField(
-        label="Municipio",
+    departamento = forms.ModelChoiceField(
+        label="Departamento de ubicación",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
+        queryset=Departamento.objects.all(),
+        empty_label="Todos",
+        required=False
+    )
+    
+    municipio = forms.ChoiceField(
+        label="Municipio de ubicacion",
+        choices=[('', 'Todos')],
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
         required=False,
-        queryset=Municipio.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble_filter'}),
-        empty_label="Cualquiera"
     )
 
 # --- Usuario: Crear propiedad --- #

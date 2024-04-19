@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario
+from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario, Imagenes
 from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
@@ -24,6 +24,7 @@ HTMLCREARINMUEBLE = 'inmueble_crear.html'
 
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
+SUCCESS_2 = "Inmueble borrado con éxito"
 
 ERROR_1 = "El nombre de usuario ya existe."
 ERROR_3 = "Error desconocido."
@@ -37,6 +38,9 @@ ERROR_10 = "Las contraseñas nuevas no coinciden"
 ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
 ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes."
 ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb por imágen"
+ERROR_14 = "Algún archivo cargado NO es una imagen."
+ERROR_15 = "Este objeto no existe"
+ERROR_16 = "No se pudo borrar el inmueble, no se pudo garantizar autenticidad."
 
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
@@ -181,27 +185,50 @@ def UserArea(request):
     """
     
     #--Variables--#
-    INMUEBLES_POR_PAGINA = 12
-    data = {'form': FiltrarInmuebles(),
-            'event': ''}
+    INMUEBLES_POR_PAGINA = 9
+    data = {'form': FiltrarInmuebles(), 'event': '', 'alert_type': 'danger'}
     inmuebles_usuario = Inmueble.objects.filter(duenio=request.user.id)
-    form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
     
-    #--Procesamiento de formularios--#
-    if form.is_valid():
-        #--Form de filtro--#
-        id_inmueble = form.cleaned_data.get('id')
-        tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
-        municipio = form.cleaned_data.get('municipio')
-        
-        if id_inmueble:
-            inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
-        
-        if tipo_inmueble:
-            inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
     
-        if municipio:
-            inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion=municipio)
+    if request.method == 'POST':
+        if 'eliminarPropiedad' in request.POST:
+            propiedad_id = request.POST.get('propiedad_id')
+            try:
+                inmueble = get_object_or_404(Inmueble, pk=propiedad_id)
+                if inmueble.duenio.id == request.user.id:
+                    inmueble.delete()
+                    data['event'] = SUCCESS_2
+                    data['alert_type'] = 'success'
+                else:
+                    data['event'] = ERROR_16
+            except Inmueble.DoesNotExist:
+                data['event'] = ERROR_15
+    else:
+        form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
+        if 'municipio' in request.GET:
+            municipio_id = request.GET.get('municipio')
+            municipio_nombre = Municipio.objects.get(pk=municipio_id).description
+            form.fields['municipio'].choices = [(municipio_id, municipio_nombre)]
+        #--Procesamiento de formularios--#
+        if form.is_valid():
+            data['form'] = form
+            #--Form de filtro--#
+            id_inmueble = form.cleaned_data.get('id')
+            tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
+            departamento = form.cleaned_data.get('departamento')
+            municipio = form.cleaned_data.get('municipio')
+
+            if id_inmueble:
+                inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
+            
+            if tipo_inmueble:
+                inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
+        
+            if departamento and municipio:
+                inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion_id=municipio)
+            
+        else:
+            data['event'] = ERROR_2
             
     paginator = Paginator(inmuebles_usuario, INMUEBLES_POR_PAGINA)
     page_number = request.GET.get('page')
@@ -214,8 +241,7 @@ def UserArea(request):
         inmuebles_paginados = paginator.page(paginator.num_pages)
         
     data['inmuebles'] = inmuebles_paginados
-    if request.method == 'POST':
-        pass #Aún no se le ha dado ninguna implementación a POST.
+    
 
     return render(request, HTMLUSERAREA, {**data})
 
@@ -250,19 +276,30 @@ def CrearInmueble(request):
             if len(files) > MAX_IMAGES_PER_POST:
                 data['event'] = ERROR_12
                 ban_images = False
-            else:
-                for f in files:
-                    if f.size > MAX_IMAGE_MB * 1024 * 1024:
-                        data['event'] = ERROR_13
-                        ban_images = False
-            
+           
+            for f in files:
+                if f.size > MAX_IMAGE_MB * 1024 * 1024:
+                    data['event'] = ERROR_13
+                    ban_images = False
+                    
+                if not f.content_type.startswith('image/'):
+                    data['event'] = ERROR_14
+                    ban_images = False
+                    
             if ban_images:
                 if form.is_valid():
                     try:
                         inmueble_nuevo = form.save(commit=False)
                         duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
                         inmueble_nuevo.duenio = duenio_inmueble
-                        inmueble_nuevo.save()                
+                        inmueble_nuevo.save()     
+                        
+                        for file in files:
+                            imagen = Imagenes()
+                            imagen.img = file
+                            imagen.inmueble = inmueble_nuevo
+                            imagen.save()
+                               
                     except Exception as e:
                         print(e)
                 else:                    
