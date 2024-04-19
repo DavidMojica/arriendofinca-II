@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<!-- SwiperJS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/user_area.css' %}">
 <script src="{% static 'js/user_area.js' %}" defer></script>
 <script src="{% static 'js/API_municipios.js' %}" defer></script>
@@ -27,10 +30,6 @@
             </fieldset>
             <button type="submit" class="btn btn-primary col-md-5">Filtrar <i class="bx bx-search"></i></button>
         </form>
-        <section class="text-center">
-            <h4 class="fw-bold">-- O --</h4>
-            <a href="/crear_inmueble" class="btn btn-success">Añadir propiedad <i class="bx bx-plus"></i></a>
-        </section>
     </section>
 
     <section class="bg-light bg-gradient">
@@ -85,9 +84,14 @@
                 <article class="card col-md-4 m-3" style="width:400px;">
                     <section class="text-center pic-container">
                         {% if inmueble.imagenes.all %}
-                            {% for imagen in inmueble.imagenes.all %}
-                                <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
-                            {% endfor %}
+                            <article class="swiper imgSwiper">
+                                <section class="swiper-wrapper">
+                                    {% for imagen in inmueble.imagenes.all %}
+                                        <article class="swiper-slide"><img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2"></article>
+                                    {% endfor %}
+                                </section>
+                                <article class="swiper-pagination"></article>
+                            </article>
                         {% else %}
                             <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
                         {% endif %}    
