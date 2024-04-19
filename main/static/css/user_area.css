@@ -7,7 +7,6 @@
 
 /* SWIPER */
 .inmueble-pic {
-    object-fit: contain;
     height: 320px;
 }
 

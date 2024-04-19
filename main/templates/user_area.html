@@ -5,8 +5,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/user_area.css' %}">
+<link rel="stylesheet" href="{% static 'css/modal_img.css' %}">
 <script src="{% static 'js/user_area.js' %}" defer></script>
 <script src="{% static 'js/API_municipios.js' %}" defer></script>
+<script src="{% static 'js/modal_img.js' %}" defer></script>
+
 
 <main>
     <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
@@ -79,6 +82,17 @@
                     {% endif %}
                 </ul>
             </article>
+            <!-- POPUP -->
+            <section class="popup">
+                <article class="top-bar">
+                    <p class="image-name">Imagen del inmueble</p>
+                    <span class="close-btn"><i class='bx bx-message-square-x' ></i></span>
+                </article>
+                <!-- image -->
+                <img src="" alt="" class="large-image">
+                <!-- imagen-index -->
+                <h1 class="index"></h1>
+            </section>
             <!-- End paginación -->
             {% for inmueble in inmuebles %}
                 <article class="card col-md-4 m-3" style="width:400px;">
@@ -87,7 +101,9 @@
                             <article class="swiper imgSwiper">
                                 <section class="swiper-wrapper">
                                     {% for imagen in inmueble.imagenes.all %}
-                                        <article class="swiper-slide"><img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2"></article>
+                                        <article class="swiper-slide image-container">
+                                            <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                                        </article>
                                     {% endfor %}
                                 </section>
                                 <article class="swiper-pagination"></article>
