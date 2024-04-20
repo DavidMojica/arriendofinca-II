@@ -13,12 +13,14 @@
         </article>
         <article class="card-body">
             <form action="" class="row justify-content-center" method="POST" id="form-crear" enctype="multipart/form-data">
-
                 <!-- Detalles del inmueble -->
                 <h3 class="display-5 col-md-10 text-center">Detalles del inmueble <i class='bx bx-detail' ></i></h3>
                 <fieldset class="col-md-10 col-lg-6 ">
                     <span class="badge bg-primary my-2">{{form.tipo_inmueble.label_tag}}</span>
                     {{form.tipo_inmueble}}
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-danger '></i> No se puede editar despues de crear el inmueble
+                    </small>
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
                     <span class="badge bg-primary my-2">{{form.arriendo_venta.label_tag}}</span>
@@ -38,10 +40,16 @@
                 <fieldset class="col-md-10 col-lg-6">
                     <span class="badge bg-primary my-2">{{form.departamento.label_tag}}</span>
                     {{form.departamento}}
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-danger '></i> No se puede editar despues de crear el inmueble
+                    </small>
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
                     <span class="badge bg-primary my-2">{{form.municipio_ubicacion.label_tag}}</span>
                     {{form.municipio_ubicacion}}
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-danger '></i> No se puede editar despues de crear el inmueble
+                    </small>
                 </fieldset>
                 
                 <!-- Detalles del inmueble -->

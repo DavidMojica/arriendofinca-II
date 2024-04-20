@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario, Imagenes
+from main.models import Inmueble, Municipio, TipoCobro, TipoDocumento, TipoUsuario, Usuario, Imagenes
 from .forms import EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
@@ -310,6 +310,13 @@ def CrearInmueble(request):
                 if form.is_valid():
                     try:
                         inmueble_nuevo = form.save(commit=False)
+                        arriendo_venta = request.POST.get('arriendo_venta')
+                        
+                        print(f"{arriendo_venta} - {type(arriendo_venta)}")
+                        
+                        if arriendo_venta == '1':
+                            inmueble_nuevo.tipo_cobro = get_object_or_404(TipoCobro, pk= 5)
+                            
                         duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
                         inmueble_nuevo.duenio = duenio_inmueble
                         inmueble_nuevo.save()     
