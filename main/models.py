@@ -23,7 +23,7 @@ class TipoCobro(models.Model):
     description = models.CharField(max_length=40)
     
     def temporizar(self):
-        map_tiempo = {0: 'Año', 1: 'Mes', 2: 'Semana', 3: 'Dia', 4:'Noche'}
+        map_tiempo = {0: 'Año', 1: 'Mes', 2: 'Semana', 3: 'Dia', 4:'Noche', 5:'Precio total'}
         return map_tiempo[self.id]
     
     def __str__(self):

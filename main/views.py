@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario, Imagenes
-from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from main.models import Inmueble, Municipio, TipoCobro, TipoDocumento, TipoUsuario, Usuario, Imagenes
+from .forms import EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #--Variables--#
@@ -21,10 +21,13 @@ HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
 HTMLUSEREDIT = 'user_edit.html'
 HTMLCREARINMUEBLE = 'inmueble_crear.html'
+HTMLEDITARINMUEBLE = 'inmueble_editar.html'
 
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
 SUCCESS_2 = "Inmueble borrado con éxito"
+SUCCESS_3 = "Imagenes guardadas correctamente"
+SUCCESS_4 = "Imagen borrada correctamente"
 
 ERROR_1 = "El nombre de usuario ya existe."
 ERROR_3 = "Error desconocido."
@@ -36,11 +39,12 @@ ERROR_8 = "La contraseña anterior no es la correcta."
 ERROR_9 = "Alguna(s) de las contraseñas no cumplen con la longitud minima."
 ERROR_10 = "Las contraseñas nuevas no coinciden"
 ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
-ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes."
+ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes por inmueble."
 ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb por imágen"
 ERROR_14 = "Algún archivo cargado NO es una imagen."
 ERROR_15 = "Este objeto no existe"
 ERROR_16 = "No se pudo borrar el inmueble, no se pudo garantizar autenticidad."
+ERROR_17 = "Petición desconocida"
 
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
@@ -75,6 +79,31 @@ def Logout(request):
     logout(request)
     return redirect(reverse('home'))
 
+def ValidarImagenes(files, cantidad_imagenes_inmueble=0):
+    """
+    Se encarga de validar las imágenes provenientes de los formularios.
+
+    Args:
+        files (FILE_LIST): Lista de imágenes provenientes de los formularios.
+
+    Returns:
+        bool: Bandera aprobatoria de las validaciones.
+        int: Número usado para mostrar errores en la salida.
+    """
+    if len(files) > MAX_IMAGES_PER_POST:
+        return False, 0
+
+    for f in files:
+        if f.size > MAX_IMAGE_MB * 1024 * 1024:
+            return False, 1
+        
+        if not f.content_type.startswith('image/'):
+            return False, 2
+    
+    if cantidad_imagenes_inmueble + len(files) > MAX_IMAGES_PER_POST:
+        return False, 0
+      
+    return True, 3
 #-----------------------------------------------------------------------------------------#
 #-----------------------------------------VISTAS------------------------------------------#
 #-----------------------------------------------------------------------------------------#
@@ -173,6 +202,7 @@ def Login(request):
         return render(request, HTMLLOGIN, {**data})
 
 #--Área del usuario--#
+#-Borrar inmueble
 @login_required
 def UserArea(request):
     """
@@ -273,23 +303,20 @@ def CrearInmueble(request):
             
             #--Validación de imágenes--#
             files = request.FILES.getlist('imagenes')
-            if len(files) > MAX_IMAGES_PER_POST:
-                data['event'] = ERROR_12
-                ban_images = False
-           
-            for f in files:
-                if f.size > MAX_IMAGE_MB * 1024 * 1024:
-                    data['event'] = ERROR_13
-                    ban_images = False
-                    
-                if not f.content_type.startswith('image/'):
-                    data['event'] = ERROR_14
-                    ban_images = False
-                    
+            ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
+            ban_images, error_index = ValidarImagenes(files)
+            
             if ban_images:
                 if form.is_valid():
                     try:
                         inmueble_nuevo = form.save(commit=False)
+                        arriendo_venta = request.POST.get('arriendo_venta')
+                        
+                        print(f"{arriendo_venta} - {type(arriendo_venta)}")
+                        
+                        if arriendo_venta == '1':
+                            inmueble_nuevo.tipo_cobro = get_object_or_404(TipoCobro, pk= 5)
+                            
                         duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
                         inmueble_nuevo.duenio = duenio_inmueble
                         inmueble_nuevo.save()     
@@ -306,6 +333,7 @@ def CrearInmueble(request):
                     data['form'] = form
                     data['event'] = ERROR_2
             else:
+                data['event'] = ERROR_LIST[error_index]
                 data['form'] = form
         else:
             data['form'] = form
@@ -317,6 +345,66 @@ def CrearInmueble(request):
         if departamento_id:
             form.fields['municipio_ubicacion'].queryset = Municipio.objects.filter(departamento_id=departamento_id)
     return render(request, HTMLCREARINMUEBLE, {**data})
+
+@login_required
+def EditarInmueble(request,  inmueble_id):
+    #Si no se proporciono id de inmueble
+    if inmueble_id is None:
+        return redirect('userarea')
+    #Si el usuario no es el dueño de la propiedad
+    inmueble = get_object_or_404(Inmueble, pk=inmueble_id)
+    if inmueble.duenio.id != request.user.id:
+        return redirect('userarea')
+    
+    #--Si todo salió bien--#
+    data = {'event' : '', 'alert_type': 'danger'}
+    if request.method == 'POST':
+        if 'guardar_edicion' in request.POST:
+            form = EditarInmuebleForm(request.POST, instance=inmueble)
+            if form.is_valid():
+                inmueble_editar = form.save(commit=False)
+                inmueble_editar.save()
+                data['alert_type'] = 'success'
+                data['event'] = SUCCESS_1
+            else:
+                data['event'] = ERROR_2        
+        elif 'eliminarImagen' in request.POST:
+            imagen_id = request.POST.get('imagen_id')   
+            imagen = Imagenes.objects.get(pk=imagen_id)
+
+            if imagen.img:     
+                imagen.img.delete()
+            imagen.delete()
+            data['alert_type'] = 'success'
+            data['event'] = SUCCESS_4
+            
+        elif 'agregar_imagenes' in request.POST:
+            #--Validación de imágenes--#
+            files = request.FILES.getlist('imagenes')
+            ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
+            ban_images, error_index = ValidarImagenes(files, inmueble.imagenes.count())
+            
+            if ban_images:
+                for file in files:
+                    imagen = Imagenes()
+                    imagen.img = file
+                    imagen.inmueble = inmueble
+                    imagen.save()
+                data['alert_type'] = 'success'
+                data['event'] = SUCCESS_3
+            else:
+                data['event'] = ERROR_LIST[error_index]
+        else:
+            data['event'] = ERROR_17
+    
+    form = EditarInmuebleForm(instance=inmueble)
+    form.fields['tipo_inmueble'].choices = [(inmueble.tipo_inmueble.id, inmueble.tipo_inmueble.description)]
+    form.fields['municipio_ubicacion'].choices = [(inmueble.municipio_ubicacion.id, inmueble.municipio_ubicacion.description)]
+    form.fields['departamento'].choices = [(inmueble.municipio_ubicacion.departamento.id, inmueble.municipio_ubicacion.departamento.description)]
+    data['form'] = form
+    data['inmueble'] = inmueble
+    
+    return render(request, HTMLEDITARINMUEBLE, {**data} )
 
 @login_required
 def UserEdit(request):
