@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario, Imagenes
-from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from .forms import EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #--Variables--#
@@ -21,6 +21,7 @@ HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
 HTMLUSEREDIT = 'user_edit.html'
 HTMLCREARINMUEBLE = 'inmueble_crear.html'
+HTMLEDITARINMUEBLE = 'inmueble_editar.html'
 
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
@@ -41,6 +42,7 @@ ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb p
 ERROR_14 = "Algún archivo cargado NO es una imagen."
 ERROR_15 = "Este objeto no existe"
 ERROR_16 = "No se pudo borrar el inmueble, no se pudo garantizar autenticidad."
+ERROR_17 = "Petición desconocida"
 
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
@@ -173,6 +175,7 @@ def Login(request):
         return render(request, HTMLLOGIN, {**data})
 
 #--Área del usuario--#
+#-Borrar inmueble
 @login_required
 def UserArea(request):
     """
@@ -317,6 +320,35 @@ def CrearInmueble(request):
         if departamento_id:
             form.fields['municipio_ubicacion'].queryset = Municipio.objects.filter(departamento_id=departamento_id)
     return render(request, HTMLCREARINMUEBLE, {**data})
+
+@login_required
+def EditarInmueble(request,  inmueble_id):
+    #Si no se proporciono id de inmueble
+    if inmueble_id is None:
+        return redirect('userarea')
+    #Si el usuario no es el dueño de la propiedad
+    inmueble = get_object_or_404(Inmueble, pk=inmueble_id)
+    if inmueble.duenio.id != request.user.id:
+        return redirect('userarea')
+    
+    #--Si todo salió bien--#
+    data = {'event' : '', 'form': EditarInmuebleForm(inmueble),
+            'alert_type': 'danger'}
+    
+    if request.method == 'POST':
+        if 'guardar_edicion' in request.POST:
+            form = EditarInmueble(request.POST)
+            if form.is_valid():
+                form.save()
+                data['alert_type'] = 'success'
+                data['event'] = SUCCESS_1
+            else:
+                data['event'] = ERROR_2                
+        else:
+            data['event'] = ERROR_17
+    
+    
+    return render(request, HTMLEDITARINMUEBLE, {**data} )
 
 @login_required
 def UserEdit(request):

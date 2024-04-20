@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<main>
+    <section class="card p-4 w-50">
+        <article class="card-header bg-white">
+            <h2 class="card-title fw-bold text-orange">Editar inmueble</h2>
+        </article>
+        <article class="card-body">
+            <form action="" class="row justify-content-center" method="POST" id="form-crear" enctype="multipart/form-data">
+                <!-- Detalles del inmueble -->
+                <h3 class="display-5 col-md-10 text-center">Detalles del inmueble <i class='bx bx-detail' ></i></h3>
+                <fieldset class="col-md-10 col-lg-6 ">
+                    <span class="badge bg-primary my-2">{{form.tipo_inmueble.label_tag}}</span>
+                    {{form.tipo_inmueble}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.arriendo_venta.label_tag}}</span>
+                    {{form.arriendo_venta}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.tipo_cobro.label_tag}}</span>
+                    {{form.tipo_cobro}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.precio.label_tag}}</span>
+                    {{form.precio}}
+                </fieldset>
+
+                <!-- Ubicación -->
+                <h3 class="display-5 col-md-10 text-center mt-3">Ubicación <i class='bx bx-map' ></i></h3>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.departamento.label_tag}}</span>
+                    {{form.departamento}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.municipio_ubicacion.label_tag}}</span>
+                    {{form.municipio_ubicacion}}
+                </fieldset>
+                
+                <!-- Detalles del inmueble -->
+                <h3 class="display-5 col-md-10 text-center mt-3">Información del inmueble <i class='bx bx-info-square'></i></h3>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.direccion.label_tag}}</span>
+                    {{form.direccion}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.area.label_tag}}</span>
+                    {{form.area}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.area_construida.label_tag}}</span>
+                    {{form.area_construida}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <span class="badge bg-primary my-2">{{form.habitaciones.label_tag}}</span>
+                    {{form.habitaciones}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6 mb-3">
+                    <span class="badge bg-primary my-2">{{form.banios.label_tag}}</span>
+                    {{form.banios}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-8">
+                    {{form.description}}
+                    
+                </fieldset>
+                <!-- Imágenes del inmueble --> 
+                <h3 class="display-5 col-md-10 text-center mt-3">Imágenes del inmueble <i class='bx bx-info-square'></i></h3>
+                
+                <fieldset class="col-md-10 col-lg-10 mb-3">
+                    <input type="file" name="imagenes" id="imagenes" multiple class="form-control mb-2">
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-blue '></i> Máximo 5 imágenes, 2Mb como máximo en cada una. <br>
+                        <i class='bx bxs-info-circle text-blue'></i> Subir imágenes es opcional, pero tus inmuebles atraerán más clientes potenciales. Después de crear el inmueble con o sin imagenes, podrás subir imágenes de este inmueble, modificarlas o borrarlas.</small>
+                </fieldset>
+
+                <span class="badge bg-danger mb-3">{{event}}</span>
+                <input type="hidden" name="agregar_inmueble">
+                <input type="submit" value="Publicar nuevo inmueble" class="btn btn-success p-4">
+                {% csrf_token %}
+            </form>
+        </article>
+    </section>
+</main>
+{% endblock %}
