@@ -1,17 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<!-- SwiperJS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
+<script src="{% static 'js/swiper.js' %}" defer></script>
+<!-- POPUP -->
+<link rel="stylesheet" href="{% static 'css/modal_img.css' %}">
+<script src="{% static 'js/modal_img.js' %}" defer></script>
+
 <link rel="stylesheet" href="{% static 'css/ToastNotify.css' %}">
 <script src="{% static 'js/ToastNotify.js' %}" defer></script>
-<script src="{% static 'js/API_municipios.js' %}" defer></script>
 <script src="{% static 'js/inmueble_crear.js' %}" defer></script>
-<link rel="stylesheet" href="{% static 'css/crear_inmueble.css' %}">
+<link rel="stylesheet" href="{% static 'css/editar_inmueble.css' %}">
+
 
 {% if event %}
     <section class="alert alert-{{alert_type}} text-center w-75 m-auto mt-4" role="alert">{{event}}</section>
 {% endif %}
 <main class="d-flex justify-content-center my-4">
-
+    <!-- POPUP MODAL -->
+    <section class="popup">
+        <article class="top-bar">
+            <p class="image-name">Imagen del inmueble</p>
+            <span class="close-btn"><i class='bx bx-message-square-x' ></i></span>
+        </article>
+        <img src="" alt="" class="large-image">
+        <h1 class="index"></h1>
+    </section>
+    <!-- End POPUP MODAL -->
     <section class="card p-4 w-50">
         <article class="card-header bg-white">
             <h2 class="card-title fw-bold text-orange">Editar inmueble</h2>
@@ -86,6 +104,22 @@
                 <!-- Imágenes del inmueble --> 
                 <h3 class="display-5 col-md-10 text-center mt-3">Imágenes del inmueble <i class='bx bx-info-square'></i></h3>
                 
+                {% if inmueble.imagenes.all %}
+                    <strong class="text-center"><i class='bx bxs-info-circle text-blue '></i> El inmueble tiene {{ inmueble.imagenes.all|length }} / 5 imágenes.</strong>
+                    <article class="swiper imgSwiper my-4">
+                        <section class="swiper-wrapper">
+                            {% for imagen in inmueble.imagenes.all %}
+                                <article class="swiper-slide image-container">
+                                    <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                                </article>
+                            {% endfor %}
+                        </section>
+                        <article class="swiper-pagination"></article>
+                    </article>
+                {% else %}
+                    <h4 class="display-5 text-center text-info">Inmueble sin imágenes</h4>
+                {% endif %}   
+
                 <fieldset class="col-md-10 col-lg-10 mb-3">
                     <input type="file" name="imagenes" id="imagenes" multiple class="form-control mb-2">
                     <small class="form-text text-muted">

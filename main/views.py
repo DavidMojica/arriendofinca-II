@@ -355,7 +355,7 @@ def EditarInmueble(request,  inmueble_id):
     form.fields['municipio_ubicacion'].choices = [(inmueble.municipio_ubicacion.id, inmueble.municipio_ubicacion.description)]
     form.fields['departamento'].choices = [(inmueble.municipio_ubicacion.departamento.id, inmueble.municipio_ubicacion.departamento.description)]
     data['form'] = form
-    
+    data['inmueble'] = inmueble
     
     return render(request, HTMLEDITARINMUEBLE, {**data} )
 
