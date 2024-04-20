@@ -26,6 +26,8 @@ HTMLEDITARINMUEBLE = 'inmueble_editar.html'
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
 SUCCESS_2 = "Inmueble borrado con éxito"
+SUCCESS_3 = "Imagenes guardadas correctamente"
+SUCCESS_4 = "Imagen borrada correctamente"
 
 ERROR_1 = "El nombre de usuario ya existe."
 ERROR_3 = "Error desconocido."
@@ -37,7 +39,7 @@ ERROR_8 = "La contraseña anterior no es la correcta."
 ERROR_9 = "Alguna(s) de las contraseñas no cumplen con la longitud minima."
 ERROR_10 = "Las contraseñas nuevas no coinciden"
 ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
-ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes."
+ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes por inmueble."
 ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb por imágen"
 ERROR_14 = "Algún archivo cargado NO es una imagen."
 ERROR_15 = "Este objeto no existe"
@@ -77,7 +79,7 @@ def Logout(request):
     logout(request)
     return redirect(reverse('home'))
 
-def ValidarImagenes(files):
+def ValidarImagenes(files, cantidad_imagenes_inmueble=0):
     """
     Se encarga de validar las imágenes provenientes de los formularios.
 
@@ -97,7 +99,10 @@ def ValidarImagenes(files):
         
         if not f.content_type.startswith('image/'):
             return False, 2
-        
+    
+    if cantidad_imagenes_inmueble + len(files) > MAX_IMAGES_PER_POST:
+        return False, 0
+      
     return True, 3
 #-----------------------------------------------------------------------------------------#
 #-----------------------------------------VISTAS------------------------------------------#
@@ -363,18 +368,23 @@ def EditarInmueble(request,  inmueble_id):
             if imagen.img:     
                 imagen.img.delete()
             imagen.delete()
+            data['alert_type'] = 'success'
+            data['event'] = SUCCESS_4
+            
         elif 'agregar_imagenes' in request.POST:
             #--Validación de imágenes--#
             files = request.FILES.getlist('imagenes')
             ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
-            ban_images, error_index = ValidarImagenes(files)
-            len(files)
+            ban_images, error_index = ValidarImagenes(files, inmueble.imagenes.count())
+            
             if ban_images:
                 for file in files:
                     imagen = Imagenes()
                     imagen.img = file
-                    imagen.inmueble = inmueble_editar
+                    imagen.inmueble = inmueble
                     imagen.save()
+                data['alert_type'] = 'success'
+                data['event'] = SUCCESS_3
             else:
                 data['event'] = ERROR_LIST[error_index]
         else:
