@@ -22,7 +22,7 @@ let validationResult = undefined;
 form_crear.addEventListener('submit', e=>{
     e.preventDefault();
     validationResult = form_validators();
-    if (validationResult != "0") createToastNotify(1, "Error creando inmueble", validationResult);
+    if (validationResult != "0") createToastNotify(1, "Error en detalles del inmueble", validationResult);
     else form_crear.submit();
 });
 //----------Validacion de imagenes---------//

@@ -332,20 +332,29 @@ def EditarInmueble(request,  inmueble_id):
         return redirect('userarea')
     
     #--Si todo salió bien--#
-    data = {'event' : '', 'form': EditarInmuebleForm(inmueble),
-            'alert_type': 'danger'}
+    data = {'event' : '', 'alert_type': 'danger'}
     
     if request.method == 'POST':
         if 'guardar_edicion' in request.POST:
-            form = EditarInmueble(request.POST)
+            form = EditarInmuebleForm(request.POST, instance=inmueble)
             if form.is_valid():
-                form.save()
+                inmueble_editar = form.save(commit=False)
+                inmueble_editar.save()
                 data['alert_type'] = 'success'
                 data['event'] = SUCCESS_1
             else:
-                data['event'] = ERROR_2                
+                data['event'] = ERROR_2       
+                errores = form.errors
+                # Puedes imprimir los errores en la consola para depuración
+                print(errores)         
         else:
             data['event'] = ERROR_17
+    
+    form = EditarInmuebleForm(instance=inmueble)
+    form.fields['tipo_inmueble'].choices = [(inmueble.tipo_inmueble.id, inmueble.tipo_inmueble.description)]
+    form.fields['municipio_ubicacion'].choices = [(inmueble.municipio_ubicacion.id, inmueble.municipio_ubicacion.description)]
+    form.fields['departamento'].choices = [(inmueble.municipio_ubicacion.departamento.id, inmueble.municipio_ubicacion.departamento.description)]
+    data['form'] = form
     
     
     return render(request, HTMLEDITARINMUEBLE, {**data} )

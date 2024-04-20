@@ -331,7 +331,9 @@ class EditarInmuebleForm(forms.ModelForm):
     tipo_inmueble = forms.ModelChoiceField(
         label="Tipo de inmueble",
         queryset=TipoInmueble.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble', 'readonly':'readonly'}),
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble'}),
+        disabled=True,
+        required=False
     )
     
     arriendo_venta = forms.ModelChoiceField(
@@ -357,19 +359,18 @@ class EditarInmuebleForm(forms.ModelForm):
         widget=forms.Select(attrs={'class':'form-select', 'id': 'tipo_cobro'}),
     )
     
-    departamento = forms.ModelChoiceField(
+    departamento = forms.ChoiceField(
         label="Departamento de ubicación",
-        widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
-        queryset=Departamento.objects.all(),
-        empty_label=TEXT_SELECCIONAR,
-        required=True
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select', 'readonly':'readonly'}),
+        disabled=True,
+        required=False
     )
     
     municipio_ubicacion = forms.ChoiceField(
         label="Municipio de ubicacion",
-        choices=[('', 'Selecciona un departamento...')],
-        widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
-        required=True,
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select', 'readonly':'readonly'}),
+        disabled=True,
+        required=False
     )
     
     direccion = forms.CharField(
@@ -414,29 +415,9 @@ class EditarInmuebleForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Describa las carácteristicas del inmueble (opcional)'}),
         max_length=500,
         strip=True,
-        
     )
-# #----imagenes de los inmuebles----#
-# class ImagenesInmuebleForm(forms.ModelForm):
-#     imagenes = forms.FileField(
-#         label="Subir imágenes (Hasta 5 imágenes de 2Mb cada una)",
-#         widget=forms.ClearableFileInput(attrs={'multiple':True}),
-#         required=False
-#     )
     
-#     def clean_imagenes(self):
-#         uploaded_images = self.cleaned_data.get('imagenes')
-#         total_images = len(uploaded_images) if uploaded_images else 0
-        
-#         if total_images > 5:
-#             raise forms.ValidationError("No se pueden subir más de 5 imágenes")
-        
-#         for image in uploaded_images:
-#             if image.size > 2 * 1024 * 1024:  # 2Mb en bytes
-#                 raise forms.ValidationError("El tamaño de la imagen no puede ser mayor a 2Mb")
-            
-#         return uploaded_images
-
-#     class Meta:
-#         model = Imagenes
-#         fields = ['imagenes']
+    class Meta:
+        model = Inmueble
+        fields = ('arriendo_venta', 'precio', 'tipo_cobro','direccion', 'area', 'area_construida', 'habitaciones', 'banios', 'description')
+        exclude= ['tipo_inmueble', 'municipio_ubicacion', 'duenio']
