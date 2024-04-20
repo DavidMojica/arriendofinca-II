@@ -343,10 +343,15 @@ def EditarInmueble(request,  inmueble_id):
                 data['alert_type'] = 'success'
                 data['event'] = SUCCESS_1
             else:
-                data['event'] = ERROR_2       
-                errores = form.errors
-                # Puedes imprimir los errores en la consola para depuración
-                print(errores)         
+                data['event'] = ERROR_2        
+        elif 'eliminarImagen' in request.POST:
+            imagen_id = request.POST.get('imagen_id')   
+            imagen = Imagenes.objects.get(pk=imagen_id)
+
+            if imagen.img:     
+                imagen.img.delete()
+            imagen.delete()
+            
         else:
             data['event'] = ERROR_17
     

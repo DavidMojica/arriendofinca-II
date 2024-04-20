@@ -1,3 +1,7 @@
 .imgSwiper{
     width: 500px;
 }
+
+.modal-backdrop{
+    position: static;
+}

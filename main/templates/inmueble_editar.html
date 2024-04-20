@@ -111,6 +111,34 @@
                             {% for imagen in inmueble.imagenes.all %}
                                 <article class="swiper-slide image-container">
                                     <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                                    <!-- trigger -->
+                                    <button type="button" class="btn btn-danger btn-sm mx-3 cart-handler" data-bs-toggle="modal" data-bs-target="#borrarImagen-{{ imagen.id }}" title="Eliminar imagen">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    <!-- modal -->
+                                    <section class="modal fade" id="borrarImagen-{{ imagen.id }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                                        <article class="modal-dialog modal-dialog-centered">
+                                            <article class="modal-content">
+                                                <section class="modal-header">
+                                                    <h5 class="modal-title">Confirmar borrar</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </section>
+                                                <section class="modal-body">
+                                                    <p>¿Realmente desea borrar la imagen?</p>
+                                                </section>
+                                                <section class="modal-footer ">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                                                    <form action="" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="eliminarImagen">   
+                                                        <input type="hidden" name="imagen_id" value="{{imagen.id}}">
+                                                        <button type="submit" class="btn btn-danger">Borrar</button>                             
+                                                    </form>
+                                                </section>
+                                            </article>
+                                        </article>
+                                    </section>
+                                    
                                 </article>
                             {% endfor %}
                         </section>
