@@ -35,7 +35,7 @@
             <h2 class="card-title fw-bold text-orange">Editar inmueble</h2>
         </article>
         <article class="card-body">
-            <form action="" class="row justify-content-center" method="POST" id="form-crear" enctype="multipart/form-data">
+            <form action="" class="row justify-content-center" method="POST" id="form-crear">
                 <!-- Detalles del inmueble -->
                 <h3 class="display-5 col-md-10 text-center">Detalles del inmueble <i class='bx bx-detail' ></i></h3>
                 <fieldset class="col-md-10 col-lg-6 ">
@@ -101,9 +101,15 @@
                     {{form.description}}
                     
                 </fieldset>
+                <span class="badge bg-danger my-3">{{event}}</span>
+                <input type="hidden" name="guardar_edicion">
+                <input type="submit" value="Guardar cambios en la información" class="btn btn-success py-4 mt-3">
+                {% csrf_token %}
+            </form>
+            <section class="text-center">
                 <!-- Imágenes del inmueble --> 
-                <h3 class="display-5 col-md-10 text-center mt-3">Imágenes del inmueble <i class='bx bx-info-square'></i></h3>
-                
+                <h3 class="display-5 mt-3">Área de imágenes <i class='bx bx-image'></i></h3>
+                    
                 {% if inmueble.imagenes.all %}
                     <strong class="text-center"><i class='bx bxs-info-circle text-blue '></i> El inmueble tiene {{ inmueble.imagenes.all|length }} / 5 imágenes.</strong>
                     <article class="swiper imgSwiper my-4">
@@ -146,18 +152,17 @@
                     </article>
                 {% else %}
                     <h4 class="display-5 text-center text-info">Inmueble sin imágenes</h4>
-                {% endif %}   
-
-                <fieldset class="col-md-10 col-lg-10 mb-3">
+                {% endif %}  
+            </section>
+            <form action="" method="POST" class="text-center" enctype="multipart/form-data">
+                <fieldset class="my-3">
                     <input type="file" name="imagenes" id="imagenes" multiple class="form-control mb-2">
                     <small class="form-text text-muted">
-                        <i class='bx bxs-info-circle text-blue '></i> Máximo 5 imágenes, 2Mb como máximo en cada una. <br>
-                        <i class='bx bxs-info-circle text-blue'></i> Subir imágenes es opcional, pero tus inmuebles atraerán más clientes potenciales. Después de crear el inmueble con o sin imagenes, podrás subir imágenes de este inmueble, modificarlas o borrarlas.</small>
+                        <i class='bx bxs-info-circle text-blue '></i> Máximo 5 imágenes por inmueble, 2Mb como máximo en cada una. <br>
+                        <i class='bx bxs-info-circle text-blue'></i> Subir imágenes es opcional, pero tus inmuebles atraerán más clientes potenciales.</small>
                 </fieldset>
-
-                <span class="badge bg-danger mb-3">{{event}}</span>
-                <input type="hidden" name="guardar_edicion">
-                <input type="submit" value="Publicar nuevo inmueble" class="btn btn-success p-4">
+                <input type="hidden" name="agregar_imagenes">
+                <input type="submit" value="Subir imágenes" class="btn btn-warning py-4 mt-3 w-100">
                 {% csrf_token %}
             </form>
         </article>

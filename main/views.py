@@ -77,6 +77,28 @@ def Logout(request):
     logout(request)
     return redirect(reverse('home'))
 
+def ValidarImagenes(files):
+    """
+    Se encarga de validar las imágenes provenientes de los formularios.
+
+    Args:
+        files (FILE_LIST): Lista de imágenes provenientes de los formularios.
+
+    Returns:
+        bool: Bandera aprobatoria de las validaciones.
+        int: Número usado para mostrar errores en la salida.
+    """
+    if len(files) > MAX_IMAGES_PER_POST:
+        return False, 0
+
+    for f in files:
+        if f.size > MAX_IMAGE_MB * 1024 * 1024:
+            return False, 1
+        
+        if not f.content_type.startswith('image/'):
+            return False, 2
+        
+    return True, 3
 #-----------------------------------------------------------------------------------------#
 #-----------------------------------------VISTAS------------------------------------------#
 #-----------------------------------------------------------------------------------------#
@@ -276,19 +298,9 @@ def CrearInmueble(request):
             
             #--Validación de imágenes--#
             files = request.FILES.getlist('imagenes')
-            if len(files) > MAX_IMAGES_PER_POST:
-                data['event'] = ERROR_12
-                ban_images = False
-           
-            for f in files:
-                if f.size > MAX_IMAGE_MB * 1024 * 1024:
-                    data['event'] = ERROR_13
-                    ban_images = False
-                    
-                if not f.content_type.startswith('image/'):
-                    data['event'] = ERROR_14
-                    ban_images = False
-                    
+            ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
+            ban_images, error_index = ValidarImagenes(files)
+            
             if ban_images:
                 if form.is_valid():
                     try:
@@ -309,6 +321,7 @@ def CrearInmueble(request):
                     data['form'] = form
                     data['event'] = ERROR_2
             else:
+                data['event'] = ERROR_LIST[error_index]
                 data['form'] = form
         else:
             data['form'] = form
@@ -333,7 +346,6 @@ def EditarInmueble(request,  inmueble_id):
     
     #--Si todo salió bien--#
     data = {'event' : '', 'alert_type': 'danger'}
-    
     if request.method == 'POST':
         if 'guardar_edicion' in request.POST:
             form = EditarInmuebleForm(request.POST, instance=inmueble)
@@ -351,7 +363,20 @@ def EditarInmueble(request,  inmueble_id):
             if imagen.img:     
                 imagen.img.delete()
             imagen.delete()
-            
+        elif 'agregar_imagenes' in request.POST:
+            #--Validación de imágenes--#
+            files = request.FILES.getlist('imagenes')
+            ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
+            ban_images, error_index = ValidarImagenes(files)
+            len(files)
+            if ban_images:
+                for file in files:
+                    imagen = Imagenes()
+                    imagen.img = file
+                    imagen.inmueble = inmueble_editar
+                    imagen.save()
+            else:
+                data['event'] = ERROR_LIST[error_index]
         else:
             data['event'] = ERROR_17
     
