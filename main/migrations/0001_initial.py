@@ -6,7 +6,6 @@ import django.contrib.auth.validators
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import essentials
 
 
 class Migration(migrations.Migration):
@@ -70,7 +69,6 @@ class Migration(migrations.Migration):
             name='Imagenes',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('img', models.ImageField(upload_to='images/', validators=[essentials.validate_file_size])),
             ],
         ),
         migrations.CreateModel(

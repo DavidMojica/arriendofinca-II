@@ -22,6 +22,7 @@ HTMLUSERAREA = 'user_area.html'
 HTMLUSEREDIT = 'user_edit.html'
 HTMLCREARINMUEBLE = 'inmueble_crear.html'
 HTMLEDITARINMUEBLE = 'inmueble_editar.html'
+HTMLBUSQUEDA = "busqueda.html"
 
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
@@ -480,7 +481,13 @@ def UserEdit(request):
     data['edit_account_basics'] = EditAccountBasics(instance=user)
     data['edit_account_dangerzone'] = EditAccountDangerZone(initial=initial_danger_form)
     return render(request, HTMLUSEREDIT, {**data})
-        
+    
+#----------BÚSQUEDA------------#
+def Busqueda(request):
+    data = {}
+    
+    return render(request, HTMLBUSQUEDA, {**data})
+    
 #--------------APIS-------------#
 def municipios_por_departamento(request):
     return JsonResponse(list(Municipio.objects.filter(departamento_id=request.GET.get('departamento_id')).values('id','description')), safe=False)
