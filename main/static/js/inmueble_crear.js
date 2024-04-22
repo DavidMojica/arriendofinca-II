@@ -21,9 +21,9 @@ let validationResult = undefined;
 //------Events-----//
 form_crear.addEventListener('submit', e=>{
     e.preventDefault();
-    // validationResult = form_validators();
-    // if (validationResult != "0") createToastNotify(1, "Error en detalles del inmueble", validationResult);
-    // else 
+    validationResult = form_validators();
+    if (validationResult != "0") createToastNotify(1, "Error en detalles del inmueble", validationResult);
+    else 
     form_crear.submit();
 });
 //----------Validacion de imagenes---------//
@@ -63,7 +63,6 @@ const img_validators = files =>{
 arriendo_venta.addEventListener('change', e=>{
     if (e.target.value == 1){
         tipo_cobro.value = 5;
-        tipo_cobro.disabled = true;
 
         for (let i = 0; i < tipo_cobro.options.length; i++) {
             if (tipo_cobro.options[i].value == 5) {

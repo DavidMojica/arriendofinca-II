@@ -11,6 +11,7 @@
 <script src="{% static 'js/swiper.js' %}" defer></script>
 <!-- Misc -->
 <script src="{% static 'js/utils.js' %}" defer></script>
+<script src="{% static 'js/default_pics.js' %}" defer></script>
 <main>
     <!-- Filtro -->
     <section id="filterContainer" class="m-auto card p-4 col-sm-12 col-md-3 col-lg-3 rounded-lg base my-5">
@@ -45,8 +46,8 @@
     <!-- EndFiltro -->
 
     <section class="w-75 row justify-content-center m-auto mb-3">
-        <aside class="col-sm-0 col-md-3 ">
-            <form action="" method="POST" class="  bg-light bg-gradient card p-2 text-center justify-content-center">
+        <aside class="col-sm-0 col-md-3">
+            <form action="" method="POST" class="aside-form bg-light bg-gradient card p-2 text-center justify-content-center">
                 <h4 class="text-orange fw-bold">Características</h4>
                 <fieldset class="mb-1 text-start">
                     <small class="text-muted ms-2">
@@ -89,13 +90,57 @@
                 <button type="submit" class="btn bg-tt-orange mt-3 text-white">Aplicar filtros</button>
             </form>
         </aside>
-        <section class="col-sm-10 col-md-9 text-center bg-light bg-gradient rounded">
+
+        <section class="col-sm-10 col-md-9 text-center bg-light bg-gradient rounded" id="seccion-inmuebles">
             <h1 class="text-orange">Resultados de la búsqueda</h1>
             
             {% if inmuebles %}
-                <section id="results" class="row">
+                <!-- Paginacion -->
+                <article class="pagination justify-content-center mt-2">
+                    <ul class="pagination">
+                        {% if inmuebles.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ inmuebles.previous_page_number }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Página {{ inmuebles.number }} de {{ inmuebles.paginator.num_pages }}</span>
+                        </li>
+
+                        {% for i in inmuebles.paginator.page_range %}
+                            {% if i >= inmuebles.number|add:"-3" and i <= inmuebles.number|add:"3" %}
+                                <li class="page-item {% if inmuebles.number == i %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ i }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if inmuebles.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ inmuebles.next_page_number }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ inmuebles.paginator.num_pages }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </article>
+                <!-- End paginacion -->
+                <section id="results" class="row p-4 gap-4 justify-content-center">
                     {% for inmueble in inmuebles%}
-                        <article class="card col-sm-12 col-md-10 col-lg-8 col-xl-6 col-xxl-4 m-3 inmueble-container">
+                    <section class="card col-sm-12 col-md-10 col-lg-8 col-xl-4 col-xxl-4 col-md-offset-2">
+                        <article class="inmueble-container">
                             <section class="text-center pic-container">
                                 {% if inmueble.imagenes.all %}
                                     <article class="swiper imgSwiper">
@@ -142,9 +187,51 @@
                                 <a href="" class="btn bg-tt-orange text-white my-2">Ver detalles</a>
                             </section>
                         </article>
-
+                    </section>
                     {% endfor %}
                 </section>
+                <!-- Paginacion -->
+                <article class="pagination justify-content-center mt-2">
+                    <ul class="pagination">
+                        {% if inmuebles.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ inmuebles.previous_page_number }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Página {{ inmuebles.number }} de {{ inmuebles.paginator.num_pages }}</span>
+                        </li>
+
+                        {% for i in inmuebles.paginator.page_range %}
+                            {% if i >= inmuebles.number|add:"-3" and i <= inmuebles.number|add:"3" %}
+                                <li class="page-item {% if inmuebles.number == i %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ i }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if inmuebles.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ inmuebles.next_page_number }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ inmuebles.paginator.num_pages }}{% if request.GET.tipo_inmueble %}&tipo_inmueble={{request.GET.tipo_inmueble}}{% endif %}{% if request.GET.arriendo_venta %}&arriendo_venta={{request.GET.arriendo_venta}}{% endif %}{% if request.GET.departamento %}&departamento={{request.GET.departamento}}{% endif %}{% if request.GET.municipio_ubicacion %}&municipio_ubicacion={{request.GET.municipio_ubicacion}}{% endif %}#seccion-inmuebles" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </article>
+                <!-- End paginacion -->
             {% else %}
                 <h4 class="display-5">Sin resultados</h4>
             {% endif %}

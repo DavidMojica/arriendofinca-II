@@ -238,8 +238,9 @@ def UserArea(request):
         form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
         if 'municipio' in request.GET:
             municipio_id = request.GET.get('municipio')
-            municipio_nombre = Municipio.objects.get(pk=municipio_id).description
-            form.fields['municipio'].choices = [(municipio_id, municipio_nombre)]
+            if municipio_id:
+                municipio_nombre = Municipio.objects.get(pk=municipio_id).description
+                form.fields['municipio'].choices = [(municipio_id, municipio_nombre)]
         #--Procesamiento de formularios--#
         if form.is_valid():
             data['form'] = form
@@ -494,11 +495,11 @@ def Busqueda(request):
     municipio_ubicacion = request.GET.get('municipio_ubicacion')
     solo_certificados = request.GET.get('solo_certificados')
     
+    print(arriendo_venta)
     inmuebles = []
-    INMUEBLES_POR_PAGINA = 12
-    data = { 'form': BusquedaInmuebleForm(request.GET),
-            'form_filtro': FiltrarInmueblesCaracteristicas()}
-    
+    INMUEBLES_POR_PAGINA = 9
+    data = { 'form_filtro': FiltrarInmueblesCaracteristicas()}
+    form = BusquedaInmuebleForm(request.GET)
     #Campos obligatorios
     if tipo_inmueble:
         inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble)
@@ -506,24 +507,26 @@ def Busqueda(request):
         return redirect('home')
     
     if arriendo_venta:
-        inmuebles.filter(arriendo_venta=arriendo_venta)
+        inmuebles = inmuebles.filter(arriendo_venta=arriendo_venta)
         
     if municipio_ubicacion:
-        inmuebles.filter(municipio_ubicacion=municipio_ubicacion)
+        municipio_nombre = Municipio.objects.get(pk=municipio_ubicacion).description
+        form.fields['municipio_ubicacion'].choices = [(municipio_ubicacion, municipio_nombre)]
+        inmuebles = inmuebles.filter(municipio_ubicacion=municipio_ubicacion)
     
     if solo_certificados == 'on':
         inmuebles = inmuebles.exclude(certificado__isnull=True)
         
     if request.method == "POST":
         if 'filter_secondary' in request.POST:
-            form = FiltrarInmueblesCaracteristicas(request.POST)
-            if form.is_valid():
-                precio_min = form.cleaned_data['precio_min']
-                precio_max = form.cleaned_data['precio_max']
-                habitaciones = form.cleaned_data['habitaciones']
-                banios = form.cleaned_data['banios']
-                area_min = form.cleaned_data['area_min']
-                area_max = form.cleaned_data['area_max']
+            form_post = FiltrarInmueblesCaracteristicas(request.POST)
+            if form_post.is_valid():
+                precio_min = form_post.cleaned_data['precio_min']
+                precio_max = form_post.cleaned_data['precio_max']
+                habitaciones = form_post.cleaned_data['habitaciones']
+                banios = form_post.cleaned_data['banios']
+                area_min = form_post.cleaned_data['area_min']
+                area_max = form_post.cleaned_data['area_max']
                 
                 if precio_min:
                     inmuebles = inmuebles.exclude(precio__lt=precio_min)
@@ -560,6 +563,7 @@ def Busqueda(request):
     except EmptyPage:
         inmuebles_paginados = paginator.page(paginator.num_pages)
      
+    data['form'] = form
     data['inmuebles'] = inmuebles_paginados
     return render(request, HTMLBUSQUEDA, {**data})
     
