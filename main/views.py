@@ -330,13 +330,18 @@ def CrearInmueble(request):
                                
                     except Exception as e:
                         print(e)
-                else:                    
+                else:
+                    print("Errores en el formulario:")
+                    for field, errors in form.errors.items():
+                        for error in errors:
+                            print(f"- {field}: {error}")                    
                     data['form'] = form
                     data['event'] = ERROR_2
             else:
                 data['event'] = ERROR_LIST[error_index]
                 data['form'] = form
         else:
+            
             data['form'] = form
             data['event'] = ERROR_3
     
@@ -486,14 +491,14 @@ def UserEdit(request):
 def Busqueda(request):
     tipo_inmueble = request.GET.get('tipo_inmueble')
     arriendo_venta = request.GET.get('arriendo_venta')
-    departamento = request.GET.get('departamento')
     municipio_ubicacion = request.GET.get('municipio_ubicacion')
     solo_certificados = request.GET.get('solo_certificados')
     
     inmuebles = []
     INMUEBLES_POR_PAGINA = 12
-    data = { 'form': BusquedaInmuebleForm(),
+    data = { 'form': BusquedaInmuebleForm(request.GET),
             'form_filtro': FiltrarInmueblesCaracteristicas()}
+    
     #Campos obligatorios
     if tipo_inmueble:
         inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble)
@@ -505,9 +510,45 @@ def Busqueda(request):
         
     if municipio_ubicacion:
         inmuebles.filter(municipio_ubicacion=municipio_ubicacion)
-       
+    
     if solo_certificados == 'on':
         inmuebles = inmuebles.exclude(certificado__isnull=True)
+        
+    if request.method == "POST":
+        if 'filter_secondary' in request.POST:
+            form = FiltrarInmueblesCaracteristicas(request.POST)
+            if form.is_valid():
+                precio_min = form.cleaned_data['precio_min']
+                precio_max = form.cleaned_data['precio_max']
+                habitaciones = form.cleaned_data['habitaciones']
+                banios = form.cleaned_data['banios']
+                area_min = form.cleaned_data['area_min']
+                area_max = form.cleaned_data['area_max']
+                
+                if precio_min:
+                    inmuebles = inmuebles.exclude(precio__lt=precio_min)
+                
+                if precio_max:
+                    inmuebles =inmuebles.exclude(precio__gt=precio_max)
+                    
+                if habitaciones:
+                    inmuebles = inmuebles.filter(habitaciones=habitaciones)
+                    
+                if banios:
+                    inmuebles = inmuebles.filter(banios=banios)
+                    
+                if area_min:
+                    inmuebles = inmuebles.exclude(area__lt=area_min)
+                
+                if area_max:
+                    inmuebles= inmuebles.exclude(area__gt=area_max)
+                
+                data['form_filtro'] = form
+            else:
+                data['event'] = ERROR_2
+        else:
+            data['event'] = ERROR_17
+        
     
     paginator = Paginator(inmuebles, INMUEBLES_POR_PAGINA)
     page_number = request.GET.get('page', 1)

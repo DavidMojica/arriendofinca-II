@@ -3,13 +3,14 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
 <link rel="stylesheet" href="{% static 'css/busqueda.css' %}">
-
+<script src="{% static 'js/API_municipios.js' %}" defer></script>
 <!-- SwiperJS CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/swiper.css' %}">
 <script src="{% static 'js/swiper.js' %}" defer></script>
-
+<!-- Misc -->
+<script src="{% static 'js/utils.js' %}" defer></script>
 <main>
     <!-- Filtro -->
     <section id="filterContainer" class="m-auto card p-4 col-sm-12 col-md-3 col-lg-3 rounded-lg base my-5">
@@ -84,6 +85,7 @@
                     {{form_filtro.area_max}}
                 </fieldset>
                 {% csrf_token %}
+                <input type="hidden" name="filter_secondary">
                 <button type="submit" class="btn bg-tt-orange mt-3 text-white">Aplicar filtros</button>
             </form>
         </aside>
@@ -91,9 +93,9 @@
             <h1 class="text-orange">Resultados de la búsqueda</h1>
             
             {% if inmuebles %}
-                <section id="results" class="row mx-2">
+                <section id="results" class="row">
                     {% for inmueble in inmuebles%}
-                        <article class="card col-md-4 m-3 inmueble-container">
+                        <article class="card col-sm-12 col-md-10 col-lg-8 col-xl-6 col-xxl-4 m-3 inmueble-container">
                             <section class="text-center pic-container">
                                 {% if inmueble.imagenes.all %}
                                     <article class="swiper imgSwiper">
@@ -115,23 +117,23 @@
                                 <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
                                 <p class="card-text">
                                     Precio {{inmueble.tipo_cobro.temporizar}}
-                                    $<strong>{{inmueble.precio}}</strong>
+                                    $<strong class="precio">{{inmueble.precio}}</strong>
                                 </p>
                             </section> 
                             <section class="bg-white justify-content-evenly row border-top">
-                                <article class="col-md-6 ">
+                                <article class="col-6 ">
                                     <small class="text-muted">Habitaciones</small>
                                     <p class="text-orange">{{inmueble.habitaciones}}</p>
                                 </article>
-                                <article class="col-md-6">
+                                <article class="col-6">
                                     <small class="text-muted">Baños</small>
                                     <p class="text-orange">{{inmueble.banios}}</p>
                                 </article>
-                                <article class="col-md-6">
+                                <article class="col-6">
                                     <small class="text-muted">Área</small>
                                     <p class="text-orange">{{inmueble.area}} m²</p>
                                 </article>
-                                <article class="col-md-6">
+                                <article class="col-6">
                                     <small class="text-muted">Área construida</small>
                                     <p class="text-orange">{{inmueble.area_construida}} m²</p>
                                 </article>
