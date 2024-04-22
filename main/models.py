@@ -23,7 +23,7 @@ class TipoCobro(models.Model):
     description = models.CharField(max_length=40)
     
     def temporizar(self):
-        map_tiempo = {0: 'Año', 1: 'Mes', 2: 'Semana', 3: 'Dia', 4:'Noche', 5:'Precio total'}
+        map_tiempo = ['por año', ' por mes', 'por semana', 'por día', 'por noche', 'de venta']
         return map_tiempo[self.id]
     
     def __str__(self):
@@ -32,6 +32,10 @@ class TipoCobro(models.Model):
 class TipoInmueble(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=25)
+    
+    def singular(self):
+        map_singular = ['Finca', 'Cabaña', 'Lote', 'Casa', 'Apartamento', 'Oficina', 'Consultorio', 'Hotel', 'Local', 'Apartaestudio', 'Habitación', 'Glamping']
+        return map_singular[self.id]
     
     def __str__(self):
         return self.description

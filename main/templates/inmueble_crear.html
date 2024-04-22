@@ -6,45 +6,56 @@
 <script src="{% static 'js/API_municipios.js' %}" defer></script>
 <script src="{% static 'js/inmueble_crear.js' %}" defer></script>
 <main class="d-flex justify-content-center my-4">
-    <section class="card p-4 w-50">
+    <section class="card p-4 col col-md-6 mx-auto">
         <article class="card-header bg-white">
             <h2 class="card-title fw-bold text-orange">Agregar nuevo inmueble</h2>
         </article>
         <article class="card-body">
             <form action="" class="row justify-content-center" method="POST" id="form-crear" enctype="multipart/form-data">
                 <!-- Detalles del inmueble -->
-                <h3 class="display-5 col-md-10 text-center">Detalles del inmueble <i class='bx bx-detail' ></i></h3>
-                <fieldset class="col-md-10 col-lg-6 ">
-                    <span class="badge bg-primary my-2">{{form.tipo_inmueble.label_tag}}</span>
+                <fieldset class="col-md-10 col-lg-6 text-start">
+                    <small class="text-muted ms-2">
+                        {{form.tipo_inmueble.label_tag}}
+                    </small>
+                    
                     {{form.tipo_inmueble}}
                     <small class="form-text text-muted">
                         <i class='bx bxs-info-circle text-danger '></i> No se puede editar despues de crear el inmueble
                     </small>
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.arriendo_venta.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.arriendo_venta.label_tag}}
+                    </small>
                     {{form.arriendo_venta}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.tipo_cobro.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.tipo_cobro.label_tag}}</span>
+                    </small>
                     {{form.tipo_cobro}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.precio.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.precio.label_tag}}
+                    </small>
                     {{form.precio}}
                 </fieldset>
 
                 <!-- Ubicación -->
-                <h3 class="display-5 col-md-10 text-center mt-3">Ubicación <i class='bx bx-map' ></i></h3>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.departamento.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.departamento.label_tag}}
+                    </small>
                     {{form.departamento}}
                     <small class="form-text text-muted">
                         <i class='bx bxs-info-circle text-danger '></i> No se puede editar despues de crear el inmueble
                     </small>
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.municipio_ubicacion.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.municipio_ubicacion.label_tag}}
+                    </small>
                     {{form.municipio_ubicacion}}
                     <small class="form-text text-muted">
                         <i class='bx bxs-info-circle text-danger '></i> No se puede editar despues de crear el inmueble
@@ -52,34 +63,45 @@
                 </fieldset>
                 
                 <!-- Detalles del inmueble -->
-                <h3 class="display-5 col-md-10 text-center mt-3">Información del inmueble <i class='bx bx-info-square'></i></h3>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.direccion.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.direccion.label_tag}}
+                    </small>
                     {{form.direccion}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.area.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.area.label_tag}}
+                    </small>
                     {{form.area}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.area_construida.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.area_construida.label_tag}}
+                    </small>
                     {{form.area_construida}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6">
-                    <span class="badge bg-primary my-2">{{form.habitaciones.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.habitaciones.label_tag}}
+                    </small>
                     {{form.habitaciones}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-6 mb-3">
-                    <span class="badge bg-primary my-2">{{form.banios.label_tag}}</span>
+                    <small class="text-muted ms-2">
+                        {{form.banios.label_tag}}
+                    </small>
                     {{form.banios}}
                 </fieldset>
                 <fieldset class="col-md-10 col-lg-8">
-                    {{form.description}}
-                    
+                    <small class="text-muted ms-2">
+                        Ofrezca detalles sobre su inmueble
+                    </small>
+                    {{form.description}}         
                 </fieldset>
                 <!-- Imágenes del inmueble --> 
-                <h3 class="display-5 col-md-10 text-center mt-3">Imágenes del inmueble <i class='bx bx-info-square'></i></h3>
-                
+                <h3 class="col-md-10 text-center mt-4">Imágenes del inmueble</h3>
+            
                 <fieldset class="col-md-10 col-lg-10 mb-3">
                     <input type="file" name="imagenes" id="imagenes" multiple class="form-control mb-2">
                     <small class="form-text text-muted">

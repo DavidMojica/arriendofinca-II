@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from main.models import Inmueble, Municipio, TipoCobro, TipoDocumento, TipoUsuario, Usuario, Imagenes
-from .forms import EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from .forms import FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #--Variables--#
@@ -238,8 +238,9 @@ def UserArea(request):
         form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
         if 'municipio' in request.GET:
             municipio_id = request.GET.get('municipio')
-            municipio_nombre = Municipio.objects.get(pk=municipio_id).description
-            form.fields['municipio'].choices = [(municipio_id, municipio_nombre)]
+            if municipio_id:
+                municipio_nombre = Municipio.objects.get(pk=municipio_id).description
+                form.fields['municipio'].choices = [(municipio_id, municipio_nombre)]
         #--Procesamiento de formularios--#
         if form.is_valid():
             data['form'] = form
@@ -330,13 +331,18 @@ def CrearInmueble(request):
                                
                     except Exception as e:
                         print(e)
-                else:                    
+                else:
+                    print("Errores en el formulario:")
+                    for field, errors in form.errors.items():
+                        for error in errors:
+                            print(f"- {field}: {error}")                    
                     data['form'] = form
                     data['event'] = ERROR_2
             else:
                 data['event'] = ERROR_LIST[error_index]
                 data['form'] = form
         else:
+            
             data['form'] = form
             data['event'] = ERROR_3
     
@@ -484,8 +490,81 @@ def UserEdit(request):
     
 #----------BÚSQUEDA------------#
 def Busqueda(request):
-    data = {}
+    tipo_inmueble = request.GET.get('tipo_inmueble')
+    arriendo_venta = request.GET.get('arriendo_venta')
+    municipio_ubicacion = request.GET.get('municipio_ubicacion')
+    solo_certificados = request.GET.get('solo_certificados')
     
+    print(arriendo_venta)
+    inmuebles = []
+    INMUEBLES_POR_PAGINA = 9
+    data = { 'form_filtro': FiltrarInmueblesCaracteristicas()}
+    form = BusquedaInmuebleForm(request.GET)
+    #Campos obligatorios
+    if tipo_inmueble:
+        inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble)
+    else:
+        return redirect('home')
+    
+    if arriendo_venta:
+        inmuebles = inmuebles.filter(arriendo_venta=arriendo_venta)
+        
+    if municipio_ubicacion:
+        municipio_nombre = Municipio.objects.get(pk=municipio_ubicacion).description
+        form.fields['municipio_ubicacion'].choices = [(municipio_ubicacion, municipio_nombre)]
+        inmuebles = inmuebles.filter(municipio_ubicacion=municipio_ubicacion)
+    
+    if solo_certificados == 'on':
+        inmuebles = inmuebles.exclude(certificado__isnull=True)
+        
+    if request.method == "POST":
+        if 'filter_secondary' in request.POST:
+            form_post = FiltrarInmueblesCaracteristicas(request.POST)
+            if form_post.is_valid():
+                precio_min = form_post.cleaned_data['precio_min']
+                precio_max = form_post.cleaned_data['precio_max']
+                habitaciones = form_post.cleaned_data['habitaciones']
+                banios = form_post.cleaned_data['banios']
+                area_min = form_post.cleaned_data['area_min']
+                area_max = form_post.cleaned_data['area_max']
+                
+                if precio_min:
+                    inmuebles = inmuebles.exclude(precio__lt=precio_min)
+                
+                if precio_max:
+                    inmuebles =inmuebles.exclude(precio__gt=precio_max)
+                    
+                if habitaciones:
+                    inmuebles = inmuebles.filter(habitaciones=habitaciones)
+                    
+                if banios:
+                    inmuebles = inmuebles.filter(banios=banios)
+                    
+                if area_min:
+                    inmuebles = inmuebles.exclude(area__lt=area_min)
+                
+                if area_max:
+                    inmuebles= inmuebles.exclude(area__gt=area_max)
+                
+                data['form_filtro'] = form
+            else:
+                data['event'] = ERROR_2
+        else:
+            data['event'] = ERROR_17
+        
+    
+    paginator = Paginator(inmuebles, INMUEBLES_POR_PAGINA)
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        inmuebles_paginados = paginator.page(page_number)
+    except PageNotAnInteger:
+        inmuebles_paginados = paginator.page(1)
+    except EmptyPage:
+        inmuebles_paginados = paginator.page(paginator.num_pages)
+     
+    data['form'] = form
+    data['inmuebles'] = inmuebles_paginados
     return render(request, HTMLBUSQUEDA, {**data})
     
 #--------------APIS-------------#

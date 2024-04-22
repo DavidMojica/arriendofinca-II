@@ -27,7 +27,7 @@ insert into main_tipoinmueble (id, description) values(7, 'Hotel');
 insert into main_tipoinmueble (id, description) values(8, 'Locales');
 insert into main_tipoinmueble (id, description) values(9, 'Apartaestudios');
 insert into main_tipoinmueble (id, description) values(10, 'Habitaciones');
-insert into main_tipoinmueble (id, description) values(11, 'Gamplings');
+insert into main_tipoinmueble (id, description) values(11, 'Glampings');
 
 /*-----Arriendo Venta-----*/
 insert into main_arriendoventa (id, description) values(0,'Arriendo');

@@ -25,21 +25,21 @@ class BusquedaInmuebleForm(forms.Form):
         widget=forms.Select(attrs={'class':'form-select'}),
         queryset=ArriendoVenta.objects.all(),
         empty_label=TEXT_SELECCIONAR,
-        required=True
+        required=False
     )
     departamento = forms.ModelChoiceField(
         label="Departamento",
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
         queryset=Departamento.objects.all(),
         empty_label=TEXT_SELECCIONAR,
-        required=True
+        required=False
     )
     
     municipio_ubicacion = forms.ChoiceField(
         label="Municipio",
         choices=[('', 'Selecciona un departamento...')],
         widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
-        required=True,
+        required=False,
     )
     
     solo_certificados = forms.BooleanField(
@@ -421,3 +421,47 @@ class EditarInmuebleForm(forms.ModelForm):
         model = Inmueble
         fields = ('arriendo_venta', 'precio', 'tipo_cobro','direccion', 'area', 'area_construida', 'habitaciones', 'banios', 'description')
         exclude= ['tipo_inmueble', 'municipio_ubicacion', 'duenio']
+        
+#-------------------------------------------------
+#--------------------Búsqueda---------------------
+#-------------------------------------------------     
+class FiltrarInmueblesCaracteristicas(forms.Form):
+    precio_min = forms.IntegerField(
+        label="Precio desde (COP)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'precio_min', 'class': 'form-control', 'placeholder': '$ Desde'})
+    )
+    precio_max = forms.IntegerField(
+        label="Precio hasta (COP)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'precio_max', 'class': 'form-control', 'placeholder': '$ Hasta'})
+    )
+    habitaciones = forms.IntegerField(
+        label="Habitaciones",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'habitaciones', 'class': 'form-control', 'placeholder': '# Habitaciones'})
+    )
+    banios = forms.IntegerField(
+        label="Baños",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'banios', 'class': 'form-control', 'placeholder': '# Baños'})
+    )
+    area_min = forms.IntegerField(
+        label="Área mínima construida (m²)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'area_min', 'class': 'form-control', 'placeholder': '(m²)'})
+    )
+    area_max = forms.IntegerField(
+        label="Área máxima construida (m²)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'area_max', 'class': 'form-control', 'placeholder': '(m²)'})
+    )
+    
+    
+    
