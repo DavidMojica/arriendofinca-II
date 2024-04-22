@@ -430,13 +430,13 @@ class FiltrarInmueblesCaracteristicas(forms.Form):
         label="Precio desde (COP)",
         required=False,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id': 'precio_min', 'class': 'form-control', 'placeholder': 'Desde'})
+        widget=forms.NumberInput(attrs={'id': 'precio_min', 'class': 'form-control', 'placeholder': '$ Desde'})
     )
     precio_max = forms.IntegerField(
         label="Precio hasta (COP)",
         required=False,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id': 'precio_max', 'class': 'form-control', 'placeholder': 'Hasta'})
+        widget=forms.NumberInput(attrs={'id': 'precio_max', 'class': 'form-control', 'placeholder': '$ Hasta'})
     )
     habitaciones = forms.IntegerField(
         label="Habitaciones",
@@ -454,13 +454,13 @@ class FiltrarInmueblesCaracteristicas(forms.Form):
         label="Área mínima construida (m²)",
         required=False,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id': 'area_min', 'class': 'form-control', 'placeholder': 'area max en m²'})
+        widget=forms.NumberInput(attrs={'id': 'area_min', 'class': 'form-control', 'placeholder': '(m²)'})
     )
     area_max = forms.IntegerField(
         label="Área máxima construida (m²)",
         required=False,
         min_value=0,
-        widget=forms.NumberInput(attrs={'id': 'area_max', 'class': 'form-control', 'placeholder': 'area min en m²'})
+        widget=forms.NumberInput(attrs={'id': 'area_max', 'class': 'form-control', 'placeholder': '(m²)'})
     )
     
     

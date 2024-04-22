@@ -122,7 +122,8 @@
                         <h4 class="card-title">{{ inmueble.tipo_inmueble }} en {{inmueble.arriendo_venta}}</h4>
                         <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
                         <p class="card-text">
-                            <strong>${{inmueble.precio}} / {{inmueble.tipo_cobro.temporizar}}</strong>
+                            Precio {{inmueble.tipo_cobro.temporizar}}
+                            $<strong>{{inmueble.precio}}</strong>
                         </p>
                         <span class="badge bg-primary">ID Propiedad: {{inmueble.id}}</span>
                     </section> 

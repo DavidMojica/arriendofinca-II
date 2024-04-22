@@ -3,27 +3,32 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
 <link rel="stylesheet" href="{% static 'css/busqueda.css' %}">
+
+<!-- SwiperJS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
+<script src="{% static 'js/swiper.js' %}" defer></script>
+
 <main>
     <!-- Filtro -->
-    <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
+    <section id="filterContainer" class="m-auto card p-4 col-sm-12 col-md-3 col-lg-3 rounded-lg base my-5">
         <form action="" method="GET" class="text-center filter-form">
-            <h2 class="text-primary font-weight-bold">Volver a buscar</h2>
-            <fieldset class="input-group mb-3">
-                <span class="badge bg-info filter-badge">{{form.tipo_inmueble.label_tag}}</span>
+            <h2 class="text-orange font-weight-bold">Volver a buscar</h2>
+            <fieldset class="mb-1 text-start">
+                <small class="text-muted ms-2 text-start">{{form.tipo_inmueble.label_tag}}</small>
                 {{form.tipo_inmueble}}
             </fieldset>
-            <fieldset class="input-group mb-3">
-                <span class="badge bg-info filter-badge">
-                    {{form.arriendo_venta.label_tag}}
-                </span>
+            <fieldset class="mb-1 text-start">
+                <small class="text-muted ms-2 text-start">{{form.arriendo_venta.label_tag}}</small>
                 {{form.arriendo_venta}}
             </fieldset>
-            <fieldset class="input-group mb-3">
-                <span class="badge bg-info filter-badge">{{form.departamento.label_tag}}</span>
+            <fieldset class="mb-1 text-start">
+                <small class="text-muted ms-2 text-start">{{form.departamento.label_tag}}</small>
                 {{form.departamento}}
             </fieldset>
-            <fieldset class="input-group mb-3">
-                <span class="badge bg-info filter-badge">{{form.municipio_ubicacion.label_tag}}</span>
+            <fieldset class="mb-1 text-start">
+                <small class="text-muted ms-2 text-start">{{form.municipio_ubicacion.label_tag}}</small>
                 {{form.municipio_ubicacion}}
             </fieldset>
             <fieldset class="text-center mt-4">
@@ -38,9 +43,10 @@
     </section>
     <!-- EndFiltro -->
 
-    <section class="w-75 row justify-content-center m-auto">
+    <section class="w-75 row justify-content-center m-auto mb-3">
         <aside class="col-sm-0 col-md-3 ">
             <form action="" method="POST" class="  bg-light bg-gradient card p-2 text-center justify-content-center">
+                <h4 class="text-orange fw-bold">Características</h4>
                 <fieldset class="mb-1 text-start">
                     <small class="text-muted ms-2">
                         {{form_filtro.precio_min.label_tag}}
@@ -78,14 +84,68 @@
                     {{form_filtro.area_max}}
                 </fieldset>
                 {% csrf_token %}
-                <button type="submit" class="btn bg-tt-orange mt-3 text-white">Volver a buscar</button>
+                <button type="submit" class="btn bg-tt-orange mt-3 text-white">Aplicar filtros</button>
             </form>
         </aside>
-        <section class="col-sm-10 col-md-8 text-center bg-light bg-gradient">
-            <h1>Resultados de la búsqueda</h1>
+        <section class="col-sm-10 col-md-9 text-center bg-light bg-gradient rounded">
+            <h1 class="text-orange">Resultados de la búsqueda</h1>
+            
+            {% if inmuebles %}
+                <section id="results" class="row mx-2">
+                    {% for inmueble in inmuebles%}
+                        <article class="card col-md-4 m-3 inmueble-container">
+                            <section class="text-center pic-container">
+                                {% if inmueble.imagenes.all %}
+                                    <article class="swiper imgSwiper">
+                                        <section class="swiper-wrapper">
+                                            {% for imagen in inmueble.imagenes.all %}
+                                                <article class="swiper-slide image-container">
+                                                    <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                                                </article>
+                                            {% endfor %}
+                                        </section>
+                                        <article class="swiper-pagination"></article>
+                                    </article>
+                                {% else %}
+                                    <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
+                                {% endif %}    
+                            </section>
+                            <section class="card-body">
+                                <h5 class="card-title">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}</h5>
+                                <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
+                                <p class="card-text">
+                                    Precio {{inmueble.tipo_cobro.temporizar}}
+                                    $<strong>{{inmueble.precio}}</strong>
+                                </p>
+                            </section> 
+                            <section class="bg-white justify-content-evenly row border-top">
+                                <article class="col-md-6 ">
+                                    <small class="text-muted">Habitaciones</small>
+                                    <p class="text-orange">{{inmueble.habitaciones}}</p>
+                                </article>
+                                <article class="col-md-6">
+                                    <small class="text-muted">Baños</small>
+                                    <p class="text-orange">{{inmueble.banios}}</p>
+                                </article>
+                                <article class="col-md-6">
+                                    <small class="text-muted">Área</small>
+                                    <p class="text-orange">{{inmueble.area}} m²</p>
+                                </article>
+                                <article class="col-md-6">
+                                    <small class="text-muted">Área construida</small>
+                                    <p class="text-orange">{{inmueble.area_construida}} m²</p>
+                                </article>
+                            </section>
+                            <section class="border-top text-center ">
+                                <a href="" class="btn bg-tt-orange text-white my-2">Ver detalles</a>
+                            </section>
+                        </article>
 
-            <h4 class="display-5">Sin resultados</h4>
-
+                    {% endfor %}
+                </section>
+            {% else %}
+                <h4 class="display-5">Sin resultados</h4>
+            {% endif %}
         </section>
     </section>
 </main>
