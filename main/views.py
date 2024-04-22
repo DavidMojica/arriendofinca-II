@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from main.models import Inmueble, Municipio, TipoCobro, TipoDocumento, TipoUsuario, Usuario, Imagenes
-from .forms import EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from .forms import FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #--Variables--#
@@ -484,8 +484,42 @@ def UserEdit(request):
     
 #----------BÚSQUEDA------------#
 def Busqueda(request):
-    data = {}
+    tipo_inmueble = request.GET.get('tipo_inmueble')
+    arriendo_venta = request.GET.get('arriendo_venta')
+    departamento = request.GET.get('departamento')
+    municipio_ubicacion = request.GET.get('municipio_ubicacion')
+    solo_certificados = request.GET.get('solo_certificados')
     
+    inmuebles = []
+    INMUEBLES_POR_PAGINA = 12
+    data = { 'form': BusquedaInmuebleForm(),
+            'form_filtro': FiltrarInmueblesCaracteristicas()}
+    #Campos obligatorios
+    if tipo_inmueble:
+        inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble)
+    else:
+        return redirect('home')
+    
+    if arriendo_venta:
+        inmuebles.filter(arriendo_venta=arriendo_venta)
+        
+    if municipio_ubicacion:
+        inmuebles.filter(municipio_ubicacion=municipio_ubicacion)
+       
+    if solo_certificados == 'on':
+        inmuebles = inmuebles.exclude(certificado__isnull=True)
+    
+    paginator = Paginator(inmuebles, INMUEBLES_POR_PAGINA)
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        inmuebles_paginados = paginator.page(page_number)
+    except PageNotAnInteger:
+        inmuebles_paginados = paginator.page(1)
+    except EmptyPage:
+        inmuebles_paginados = paginator.page(paginator.num_pages)
+     
+    data['inmuebles'] = inmuebles_paginados
     return render(request, HTMLBUSQUEDA, {**data})
     
 #--------------APIS-------------#

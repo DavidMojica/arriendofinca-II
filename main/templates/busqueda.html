@@ -1,7 +1,92 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
+<link rel="stylesheet" href="{% static 'css/busqueda.css' %}">
 <main>
-    
+    <!-- Filtro -->
+    <section id="filterContainer" class="m-auto card p-4 col-md-6 col-lg-4 rounded-lg base my-5">
+        <form action="" method="GET" class="text-center filter-form">
+            <h2 class="text-primary font-weight-bold">Volver a buscar</h2>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">{{form.tipo_inmueble.label_tag}}</span>
+                {{form.tipo_inmueble}}
+            </fieldset>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">
+                    {{form.arriendo_venta.label_tag}}
+                </span>
+                {{form.arriendo_venta}}
+            </fieldset>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">{{form.departamento.label_tag}}</span>
+                {{form.departamento}}
+            </fieldset>
+            <fieldset class="input-group mb-3">
+                <span class="badge bg-info filter-badge">{{form.municipio_ubicacion.label_tag}}</span>
+                {{form.municipio_ubicacion}}
+            </fieldset>
+            <fieldset class="text-center mt-4">
+                {{form.solo_certificados.label}}
+                <label class="green-switch">
+                    {{form.solo_certificados}}
+                    <span class="slider"></span>
+                </label> <br>
+                <button type="submit" class="btn bg-tt-orange mt-3 text-white">Volver a buscar</button>
+            </fieldset>
+        </form>
+    </section>
+    <!-- EndFiltro -->
+
+    <section class="w-75 row justify-content-center m-auto">
+        <aside class="col-sm-0 col-md-3 ">
+            <form action="" method="POST" class="  bg-light bg-gradient card p-2 text-center justify-content-center">
+                <fieldset class="mb-1 text-start">
+                    <small class="text-muted ms-2">
+                        {{form_filtro.precio_min.label_tag}}
+                    </small>
+                    {{form_filtro.precio_min}}
+                </fieldset>
+                <fieldset class="mb-1 text-start">
+                    <small class="text-muted ms-2">
+                        {{form_filtro.precio_max.label_tag}}
+                    </small>
+                    {{form_filtro.precio_max}}
+                </fieldset>
+                <fieldset class="mb-1 text-start">
+                    <small class="text-muted ms-2">
+                        {{form_filtro.habitaciones.label_tag}}
+                    </small>
+                    {{form_filtro.habitaciones}}
+                </fieldset>
+                <fieldset class="mb-1 text-start">
+                    <small class="text-muted ms-2">
+                        {{form_filtro.banios.label_tag}}
+                    </small>
+                    {{form_filtro.banios}}
+                </fieldset>
+                <fieldset class="mb-1 text-start">
+                    <small class="text-muted ms-2">
+                        {{form_filtro.area_min.label_tag}}
+                    </small>
+                    {{form_filtro.area_min}}
+                </fieldset>
+                <fieldset class="mb-1 text-start">
+                    <small class="text-muted ms-2">
+                        {{form_filtro.area_max.label_tag}}
+                    </small>
+                    {{form_filtro.area_max}}
+                </fieldset>
+                {% csrf_token %}
+                <button type="submit" class="btn bg-tt-orange mt-3 text-white">Volver a buscar</button>
+            </form>
+        </aside>
+        <section class="col-sm-10 col-md-8 text-center bg-light bg-gradient">
+            <h1>Resultados de la búsqueda</h1>
+
+            <h4 class="display-5">Sin resultados</h4>
+
+        </section>
+    </section>
 </main>
 {% endblock %}
