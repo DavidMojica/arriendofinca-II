@@ -17,20 +17,28 @@
             </section> 
             <section class="card-body row">
                 <form action="busqueda/" class="col-md-6">
-                    <fieldset>
-                        <span class="badge bg-primary mb-1 mt-2">{{form.tipo_inmueble.label}} <i class='bx bx-building-house'></i></span>
+                    <fieldset class="mb-1 text-start">
+                        <small class="text-muted ms-2">
+                            {{form.tipo_inmueble.label}} <i class='bx bx-building-house'></i>
+                        </small>
                         {{form.tipo_inmueble}}
                     </fieldset>
-                    <fieldset>
-                        <span class="badge bg-primary mb-1 mt-2">{{form.arriendo_venta.label}} <i class='bx bxs-time'></i></span>
+                    <fieldset class="mb-1 text-start">
+                        <small class="text-muted ms-2">
+                            {{form.arriendo_venta.label}} <i class='bx bxs-time'></i>
+                        </small>
                         {{form.arriendo_venta}}
                     </fieldset>
-                    <fieldset>
-                        <span class="badge bg-primary mb-1 mt-2">{{form.departamento.label}} <i class='bx bxs-map-alt' ></i></span>
+                    <fieldset class="mb-1 text-start">
+                        <small class="text-muted ms-2">
+                            {{form.departamento.label}} <i class='bx bxs-map-alt' ></i>
+                        </small>
                         {{form.departamento}}
                     </fieldset>
-                    <fieldset>
-                        <span class="badge bg-primary mb-1 mt-2">{{form.municipio_ubicacion.label}} <i class='bx bx-map'></i></span>
+                    <fieldset class="mb-1 text-start">
+                        <small class="text-muted ms-2">
+                            {{form.municipio_ubicacion.label}} <i class='bx bx-map'></i>
+                        </small>
                         {{form.municipio_ubicacion}}
                     </fieldset>
                     <fieldset class="text-center mt-4">
@@ -39,7 +47,7 @@
                             {{form.solo_certificados}}
                             <span class="slider"></span>
                         </label>
-                        <button type="submit" class="btn bg-tt-orange mt-3">Búsqueda</button>
+                        <button type="submit" class="btn bg-tt-orange text-white mt-3">Búsqueda</button>
                     </fieldset>
                 </form>
                 <aside class="col-md-6 overflow-visible aside">

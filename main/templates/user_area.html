@@ -125,7 +125,7 @@
                             Precio {{inmueble.tipo_cobro.temporizar}}
                             $<strong class="precio">{{inmueble.precio}}</strong>
                         </p>
-                        <span class="badge bg-primary">ID Propiedad: {{inmueble.id}}</span>
+                        <span class="badge bg-tt-orange">ID Propiedad: {{inmueble.id}}</span>
                     </section> 
                     <section class="card-footer bg-white justify-content-evenly d-flex">
                         <aside>
@@ -154,7 +154,7 @@
                                     </article>
                                 </article>
                             </section>
-                            <a href="{% url 'editar_inmueble' inmueble_id=inmueble.id %}" class="btn bg-tt-orange btn-sm" title="Editar inmueble"><i class='bx bx-edit-alt' ></i></a>
+                            <a href="{% url 'editar_inmueble' inmueble_id=inmueble.id %}" class="btn bg-white border btn-sm" title="Editar inmueble"><i class='bx bx-edit-alt' ></i></a>
                         </aside>
                         <a href="" class="btn btn-success fw-bold btn-sm">Certificar propiedad</a>
 

@@ -75,3 +75,8 @@
 .min-main{
     min-height: 80vh;
 }
+
+.btn-logout:hover{
+    color: #fff;
+}
+
