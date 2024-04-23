@@ -23,6 +23,7 @@ HTMLUSEREDIT = 'user_edit.html'
 HTMLCREARINMUEBLE = 'inmueble_crear.html'
 HTMLEDITARINMUEBLE = 'inmueble_editar.html'
 HTMLBUSQUEDA = "busqueda.html"
+HTMLDETALLESINMUEBLE = 'detallesinmueble.html'
 
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
@@ -567,6 +568,17 @@ def Busqueda(request):
     data['inmuebles'] = inmuebles_paginados
     return render(request, HTMLBUSQUEDA, {**data})
     
+def DetallesInmueble(request,inmueble_id):
+    #Si no hay ID del inmueble
+    if inmueble_id is None:
+        return redirect('home')
+    
+    inmueble = get_object_or_404(Inmueble, pk=inmueble_id)
+    data = {'inmueble':inmueble}
+    
+    return render(request, HTMLDETALLESINMUEBLE, {**data})
+    
+
 #--------------APIS-------------#
 def municipios_por_departamento(request):
     return JsonResponse(list(Municipio.objects.filter(departamento_id=request.GET.get('departamento_id')).values('id','description')), safe=False)

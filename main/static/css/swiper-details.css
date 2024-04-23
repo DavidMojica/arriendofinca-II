@@ -1,8 +1,3 @@
-/* SWIPER */
-.inmueble-pic, .swiper {
-    height: 220px;
-}
-
 .swiper, .inmueble-pic{
     height: 420px;
 }
