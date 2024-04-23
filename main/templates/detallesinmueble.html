@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<!-- SwiperJS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/swiper-details.css' %}">
+<script src="{% static 'js/swiper.js' %}" defer></script>
+<!-- POPUP -->
+<link rel="stylesheet" href="{% static 'css/modal_img.css' %}">
+<script src="{% static 'js/modal_img.js' %}" defer></script>
+
+<main class="col col-md-8 m-auto row bg-white py-5 my-5 broder rounded">
+    <section class="col-md-6 text-center">
+        <h3 class="text-orange">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}</h3>
+        {% if inmueble.descripcion %}
+            <p class="text-muted">{{inmueble.descripcion}}</p>
+        {% else %}
+            <p class="text-muted">Este inmueble no tiene descripción</p>
+        {% endif %}
+        <article class="mx-2 row">
+            <article class="col-3 text-center">
+                <small class="text-muted">Habitaciones</small>
+                <p class="text-orange">{{inmueble.habitaciones}}</p>
+            </article>
+            <article class="col-3 text-center">
+                <small class="text-muted">Baños</small>
+                <p class="text-orange">{{inmueble.banios}}</p>
+            </article>
+            <article class="col-3 text-center">
+                <small class="text-muted">Área</small>
+                <p class="text-orange">{{inmueble.area}} m²</p>
+            </article>
+            <article class="col-3 text-center">
+                <small class="text-muted">Área construida</small>
+                <p class="text-orange">{{inmueble.area_construida}} m²</p>
+            </article>
+        </article>
+        
+        <article class="text-center">
+            <h3 class="text-orange">Contacto</h3>
+            <section class="d-flex justify-content-evenly">
+                {% if inmueble.duenio.permitir_whatsapp %}
+                    <article class="">
+                        <button class="btn btn-warning text-white">Copiar correo</button>
+                    </article>
+                    <article>
+                        <button class="btn btn-white border">Mostrar celular</button>
+                    </article>
+                    <article class="">
+                        <button class="btn btn-success">WhatsApp</button>
+                    </article>
+                {% else %}
+                    <article class="">
+                        <button class="btn btn-warning">Copiar correo</button>
+                    </article>
+                {% endif %}
+            </section>
+        </article>
+    </section>
+
+
+    <section class="col-md-6">
+        {% if inmueble.certificado %}
+        {% else %}
+            <section class="alert alert-warning text-center w-75 m-auto mt-4" role="alert">Este inmueble no está certificado por Arriendofinca.com</section>
+
+        {% endif %}
+        <section class="text-center pic-container">
+            {% if inmueble.imagenes.all %}
+                <article class="swiper imgSwiper">
+                    <section class="swiper-wrapper">
+                        {% for imagen in inmueble.imagenes.all %}
+                            <article class="swiper-slide image-container">
+                                <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                            </article>
+                        {% endfor %}
+                    </section>
+                    <article class="swiper-pagination"></article>
+                </article>
+            {% else %}
+                <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
+            {% endif %}    
+        </section>
+    </section>
+</main>
+{% endblock %}
