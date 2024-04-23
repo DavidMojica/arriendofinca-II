@@ -11,13 +11,18 @@
 <script src="{% static 'js/modal_img.js' %}" defer></script>
 
 <main class="col col-md-8 m-auto row bg-white py-5 my-5 broder rounded">
-    <section class="col-md-6 text-center">
+    <section class="col-md-6 text-center h-100">
         <h3 class="text-orange">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}</h3>
         {% if inmueble.descripcion %}
             <p class="text-muted">{{inmueble.descripcion}}</p>
         {% else %}
             <p class="text-muted">Este inmueble no tiene descripción</p>
         {% endif %}
+
+        <h6 class="card-text">
+            Precio {{inmueble.tipo_cobro.temporizar}}
+            $<strong class="precio">{{inmueble.precio}}</strong>
+        </h6>
         <article class="mx-2 row">
             <article class="col-3 text-center">
                 <small class="text-muted">Habitaciones</small>
