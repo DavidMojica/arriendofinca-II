@@ -1,5 +1,6 @@
 .swiper, .inmueble-pic{
-    height: 420px;
+    height: 44vh;
+    max-height: 420px;
 }
 
 .swiper-slide {

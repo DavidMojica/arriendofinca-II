@@ -110,7 +110,7 @@ class Inmueble(models.Model):
     area_construida = models.CharField(max_length=7)
     habitaciones = models.CharField(max_length=3)
     banios = models.CharField(max_length=3)
-    description = models.CharField(max_length=300)
+    description = models.CharField(max_length=1000)
     duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
     certificado = models.ForeignKey(Certificado, on_delete=models.CASCADE, null=True, blank=True)
 
