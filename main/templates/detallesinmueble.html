@@ -14,8 +14,8 @@
     <section class="col-md-6 text-center d-flex flex-column justify-content-around ">
         <section class="">
             <h3 class="text-orange">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}</h3>
-            {% if inmueble.descripcion %}
-                <p class="text-muted">{{inmueble.descripcion}}</p>
+            {% if inmueble.description %}
+                <p class="text-muted">{{inmueble.description}}</p>
             {% else %}
                 <p class="text-muted">Este inmueble no tiene descripción.</p>
             {% endif %}
@@ -47,7 +47,7 @@
                 <p class="text-muted">
                     <i class='bx bxs-phone-call' ></i> {{inmueble.duenio.celular}}
                     {% if inmueble.duenio.permitir_whatsapp %}
-                        <a href="https://api.whatsapp.com/send/?phone=57{{inmueble.duenio.celular}}" class="btn btn-success btn-sm p-2 ms-2"><i class='bx bxl-whatsapp' ></i> Chat WhatsApp <i class="bx bx-whatsapp"></i></a>
+                        <a href="https://api.whatsapp.com/send/?phone=57{{inmueble.duenio.celular}}&text=Hola 👋🏼. Vi tu {{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}} en Arriendofinca.com estoy interesad@. ID inmueble: {{ inmueble.id  }}" class="btn btn-success btn-sm p-2 ms-2" target="_blank"><i class='bx bxl-whatsapp' ></i> Chat WhatsApp <i class="bx bx-whatsapp"></i></a>
                     {% endif %}
                 </p>
             </article>
