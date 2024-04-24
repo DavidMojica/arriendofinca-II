@@ -10,37 +10,47 @@
 <link rel="stylesheet" href="{% static 'css/modal_img.css' %}">
 <script src="{% static 'js/modal_img.js' %}" defer></script>
 
-<main class="col col-md-8 m-auto row bg-white h-75 py-5 my-5 broder rounded overflow-auto">
-    <section class="col-md-6 text-center d-flex flex-column justify-content-around ">
-        <section class="">
-            <h3 class="text-orange">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}</h3>
+<script src="{% static 'js/utils.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/detalles.css' %}">
+
+<main class="col col-md-12 col-lg-10 col-xl-8 m-auto row bg-white py-5 my-5 broder rounded overflow-auto">
+    <section class="col-md-6 text-center d-flex flex-column justify-content-around" id="section1">
+        <section class="mt-md-5">
+            <h3 class="text-orange">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}} <br>
+                <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
+            </h3>
+            
             {% if inmueble.description %}
                 <p class="text-muted">{{inmueble.description}}</p>
             {% else %}
                 <p class="text-muted">Este inmueble no tiene descripción.</p>
             {% endif %}
         </section>
-        <article class="mx-2 row text-center">
+        <section class="mx-2 row text-center justify-content-center">
             <h3 class="text-orange">Detalles del interior</h3>
-            <article class="col-3 text-center border">
-                <small class="text-muted">Habitaciones</small>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Habitaciones</small>
                 <p class="text-orange">{{inmueble.habitaciones}}</p>
             </article>
-            <article class="col-3 text-center border">
-                <small class="text-muted">Baños</small>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Baños</small>
                 <p class="text-orange">{{inmueble.banios}}</p>
             </article>
-            <article class="col-3 text-center border">
-                <small class="text-muted">Área</small>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Área</small>
                 <p class="text-orange">{{inmueble.area}} m²</p>
             </article>
-            <article class="col-3 text-center border">
-                <small class="text-muted">Área construida</small>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Área construida</small>
                 <p class="text-orange">{{inmueble.area_construida}} m²</p>
             </article>
-        </article>
+        </section>
+        <section class="text-center mt-2">
+            <h4 class="text-orange">Precio {{inmueble.tipo_cobro.temporizar}}</h4>
+            <p class="text-muted">$ <span class="precio">{{inmueble.precio}}</span></p>
+        </section>
         
-        <article>
+        <section>
             <h3 class="text-orange">Contacto</h3>
             <article class="text-center ms-4">
                 <p class="text-muted"><i class='bx bx-envelope'></i> {{inmueble.duenio.email}}</p>
@@ -51,17 +61,16 @@
                     {% endif %}
                 </p>
             </article>
-        </article>
+        </section>
     </section>
 
-
-    <section class="col-md-6 d-flex flex-column justify-content-around">
+    <section class="col-md-6" id="section2">
         {% if inmueble.certificado %}
         {% else %}
-            <section class="alert alert-warning text-center w-75 m-auto mt-4" role="alert">Este inmueble no está certificado por Arriendofinca.com</section>
-
+            <section class="alert alert-warning text-center m-auto mb-2" role="alert">Este inmueble no está certificado por Arriendofinca.com por lo tanto el sitio no se hace responsable de daños o perjuicos a terceros provenientes de este inmueble. Arriendofinca.com se hace responsable de daños y perjuicios sólo en inmuebles que están cerficados por nosotros. <br>
+                 Para buscar solamente inmuebles certificados active el filtro 'solo certificados' en la busqueda de inmuebles.</section>
         {% endif %}
-        <section class="text-center pic-container">
+        <section class="text-center pic-container mt-2">
             {% if inmueble.imagenes.all %}
                 <article class="swiper imgSwiper">
                     <section class="swiper-wrapper">
@@ -76,12 +85,6 @@
             {% else %}
                 <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
             {% endif %}    
-        </section>
-        <section class="text-center mt-2">
-            <h4 class="card-text">
-                Precio {{inmueble.tipo_cobro.temporizar}}
-                $<strong class="precio">{{inmueble.precio}}</strong>
-            </h4>
         </section>
     </section>
 </main>
