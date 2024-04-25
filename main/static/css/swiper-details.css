@@ -19,3 +19,7 @@
     object-fit: cover;
     cursor: pointer;
 }
+
+.default-inmueble-pic{
+    font-size: 22rem;
+}

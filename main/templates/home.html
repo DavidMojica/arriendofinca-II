@@ -9,6 +9,28 @@
 <link rel="stylesheet" href="{% static 'css/green-switch.css' %}">
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
+<!-- SwiperJS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
+<script src="{% static 'js/swiper.js' %}" defer></script>
+<!-- POPUP -->
+<link rel="stylesheet" href="{% static 'css/modal_img.css' %}">
+<script src="{% static 'js/modal_img.js' %}" defer></script>
+<!-- Misc -->
+<script src="{% static 'js/utils.js' %}" defer></script>
+<script src="{% static 'js/default_pics.js' %}" defer></script>
+
+<!-- POPUP MODAL -->
+<section class="popup">
+    <article class="top-bar">
+        <p class="image-name">Imagen del inmueble</p>
+        <span class="close-btn"><i class='bx bx-message-square-x' ></i></span>
+    </article>
+    <img src="" alt="" class="large-image">
+    <h1 class="index"></h1>
+</section>
+<!-- End POPUP MODAL -->
 <main class="d-flex justify-content-center">
     <section class="bg-light my-5">
         <section class="card p-3">
@@ -305,72 +327,65 @@
         </section>
     </section>
 </main>
-<section class="bg-tt-orange p-4 text-center">
+<section class="bg-tt-orange py-4 text-center row gap-4 justify-content-center me-0">
     <h2 class="fw-bold text-white">Inmuebles más recientes</h2>
-
-    <section class="container">
-        <article class="row">
-            <!-- Propiedad -->
-            <article class="col-md-3 p-4">
-                <article class="card bg-white">
-                    <section class="photo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
-                    </section>
-                    <section>
-                        <h4 class="fw-bold">Casa en arriendo</h4>
-                        <p class="fw-bold">Puerto peralta, Amazonas</p>
-                        <blockquote>
-                            42Mt 3 Habitaciones 2 Baños
-                        </blockquote>
-                    </section>
-                </article>
+    {% for inmueble in inmuebles%}
+        <section class="card col-10 col-md-4 col-xl-3 col-xxl-2 ">
+            <article class="inmueble-container h-100">
+                <section class="text-center pic-container">
+                    {% if inmueble.imagenes.all %}
+                        <article class="swiper imgSwiper">
+                            <section class="swiper-wrapper">
+                                {% for imagen in inmueble.imagenes.all %}
+                                    <article class="swiper-slide image-container">
+                                        <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                                    </article>
+                                {% endfor %}
+                            </section>
+                            <article class="swiper-pagination"></article>
+                        </article>
+                    {% else %}
+                        <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
+                    {% endif %}    
+                </section>
+                <section class="card-body">
+                    {% if inmueble.certificado %}
+                        <span class="badge bg-tt-orange text-wrap mb-2">Inmueble certificado <i class='bx bx-check-shield'></i></span>
+                    {% endif %}
+                    <h5 class="card-title">
+                        {{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}
+                    </h5>
+                    <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
+                    
+                    <p class="card-text">
+                        Precio {{inmueble.tipo_cobro.temporizar}}
+                        $<strong class="precio">{{inmueble.precio}}</strong>
+                    </p>
+                </section> 
+                <section class="bg-white justify-content-evenly row border-top">
+                    <article class="col-6 ">
+                        <small class="text-muted">Habitaciones</small>
+                        <p class="text-orange">{{inmueble.habitaciones}}</p>
+                    </article>
+                    <article class="col-6">
+                        <small class="text-muted">Baños</small>
+                        <p class="text-orange">{{inmueble.banios}}</p>
+                    </article>
+                    <article class="col-6">
+                        <small class="text-muted">Área</small>
+                        <p class="text-orange">{{inmueble.area}} m²</p>
+                    </article>
+                    <article class="col-6">
+                        <small class="text-muted">Área construida</small>
+                        <p class="text-orange">{{inmueble.area_construida}} m²</p>
+                    </article>
+                </section>
+                <section class="border-top d-flex align-items-center justify-content-center py-2">
+                    <a href="{% url 'detalles_inmueble' inmueble_id=inmueble.id %}" class="btn bg-tt-orange text-white">Ver detalles</a>
+                </section>
             </article>
-            <!-- End Propiedad -->
-            <article class="col-md-3 p-4">
-                <article class="card bg-white">
-                    <section class="photo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
-                    </section>
-                    <section>
-                        <h4 class="fw-bold">Casa en arriendo</h4>
-                        <p class="fw-bold">Puerto peralta, Amazonas</p>
-                        <blockquote>
-                            42Mt 3 Habitaciones 2 Baños
-                        </blockquote>
-                    </section>
-                </article>
-            </article>
-            <article class="col-md-3 p-4">
-                <article class="card bg-white">
-                    <section class="photo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
-                    </section>
-                    <section>
-                        <h4 class="fw-bold">Casa en arriendo</h4>
-                        <p class="fw-bold">Puerto peralta, Amazonas</p>
-                        <blockquote>
-                            42Mt 3 Habitaciones 2 Baños
-                        </blockquote>
-                    </section>
-                </article>
-            </article>
-            <article class="col-md-3 p-4">
-                <article class="card bg-white">
-                    <section class="photo">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Finca.jpg/1200px-Finca.jpg" alt="" class="img-thumbnail destacados-img">
-                    </section>
-                    <section>
-                        <h4 class="fw-bold">Casa en arriendo</h4>
-                        <p class="fw-bold">Puerto peralta, Amazonas</p>
-                        <blockquote>
-                            42Mt 3 Habitaciones 2 Baños
-                        </blockquote>
-                    </section>
-                </article>
-            </article>
-
-        </article>
-    </section>
+        </section>
+    {% endfor %}
 </section>
 
 <section class="my-5">
@@ -385,7 +400,7 @@
                         <img src="{% static 'img/day-schematic/day-bird1.png' %}" alt="bird1" class="atropos-img" data-atropos-offset="-5.5">
                         <img src="{% static 'img/day-schematic/day-rocks.png' %}" alt="rocks" class="atropos-img extra-w" data-atropos-offset="1.5">
                         <img src="{% static 'img/day-schematic/day-water.png' %}" alt="water"class="atropos-img">
-                        <a href="#section2" class="btn-schematic text-white" >Ver más inmuebles recientes</a>
+                        <a href="/busqueda?tipo_inmueble=0" class="btn-schematic text-white" >Ver fincas</a>
                     </article>
                 </section>
             </article>

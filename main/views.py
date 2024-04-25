@@ -111,7 +111,9 @@ def ValidarImagenes(files, cantidad_imagenes_inmueble=0):
 #-----------------------------------------------------------------------------------------#
 #--HOME o Index--#
 def home(request):
-    data = { 'form': BusquedaInmuebleForm() }
+    data = { 'form': BusquedaInmuebleForm(),
+            'inmuebles': Inmueble.objects.all().order_by('-fecha_creacion')[:4]}
+    
     return render(request, HTMLHOME, {**data})
 
 #--Inicio de sesión - Registro--#

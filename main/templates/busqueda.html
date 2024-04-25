@@ -139,61 +139,61 @@
                 <!-- End paginacion -->
                 <section id="results" class="row p-4 gap-4 justify-content-center">
                     {% for inmueble in inmuebles%}
-                    <section class="card col-sm-12 col-md-10 col-lg-8 col-xl-4 col-xxl-4 col-md-offset-2">
-                        <article class="inmueble-container">
-                            <section class="text-center pic-container">
-                                {% if inmueble.imagenes.all %}
-                                    <article class="swiper imgSwiper">
-                                        <section class="swiper-wrapper">
-                                            {% for imagen in inmueble.imagenes.all %}
-                                                <article class="swiper-slide image-container">
-                                                    <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
-                                                </article>
-                                            {% endfor %}
-                                        </section>
-                                        <article class="swiper-pagination"></article>
+                        <section class="card col-sm-12 col-md-10 col-lg-8 col-xl-4 col-xxl-4 col-md-offset-2 h-100">
+                            <article class="inmueble-container">
+                                <section class="text-center pic-container">
+                                    {% if inmueble.imagenes.all %}
+                                        <article class="swiper imgSwiper">
+                                            <section class="swiper-wrapper">
+                                                {% for imagen in inmueble.imagenes.all %}
+                                                    <article class="swiper-slide image-container">
+                                                        <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                                                    </article>
+                                                {% endfor %}
+                                            </section>
+                                            <article class="swiper-pagination"></article>
+                                        </article>
+                                    {% else %}
+                                        <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
+                                    {% endif %}    
+                                </section>
+                                <section class="card-body">
+                                    {% if inmueble.certificado %}
+                                        <span class="badge bg-tt-orange text-wrap mb-2">Inmueble certificado <i class='bx bx-check-shield'></i></span>
+                                    {% endif %}
+                                    <h5 class="card-title">
+                                        {{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}
+                                    </h5>
+                                    <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
+                                    
+                                    <p class="card-text">
+                                        Precio {{inmueble.tipo_cobro.temporizar}}
+                                        $<strong class="precio">{{inmueble.precio}}</strong>
+                                    </p>
+                                </section> 
+                                <section class="bg-white justify-content-evenly row border-top">
+                                    <article class="col-6 ">
+                                        <small class="text-muted">Habitaciones</small>
+                                        <p class="text-orange">{{inmueble.habitaciones}}</p>
                                     </article>
-                                {% else %}
-                                    <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
-                                {% endif %}    
-                            </section>
-                            <section class="card-body">
-                                {% if inmueble.certificado %}
-                                    <span class="badge bg-tt-orange text-wrap mb-2">Inmueble certificado <i class='bx bx-check-shield'></i></span>
-                                {% endif %}
-                                <h5 class="card-title">
-                                    {{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}
-                                </h5>
-                                <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
-                                
-                                <p class="card-text">
-                                    Precio {{inmueble.tipo_cobro.temporizar}}
-                                    $<strong class="precio">{{inmueble.precio}}</strong>
-                                </p>
-                            </section> 
-                            <section class="bg-white justify-content-evenly row border-top">
-                                <article class="col-6 ">
-                                    <small class="text-muted">Habitaciones</small>
-                                    <p class="text-orange">{{inmueble.habitaciones}}</p>
-                                </article>
-                                <article class="col-6">
-                                    <small class="text-muted">Baños</small>
-                                    <p class="text-orange">{{inmueble.banios}}</p>
-                                </article>
-                                <article class="col-6">
-                                    <small class="text-muted">Área</small>
-                                    <p class="text-orange">{{inmueble.area}} m²</p>
-                                </article>
-                                <article class="col-6">
-                                    <small class="text-muted">Área construida</small>
-                                    <p class="text-orange">{{inmueble.area_construida}} m²</p>
-                                </article>
-                            </section>
-                            <section class="border-top text-center ">
-                                <a href="{% url 'detalles_inmueble' inmueble_id=inmueble.id %}" class="btn bg-tt-orange text-white my-2">Ver detalles</a>
-                            </section>
-                        </article>
-                    </section>
+                                    <article class="col-6">
+                                        <small class="text-muted">Baños</small>
+                                        <p class="text-orange">{{inmueble.banios}}</p>
+                                    </article>
+                                    <article class="col-6">
+                                        <small class="text-muted">Área</small>
+                                        <p class="text-orange">{{inmueble.area}} m²</p>
+                                    </article>
+                                    <article class="col-6">
+                                        <small class="text-muted">Área construida</small>
+                                        <p class="text-orange">{{inmueble.area_construida}} m²</p>
+                                    </article>
+                                </section>
+                                <section class="border-top d-flex align-items-center justify-content-center py-2">
+                                    <a href="{% url 'detalles_inmueble' inmueble_id=inmueble.id %}" class="btn bg-tt-orange text-white">Ver detalles</a>
+                                </section>
+                            </article>
+                        </section>
                     {% endfor %}
                 </section>
                 <!-- Paginacion -->

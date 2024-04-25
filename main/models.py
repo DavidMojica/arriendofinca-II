@@ -107,6 +107,7 @@ class Inmueble(models.Model):
     banios = models.CharField(max_length=3)
     description = models.CharField(max_length=1000)
     duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
 class Certificado(models.Model):
     id = models.AutoField(primary_key=True)
