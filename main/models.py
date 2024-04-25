@@ -111,10 +111,10 @@ class Inmueble(models.Model):
 class Certificado(models.Model):
     id = models.AutoField(primary_key=True)
     inmueble = models.OneToOneField(Inmueble, on_delete=models.CASCADE, null=True, blank=True)
-    fecha_certificacion = models.DateTimeField(auto_now_add=True)
+    fecha_certificacion = models.DateTimeField(auto_now_add=True, null=True)
     
     def __str__(self):
-        return self.description
+        return f"Inmueble: {self.inmueble.id} Ceritificado: {self.id}"
 
 class Imagenes(models.Model):
     id = models.AutoField(primary_key=True)

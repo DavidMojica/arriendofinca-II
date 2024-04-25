@@ -13,6 +13,16 @@
 <script src="{% static 'js/utils.js' %}" defer></script>
 <link rel="stylesheet" href="{% static 'css/detalles.css' %}">
 
+<!-- POPUP MODAL -->
+<section class="popup">
+    <article class="top-bar">
+        <p class="image-name">Imagen del inmueble</p>
+        <span class="close-btn"><i class='bx bx-message-square-x' ></i></span>
+    </article>
+    <img src="" alt="" class="large-image">
+    <h1 class="index"></h1>
+</section>
+<!-- End POPUP MODAL -->
 <main class="col col-md-12 col-lg-10 col-xl-8 m-auto row bg-white py-5 my-5 broder rounded overflow-auto">
     <section class="col-md-6 text-center d-flex flex-column justify-content-around" id="section1">
         <section class="mt-md-5">
@@ -66,6 +76,10 @@
 
     <section class="col-md-6" id="section2">
         {% if inmueble.certificado %}
+            <section class="alert alert-success text-center m-auto mb-2" role="alert">
+                Este inmueble está certificado por arriendofinca.com, todo lo que ofrece está verificado por nosotros. <br>
+                Fecha de certificación: {{inmueble.certificado.fecha_certificacion}}
+            </section>
         {% else %}
             <section class="alert alert-warning text-center m-auto mb-2" role="alert">Este inmueble no está certificado por Arriendofinca.com por lo tanto el sitio no se hace responsable de daños o perjuicos a terceros provenientes de este inmueble. Arriendofinca.com se hace responsable de daños y perjuicios sólo en inmuebles que están cerficados por nosotros. <br>
                  Para buscar solamente inmuebles certificados active el filtro 'solo certificados' en la busqueda de inmuebles.</section>
