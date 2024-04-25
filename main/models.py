@@ -124,6 +124,15 @@ class Imagenes(models.Model):
     
     def __str__(self):
         return self.id
+
+class Destacados(models.Model):
+    id = models.AutoField(primary_key=True)
+    inmueble = models.OneToOneField(Inmueble, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_destacado = models.DateTimeField(auto_now_add=True, null=True)
+    
+    def __str__(self):
+        return f"Inmueble: {self.inmueble.id} Id Destacado: {self.id} Fecha: {self.fecha_destacado}"
+    
     
 @receiver(pre_delete, sender=Inmueble)
 def eliminar_imagenes_inmueble(sender, instance, **kwargs):
