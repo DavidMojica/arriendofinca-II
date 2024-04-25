@@ -19,6 +19,7 @@ const register_username = document.getElementById('new_username');
 const register_password = document.getElementById('new_password');
 const register_celular = document.getElementById('new_celular');
 const register_whatsapp = document.getElementById('new_whatsapp');
+const register_email = document.getElementById('new_email');
 
 //variables
 const nombreMinLength = 2;

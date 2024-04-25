@@ -1,10 +1,10 @@
 /* SWIPER */
 .inmueble-pic, .swiper {
-    height: 220px;
+    max-height: 220px;
 }
 
 .swiper, .inmueble-pic{
-    height: 220px;
+    max-height: 220px;
 }
 
 .swiper-slide {

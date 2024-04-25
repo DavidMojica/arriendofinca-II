@@ -1,9 +1,10 @@
+import random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoCobro, TipoDocumento, TipoUsuario, Usuario, Imagenes
+from main.models import Inmueble, Municipio, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados
 from .forms import FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
@@ -111,7 +112,14 @@ def ValidarImagenes(files, cantidad_imagenes_inmueble=0):
 #-----------------------------------------------------------------------------------------#
 #--HOME o Index--#
 def home(request):
-    data = { 'form': BusquedaInmuebleForm() }
+    data = { 'form': BusquedaInmuebleForm(),
+            'inmuebles': Inmueble.objects.all().order_by('-fecha_creacion')[:4]}
+    
+    inmuebles_destacados = Destacados.objects.all()
+    inmuebles_destacados = [destacado.inmueble for destacado in inmuebles_destacados]
+    inmuebles_destacados = random.sample(list(inmuebles_destacados), min(len(inmuebles_destacados), 4))
+    
+    data['inmuebles_destacados'] = inmuebles_destacados
     return render(request, HTMLHOME, {**data})
 
 #--Inicio de sesión - Registro--#

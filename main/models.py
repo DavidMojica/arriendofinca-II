@@ -47,12 +47,7 @@ class ArriendoVenta(models.Model):
     def __str__(self):
         return self.description
     
-class Certificado(models.Model):
-    id = models.CharField(primary_key=True, max_length=100)
-    description = models.CharField(max_length=25)
-    
-    def __str__(self):
-        return self.description
+
 
 class Pais(models.Model):
     id = models.AutoField(primary_key=True)
@@ -112,7 +107,15 @@ class Inmueble(models.Model):
     banios = models.CharField(max_length=3)
     description = models.CharField(max_length=1000)
     duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
-    certificado = models.ForeignKey(Certificado, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
+
+class Certificado(models.Model):
+    id = models.AutoField(primary_key=True)
+    inmueble = models.OneToOneField(Inmueble, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_certificacion = models.DateTimeField(auto_now_add=True, null=True)
+    
+    def __str__(self):
+        return f"Inmueble: {self.inmueble.id} Ceritificado: {self.id}"
 
 class Imagenes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -121,6 +124,15 @@ class Imagenes(models.Model):
     
     def __str__(self):
         return self.id
+
+class Destacados(models.Model):
+    id = models.AutoField(primary_key=True)
+    inmueble = models.OneToOneField(Inmueble, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_destacado = models.DateTimeField(auto_now_add=True, null=True)
+    
+    def __str__(self):
+        return f"Inmueble: {self.inmueble.id} Id Destacado: {self.id} Fecha: {self.fecha_destacado}"
+    
     
 @receiver(pre_delete, sender=Inmueble)
 def eliminar_imagenes_inmueble(sender, instance, **kwargs):
