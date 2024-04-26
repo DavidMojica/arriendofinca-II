@@ -31,6 +31,7 @@ urlpatterns = [
     path('editar_inmueble/<int:inmueble_id>/', views.EditarInmueble, name="editar_inmueble"),
     path('busqueda/',views.Busqueda, name="busqueda"),
     path('detalles_inmueble/<int:inmueble_id>/', views.DetallesInmueble, name='detalles_inmueble'),
+    path('FAQS/', views.Faqs, name='FAQS'),
     #APIS#
     path('municipios_por_departamento/', views.municipios_por_departamento, name='municipios_por_departamento'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

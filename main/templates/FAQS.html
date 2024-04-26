@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/FAQS.css' %}">
+
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+<section class="bg-light row justify-content-center align-items-center gap-5 py-5 me-0">
+    <article class="col-6 col-lg-3 text-center">
+        <lottie-player src="https://lottie.host/f7936a61-536b-4483-adcb-d96c1afd2e7a/jtRVFzcqMf.json" id="questionLottie" background="##FFFFFF" speed="1" loop autoplay direction="1" mode="normal"></lottie-player>
+    </article>
+    <article class="col-6 col-lg-4 text-center">
+        <h1 class="fw-bold text-orange">FAQs</h1>
+        <p class="text-wrap text-muted w-lg-50 m-auto">¿Tienes dudas sobre alguno de nuestros servicios? Aquí podrás encontrar respuestas útiles y también instrucciones para ayuda personalizada y soporte de arriendofinca.com</p>
+    </article>
+</section>
+
+<section class="bg-tt-orange row justify-content-center text-center py-3 me-0">
+    <h2 class="text-white fw-bold">Certificación de inmuebles</h2>
+    <section class="col-lg-8">
+        <article class="my-2">
+            <h4 class="text-white fw-bold">¿Qué es la certificación?</h4>
+            <p class="text-white col col-10 m-auto">
+                La certificación es un proceso mediante el cual arriendofinca.com se segura de que los inmuebles, los beneficios de los inmuebles,
+                las características de los inmuebles y todo lo que describe el propietario en la publicación de su inmueble es información real y al día. 
+                También nos aseguramos de que los pepeles de inmueble estén en orden y sean aptos para ser transferidos a un nuevo comprador sin ningún riesgo adicional.
+            </p>
+        </article>
+
+        <article class="my-2">
+            <h4 class="text-white fw-bold">¿Cómo puedo inscribir mi propiedad al proceso de certificación?</h4>
+            <p class="text-white col col-10 m-auto">
+                En el área de usuario aparecen los inmuebles que has creado previamente. Tienen 3 opciones: borrar, modificar o certificar. 
+                Debes de dar click en la opción de 'certificar', te aparecerá una ventana con información que debes leer sobre la certificación y debes de confirmar
+                haber leído toda información y sus consecuencias en caso de que detectemos alguna irregularidad en el inmueble o en sus documentos. <br>
+                Cuando confirmes, nos llegará una notificación de que quieres certificar una propiedad y nosotros te estaremos respondiendo lo más pronto posible
+                al correo que tienes registrado en la plataforma con todos los detalles y cotizaciones.
+            </p>
+        </article>
+
+        <article class="my-2">
+            <h4 class="text-white fw-bold">¿Se puede editar un inmueble después de certificar?</h4>
+            <p class="text-white col col-10 m-auto">
+                No, no se pueden modificar los datos de un inmueble desde que el inmueble se inscribe al proceso de certificación para dar mayor seguridad al comprador.
+                Con esto evitamos el envío de información falsa en nombre de un inmueble certificado o en proceso de certificación.
+            </p>
+        </article>
+        
+        <article class="my-2">
+            <h4 class="text-white fw-bold">¿Cómo se certifica la propiedad?</h4>
+            <p class="text-white col col-10 m-auto">
+                En arriendofinca hay 2 formas de certificar, de forma presencial o de forma virtual. 
+            </p>
+            <h5 class="text-white mt-2">De forma presencial</h5>
+            <p class="text-white col col-10 m-auto">
+                Varios agentes de arriendofinca acudirán al inmueble en un horario previamente acordado con el dueño o encargado del inmueble. Durante el proceso se verificará que lo que se describió en el inmueble sea verdad, las características,
+                se verificarán los papeles de la propiedad, se verificará que todo esté al día y si todo está en orden, se le otorgará la insignia 'vendedor confiable' que será visible en
+                todos los inmuebles que publiques durante 3 meses (esta insignia se anula si descubrimos alguna irregularidad en alguno de sus inmuebles) y también se le otorgará al inmueble 
+                la insignia de 'completamente verificado', esta dura para siempre. Tenga en cuenta que si borra la propiedad, esta insignia desaparecerá. Actualmente esta opción sólo se encuentra
+                disponible para los inmuebles radicados en la ciudad de Medellín, municipios aledaños y pueblos cercanos a Medellín.
+            </p>
+            <h5 class="text-white mt-2">De forma virtual</h5>
+            <p class="text-white col col-10 m-auto">
+                De forma virtual, sólo podremos verificar los papeles del inmueble más no el inmueble físico, por lo que si todo sale bien, se le otorgará la insignia de 'papeles al día'
+                únicamente. Los papeles requeridos se los pediremos por correo directamente. Esta opción está disponible para toda Colombia.
+            </p>
+        </article>
+
+        <article class="my-2">
+            <h4 class="text-white fw-bold">Precio de certificación.</h4>
+            <p class="text-white col col-10 m-auto">
+                El precio para certificar la propiedad depende mucho del tipo de inmueble a verificar y del tiempo que nos tome llevar a cabo este proceso. La certificación virtual cuesta menos que la presencial,
+                pero la presencial le da más seguridad a los compradores. Las cotizaciones se harán por correo o mediante WhatsApp.
+            </p>
+        </article>
+
+        <article class="my-2">
+            <h4 class="text-white fw-bold">¿Que pasa si en el proceso de certificación no logro demostrar todo lo ofrecido en la plataforma?</h4>
+            <p class="text-white col col-10 m-auto">
+                Si el inmueble físicamente no cumple con lo ofrecido en la plataforma, arriendofinca en primera instancia le dará a usted la oportunidad de modificar las características, 
+                fotos y detalles del inmueble de forma acorde a la realidad para poder otorgarle la insignia de 'Perímetro Verificado'. Si se hace caso omiso, se le otorgará al inmueble
+                'Perímetro NO Verificado'<br>
+                Si encontramos alguna irregularidad en los papeles del inmueble, se le pondrá una insignia de 'Papeles NO verificados' hasta que los ponga al día. Cuando los ponga al día
+                cambiaremos el estado a 'Papeles Verificados'. <br>
+                Si previamente tenía la insignia de 'Comprador Confiable', esta será removida si alguno de los items anteriores suceden.
+                Revise <a href="#tipos_insignias" class="">tipos de insignias</a> para mayor información
+            </p>
+        </article>
+        <article class="my-2" id="tipos_insignias">
+            <h4 class="text-white fw-bold">Tipos de insignias para el inmueble y/o usuario</h4>
+            <h5 class="text-white mt-2">Insignias para inmuebles</h5>
+
+            <section class="table-responsive ">
+                <table class="table caption-top table-borderless col col-6 table-light border rounded">
+                    <caption class="text-white fw-bold">Insignias para inmuebles</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-orange">Descripción</th>
+                            <th scope="col" class="text-orange">Insignia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th><p>Cuando la verificación se hace presencial y el inmueble cumple tanto físicamente como en sus papeles.</p></th>
+                            <th><span class="badge bg-tt-orange">Inmueble verificado</span></th>
+                        </tr>
+                        <tr>
+
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </section>
+        </article>
+
+    </section>
+
+</section>
+
+
+{% endblock %}
