@@ -31,19 +31,9 @@
                                 <li class="nav-item"><a class="nav-link px-2" href="/"><i class='bx bx-search text-orange' ></i> Buscar inmuebles</a></li>
                                 <li class="nav-item"><a class="nav-link px-2" href="/userarea"><i class='bx bx-intersect text-orange'></i> Area de usuario</a></li>
                                 <li class="nav-item"><a class="nav-link px-2" href="/crear_inmueble"><i class='bx bx-plus-circle text-orange' ></i> Publicar inmueble</a></li>
-                                {% if isAdmin %}
-                                <li class="dropdown">
-                                    <button type="button" class="btn bg-tt-orange dropdown-toggle" id="dropdownMenuAdmin" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Administración
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuAdmin">
-                                        <li><a href="" class="dropdown-item"><i class='bx bxs-user-detail text-orange' ></i> Usuarios</a></li>
-                                        <li><a href="" class="dropdown-item"><i class='bx bx-buildings text-orange' ></i> Inmuebles</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a href="" class="dropdown-item"><i class='bx bxs-dashboard text-orange' ></i> Estadísticas</a></li>
-                                    </ul>
-                                </li>
-                                {% endif %}
+                                <li class="nav-item"><a class="nav-link px-2" href="/FAQS"><i class='bx bx-question-mark text-orange'></i> Centro de ayuda - FAQS</a></li>
+                                
+                                
                             </ul>
                             <article class="d-flex align-items-center">
                                 {% if user.is_authenticated %}

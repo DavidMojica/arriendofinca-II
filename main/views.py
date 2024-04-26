@@ -25,6 +25,7 @@ HTMLCREARINMUEBLE = 'inmueble_crear.html'
 HTMLEDITARINMUEBLE = 'inmueble_editar.html'
 HTMLBUSQUEDA = "busqueda.html"
 HTMLDETALLESINMUEBLE = 'detallesinmueble.html'
+HTMLFAQS = 'FAQS.html'
 
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
@@ -121,6 +122,10 @@ def home(request):
     
     data['inmuebles_destacados'] = inmuebles_destacados
     return render(request, HTMLHOME, {**data})
+
+def Faqs(request):
+    
+    return render(request, HTMLFAQS)
 
 #--Inicio de sesión - Registro--#
 @unloginRequired

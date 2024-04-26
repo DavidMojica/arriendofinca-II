@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/FAQS.css' %}">
+
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+<section class="bg-light row justify-content-center align-items-center gap-5 py-5 me-0">
+    <article class="col-6 col-lg-3 text-center">
+        <lottie-player src="https://lottie.host/f7936a61-536b-4483-adcb-d96c1afd2e7a/jtRVFzcqMf.json" id="questionLottie" background="##FFFFFF" speed="1" loop autoplay direction="1" mode="normal"></lottie-player>
+    </article>
+    <article class="col-6 col-lg-4 text-center">
+        <h1 class="fw-bold text-orange">FAQs</h1>
+        <p class="text-wrap text-muted w-lg-50 m-auto">¿Tienes dudas sobre alguno de nuestros servicios? Aquí podrás encontrar respuestas útiles y también instrucciones para ayuda personalizada y soporte de arriendofinca.com</p>
+    </article>
+</section>
+
+<section class="bg-tt-orange row justify-content-center text-center py-3 me-0">
+    <h2 class="text-white fw-bold">Certificación de inmuebles</h2>
+    <section class="col-lg-8">
+        <article>
+            <h4 class="text-white fw-bold">¿Qué es la certificación?</h4>
+            <p class="text-white col col-10 m-auto">
+                La certificación es un proceso mediante el cual arriendofinca.com se segura de que los inmuebles, los beneficios de los inmuebles,
+                las características de los inmuebles y todo lo que describe el propietario en la publicación de su inmueble es información real y al día. 
+                También nos aseguramos de que los pepeles de inmueble estén en orden y sean aptos para ser transferidos a un nuevo comprador sin ningún riesgo adicional.
+            </p>
+        </article>
+
+        <article>
+            <h4 class="text-white fw-bold mt-3">¿Cómo certificar una propiedad?</h4>
+            <p class="text-white col col-10 m-auto">
+                En el área de usuario aparecen los inmuebles que has creado previamente. Tienen 3 opciones: borrar, modificar o certificar. 
+                Debes de dar click en la opción de 'certificar', te aparecerá una ventana con información que debes leer sobre la certificación y debes de confirmar
+                haber leído toda información y sus consecuencias en caso de que detectemos alguna irregularidad en el inmueble o en sus documentos. <br>
+                Cuando confirmes, nos llegará una notificación de que quieres certificar una propiedad y nosotros te estaremos respondiendo lo más pronto posible
+                al correo que tienes registrado en la plataforma con todos los detalles y cotizaciones.
+            </p>
+        </article>
+    </section>
+
+</section>
+
+
+{% endblock %}
