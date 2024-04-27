@@ -109,13 +109,23 @@ class Inmueble(models.Model):
     duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
+class TipoCertificado(models.Model):
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return f"{self.description}"
+
 class Certificado(models.Model):
     id = models.AutoField(primary_key=True)
     inmueble = models.OneToOneField(Inmueble, on_delete=models.CASCADE, null=True, blank=True)
     fecha_certificacion = models.DateTimeField(auto_now_add=True, null=True)
+    tipo = models.ForeignKey(TipoCertificado, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return f"Inmueble: {self.inmueble.id} Ceritificado: {self.id}"
+
+
 
 class Imagenes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -132,6 +142,7 @@ class Destacados(models.Model):
     
     def __str__(self):
         return f"Inmueble: {self.inmueble.id} Id Destacado: {self.id} Fecha: {self.fecha_destacado}"
+    
     
     
 @receiver(pre_delete, sender=Inmueble)
