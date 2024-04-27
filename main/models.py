@@ -125,8 +125,6 @@ class Certificado(models.Model):
     def __str__(self):
         return f"Inmueble: {self.inmueble.id} Ceritificado: {self.id}"
 
-
-
 class Imagenes(models.Model):
     id = models.AutoField(primary_key=True)
     img = models.ImageField(upload_to='inmuebles', null=True)
@@ -143,8 +141,6 @@ class Destacados(models.Model):
     def __str__(self):
         return f"Inmueble: {self.inmueble.id} Id Destacado: {self.id} Fecha: {self.fecha_destacado}"
     
-    
-    
 @receiver(pre_delete, sender=Inmueble)
 def eliminar_imagenes_inmueble(sender, instance, **kwargs):
     imagenes = Imagenes.objects.filter(inmueble=instance)
@@ -152,5 +148,3 @@ def eliminar_imagenes_inmueble(sender, instance, **kwargs):
         if imagen.img:
             default_storage.delete(imagen.img.name)
         imagen.delete()
-
-
