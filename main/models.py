@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.dispatch import receiver
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import pre_delete, post_save, post_delete
 from django.core.files.storage import default_storage
+from django.forms import ValidationError
 
 class TipoUsuario(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -143,8 +144,8 @@ class Destacados(models.Model):
 
 class SolicitudDestacados(models.Model):
     ESTADO_CHOICES = (
-        ('A', 'Aceptado'),
-        ('R', 'Rechazado'),
+        ('A', 'Aceptar'),
+        ('R', 'Rechazar'),
     )
     
     inmueble = models.OneToOneField('Inmueble', on_delete=models.CASCADE, null=True, blank=True)
@@ -155,8 +156,10 @@ class SolicitudDestacados(models.Model):
 
 @receiver(post_save, sender=SolicitudDestacados)
 def gestionar_solicitud_destacado(sender, instance, created, **kwargs):
-    if created and instance.estado == 'A':
+    if instance.estado == 'A':
         Destacados.objects.create(inmueble=instance.inmueble)
+        instance.delete()
+
     elif instance.estado == 'R':
         instance.delete()
 

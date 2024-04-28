@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados
+from main.models import Inmueble, Municipio, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados, SolicitudDestacados
 from .forms import FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
@@ -49,6 +49,8 @@ ERROR_14 = "Algún archivo cargado NO es una imagen."
 ERROR_15 = "Este objeto no existe"
 ERROR_16 = "No se pudo borrar el inmueble, no se pudo garantizar autenticidad."
 ERROR_17 = "Petición desconocida"
+ERROR_18 = "Este inmueble ya tiene una solicitud de destacados en proceso."
+ERROR_19 = "Este inmueble ya tiene una solicitud de certificado en proceso."
 
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
@@ -248,6 +250,17 @@ def UserArea(request):
                     data['event'] = ERROR_16
             except Inmueble.DoesNotExist:
                 data['event'] = ERROR_15
+                
+        elif 'solicitudDestacarPropiedad' in request.POST:
+            propiedad_id = request.POST.get('propiedad_id')
+            
+            solicitud_existente = SolicitudDestacados.objects.filter(inmueble_id=propiedad_id)
+            
+            if solicitud_existente:
+                data['event'] = ERROR_18
+            else:
+                nueva_solicitud = SolicitudDestacados.objects.create(inmueble_id=propiedad_id)
+            
     else:
         form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
         if 'municipio' in request.GET:
