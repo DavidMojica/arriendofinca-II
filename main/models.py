@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.dispatch import receiver
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save, post_delete
 from django.core.files.storage import default_storage
+from django.forms import ValidationError
 
 class TipoUsuario(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -109,10 +110,19 @@ class Inmueble(models.Model):
     duenio = models.ForeignKey(Usuario, on_delete = models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True, null=True)
 
+class TipoCertificado(models.Model):
+    id = models.IntegerField(primary_key=True)
+    description = models.CharField(max_length=50)
+    badge = models.CharField(max_length=50, null=True)
+    
+    def __str__(self):
+        return f"{self.badge}"
+
 class Certificado(models.Model):
     id = models.AutoField(primary_key=True)
     inmueble = models.OneToOneField(Inmueble, on_delete=models.CASCADE, null=True, blank=True)
     fecha_certificacion = models.DateTimeField(auto_now_add=True, null=True)
+    tipo = models.ForeignKey(TipoCertificado, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return f"Inmueble: {self.inmueble.id} Ceritificado: {self.id}"
@@ -132,8 +142,50 @@ class Destacados(models.Model):
     
     def __str__(self):
         return f"Inmueble: {self.inmueble.id} Id Destacado: {self.id} Fecha: {self.fecha_destacado}"
+
+class SolicitudDestacados(models.Model):
+    ESTADO_CHOICES = (
+        ('A', 'Aceptar'),
+        ('R', 'Rechazar'),
+    )
     
+    inmueble = models.OneToOneField('Inmueble', on_delete=models.CASCADE, null=True, blank=True)
+    estado = models.CharField(max_length=1, choices=ESTADO_CHOICES)
     
+    def __str__(self):
+        return f"Solicitud de destacado para inmueble: {self.inmueble.id}"
+
+@receiver(post_save, sender=SolicitudDestacados)
+def gestionar_solicitud_destacado(sender, instance, created, **kwargs):
+    if instance.estado == 'A':
+        Destacados.objects.create(inmueble=instance.inmueble)
+        instance.delete()
+
+    elif instance.estado == 'R':
+        instance.delete()
+
+class SolicitudCertificados(models.Model):
+    ESTADO_CHOICES = (
+        ('A', 'Aceptar'),
+        ('R', 'Rechazar'),
+    )
+    
+    inmueble = models.OneToOneField('Inmueble', on_delete=models.CASCADE, null=True, blank=True)
+    tipo_certificado = models.ForeignKey(TipoCertificado, on_delete=models.CASCADE, null=True, blank=True)
+    estado = models.CharField(max_length=1, choices=ESTADO_CHOICES)
+    
+    def __str__(self):
+        return f"Solicitud de certificación para inmueble: {self.inmueble.id}"
+    
+@receiver(post_save, sender=SolicitudCertificados)
+def gestionar_solicitud_certificado(sender, instance, created, **kwargs):
+    if instance.estado == 'A':
+        Certificado.objects.create(inmueble=instance.inmueble, tipo=instance.tipo_certificado)
+        instance.delete()
+
+    elif instance.estado == 'R':
+        instance.delete()
+
 @receiver(pre_delete, sender=Inmueble)
 def eliminar_imagenes_inmueble(sender, instance, **kwargs):
     imagenes = Imagenes.objects.filter(inmueble=instance)
@@ -141,5 +193,3 @@ def eliminar_imagenes_inmueble(sender, instance, **kwargs):
         if imagen.img:
             default_storage.delete(imagen.img.name)
         imagen.delete()
-
-

@@ -15,6 +15,13 @@ insert into main_tipocobro (id, description) values(3, 'Diario');
 insert into main_tipocobro (id, description) values(4, 'Por noche');
 insert into main_tipocobro (id, description) values(5, 'Total');
 
+--Tipos de certificado
+insert into main_tipocertificado (id, description, badge) values(0, 'Revisión presencial - Inmueble y papeles' ,'100% Certificado');
+insert into main_tipocertificado (id, description, badge) values(1, 'Revisión presencial - Solo inmueble', 'Fisicamente certificado');
+insert into main_tipocertificado (id, description, badge) values(2, 'Revisión presencial - Solo papeles', 'Papeles al dia');
+insert into main_tipocertificado (id, description, badge) values(3, 'Revisión virtual - Solo papeles', 'Papeles al dia');
+insert into main_tipocertificado (id, description, badge) values(4, 'No certificado', 'No certificado');
+
 /*----Tipos de inmueble----*/
 insert into main_tipoinmueble (id, description) values(0, 'Fincas');
 insert into main_tipoinmueble (id, description) values(1, 'Cabañas');

@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados
-from .forms import FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from main.models import Inmueble, Municipio, SolicitudCertificados, TipoCertificado, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados, SolicitudDestacados
+from .forms import TipoCertificacionForm, FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
 
 #--Variables--#
@@ -49,6 +49,8 @@ ERROR_14 = "Algún archivo cargado NO es una imagen."
 ERROR_15 = "Este objeto no existe"
 ERROR_16 = "No se pudo borrar el inmueble, no se pudo garantizar autenticidad."
 ERROR_17 = "Petición desconocida"
+ERROR_18 = "Este inmueble ya tiene una solicitud de destacados en proceso."
+ERROR_19 = "Este inmueble ya tiene una solicitud de certificado en proceso."
 
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
@@ -231,7 +233,8 @@ def UserArea(request):
     
     #--Variables--#
     INMUEBLES_POR_PAGINA = 9
-    data = {'form': FiltrarInmuebles(), 'event': '', 'alert_type': 'danger'}
+    data = {'form': FiltrarInmuebles(), 'event': '', 'alert_type': 'danger',
+            'tipo_certificacion_form': TipoCertificacionForm()}
     inmuebles_usuario = Inmueble.objects.filter(duenio=request.user.id)
     
     
@@ -248,6 +251,32 @@ def UserArea(request):
                     data['event'] = ERROR_16
             except Inmueble.DoesNotExist:
                 data['event'] = ERROR_15
+                
+        elif 'solicitudDestacarPropiedad' in request.POST:
+            propiedad_id = request.POST.get('propiedad_id')
+            
+            solicitud_existente = SolicitudDestacados.objects.filter(inmueble_id=propiedad_id)
+            
+            if solicitud_existente:
+                data['event'] = ERROR_18
+            else:
+                SolicitudDestacados.objects.create(inmueble_id=propiedad_id)
+            
+        elif 'certificarPropiedad' in request.POST:
+            form_tipo_certificacion = TipoCertificacionForm(request.POST)
+            propiedad_id = request.POST.get('propiedad_id')
+            solicitud_existente = SolicitudCertificados.objects.filter(inmueble_id=propiedad_id)
+            
+            if solicitud_existente:
+                data['event'] = ERROR_19
+            else:
+                if form_tipo_certificacion.is_valid():
+                    tipo_certificacion = form_tipo_certificacion.cleaned_data.get('tipo_certificacion')
+                    tipo_certificacion_instance = get_object_or_404(TipoCertificado, pk=tipo_certificacion.id)
+
+                    SolicitudCertificados.objects.create(inmueble_id=propiedad_id, tipo_certificado=tipo_certificacion_instance)
+                else:
+                    data['event'] = ERROR_2
     else:
         form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
         if 'municipio' in request.GET:
@@ -509,7 +538,6 @@ def Busqueda(request):
     municipio_ubicacion = request.GET.get('municipio_ubicacion')
     solo_certificados = request.GET.get('solo_certificados')
     
-    print(arriendo_venta)
     inmuebles = []
     INMUEBLES_POR_PAGINA = 9
     data = { 'form_filtro': FiltrarInmueblesCaracteristicas()}

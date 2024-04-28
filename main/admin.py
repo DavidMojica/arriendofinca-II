@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Certificado, Inmueble, Destacados, Usuario
+from .models import Certificado, Inmueble, Destacados, SolicitudCertificados, Usuario, SolicitudDestacados
 
 # Register your models here.
 class CertificadoAdmin(admin.ModelAdmin):
@@ -24,3 +24,13 @@ class UsuariosAdmin(admin.ModelAdmin):
     get_full_name.short_description = 'Nombre Completo'
     
 admin.site.register(Usuario, UsuariosAdmin)
+
+class SolicitudesDestacadosAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+    
+admin.site.register(SolicitudDestacados, SolicitudesDestacadosAdmin)
+
+class SolicitudesCertificadosAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+    
+admin.site.register(SolicitudCertificados, SolicitudesCertificadosAdmin)
