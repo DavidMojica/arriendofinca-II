@@ -425,9 +425,10 @@ class EditarInmuebleForm(forms.ModelForm):
 class TipoCertificacionForm(forms.Form):
     tipo_certificacion = forms.ModelChoiceField(
         label="Tipo de certificación",
-        queryset=TipoCertificado.objects.all(),
+        queryset=TipoCertificado.objects.exclude(id=4),
         widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_certificado'}),
         required=True,
+        empty_label="Seleccione...",
     )
     
 #-------------------------------------------------

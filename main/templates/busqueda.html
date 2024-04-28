@@ -159,7 +159,22 @@
                                 </section>
                                 <section class="card-body">
                                     {% if inmueble.certificado %}
-                                        <span class="badge bg-tt-orange text-wrap mb-2">Inmueble certificado <i class='bx bx-check-shield'></i></span>
+                                        <span class="badge bg-tt-orange text-wrap mb-2">{{inmueble.certificado.tipo}} 
+                                            {% if inmueble.certificado.tipo.id == 0 %}
+                                                <i class='bx bx-check-shield'></i>
+                                            {% elif inmueble.certificado.tipo.id == 1 %}
+                                                <i class='bx bx-building-house'></i>
+                                            {% elif inmueble.certificado.tipo.id == 2 %}
+                                                <i class='bx bxs-dock-top' ></i>
+                                            {% elif inmueble.certificado.tipo.id == 3 %}
+                                                <i class='bx bxs-dock-top' ></i>
+                                            {% else %}
+                                                <i class='bx bx-x-circle' ></i>
+                                            {% endif %}
+                                        </span>
+                                    {% endif %}
+                                    {% if inmueble.destacados %}
+                                        <span class="badge bg-tt-orange text-wrap mb-2">Inmueble Destacado <i class='bx bx-medal' ></i></span>
                                     {% endif %}
                                     <h5 class="card-title">
                                         {{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}}
