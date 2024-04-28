@@ -509,7 +509,6 @@ def Busqueda(request):
     municipio_ubicacion = request.GET.get('municipio_ubicacion')
     solo_certificados = request.GET.get('solo_certificados')
     
-    print(arriendo_venta)
     inmuebles = []
     INMUEBLES_POR_PAGINA = 9
     data = { 'form_filtro': FiltrarInmueblesCaracteristicas()}

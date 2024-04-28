@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.dispatch import receiver
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.core.files.storage import default_storage
 
 class TipoUsuario(models.Model):
@@ -140,7 +140,26 @@ class Destacados(models.Model):
     
     def __str__(self):
         return f"Inmueble: {self.inmueble.id} Id Destacado: {self.id} Fecha: {self.fecha_destacado}"
+
+class SolicitudDestacados(models.Model):
+    ESTADO_CHOICES = (
+        ('A', 'Aceptado'),
+        ('R', 'Rechazado'),
+    )
     
+    inmueble = models.OneToOneField('Inmueble', on_delete=models.CASCADE, null=True, blank=True)
+    estado = models.CharField(max_length=1, choices=ESTADO_CHOICES)
+    
+    def __str__(self):
+        return f"Solicitud de destacado para inmueble: {self.inmueble.id}"
+
+@receiver(post_save, sender=SolicitudDestacados)
+def gestionar_solicitud_destacado(sender, instance, created, **kwargs):
+    if created and instance.estado == 'A':
+        Destacados.objects.create(inmueble=instance.inmueble)
+    elif instance.estado == 'R':
+        instance.delete()
+
 @receiver(pre_delete, sender=Inmueble)
 def eliminar_imagenes_inmueble(sender, instance, **kwargs):
     imagenes = Imagenes.objects.filter(inmueble=instance)
