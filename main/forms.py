@@ -1,4 +1,4 @@
-from .models import Departamento, Imagenes, Inmueble, TipoCobro, TipoDocumento, TipoInmueble, ArriendoVenta, Municipio, Usuario
+from .models import Departamento, Imagenes, Inmueble, TipoCertificado, TipoCobro, TipoDocumento, TipoInmueble, ArriendoVenta, Municipio, Usuario
 from django import forms
 from django.db import models
 
@@ -422,6 +422,14 @@ class EditarInmuebleForm(forms.ModelForm):
         fields = ('arriendo_venta', 'precio', 'tipo_cobro','direccion', 'area', 'area_construida', 'habitaciones', 'banios', 'description')
         exclude= ['tipo_inmueble', 'municipio_ubicacion', 'duenio']
         
+class TipoCertificacionForm(forms.Form):
+    tipo_certificacion = forms.ModelChoiceField(
+        label="Tipo de certificación",
+        queryset=TipoCertificado.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_certificado'}),
+        required=True,
+    )
+    
 #-------------------------------------------------
 #--------------------Búsqueda---------------------
 #-------------------------------------------------     

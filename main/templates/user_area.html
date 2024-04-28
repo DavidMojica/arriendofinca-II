@@ -164,11 +164,29 @@
                                 <article class="modal-dialog modal-dialog-centered">
                                     <article class="modal-content">
                                         <section class="modal-header">
-                                            <h5 class="modal-title">Confirmar borrar</h5>
+                                            <h5 class="modal-title">Solicitud de certificado de propiedad</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </section>
                                         <section class="modal-body">
-                                            <p>Al usted borrar esta propiedad, se eliminarán todos los datos relacionados a ella. Si la vuelve a crear despues, se creará con un ID distinto</p>
+                                            <p>
+                                                Al enviar la solicitud para certificar el inmueble, el equipo de arriendofinca.com se pondrá en contacto con usted para agendar la visita. 
+                                                Por favor lea la <a href=" {% url 'FAQS' %}#inmuebles-certificados" target="_blank">información sobre certificar una propiedad</a> antes de mandar la solicitud.
+                                                Tenga en cuenta que cuando mande la solicitud, después no podrá cancelarla hasta que el equipo de arriendofinca se comunique con usted. <br>
+                                                Por favor confirme la siguiente información y escoja el tipo de certificación según lo visto en <a href=" {% url 'FAQS' %}#formas-revision" target="_blank">formas revisión</a>.
+                                                <section class="card">
+                                                    <article class="card-body bg-white text-center">
+                                                        <h3>Inmueble elegido:</h3>
+                                                        <h4 class="card-title">{{ inmueble.tipo_inmueble }} en {{inmueble.arriendo_venta}}</h4>
+                                                        <small>
+                                                            {{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}} <br>
+                                                            ID del inmueble: {{inmueble.id}}
+                                                        </small>
+                                                    </article>
+                                                </section>
+
+
+                                            
+                                            </p>
                                         </section>
                                         <section class="modal-footer ">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
@@ -205,7 +223,6 @@
                                                                 {{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}} <br>
                                                                 ID del inmueble: {{inmueble.id}}
                                                             </small>
-                                                            
                                                         </article>
                                                     </section>
                                                 </p>
