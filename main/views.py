@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from main.models import Inmueble, Municipio, SolicitudCertificados, TipoCertificado, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados, SolicitudDestacados
 from .forms import TipoCertificacionForm, FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Case, When, Value, IntegerField, Q
 
 #--Variables--#
 USERLENGTHMIN = 4
@@ -544,7 +545,15 @@ def Busqueda(request):
     form = BusquedaInmuebleForm(request.GET)
     #Campos obligatorios
     if tipo_inmueble:
-        inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble)
+        inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble).annotate(
+            destacado_certificado=Case(
+                When(Q(destacados__isnull=False) & Q(certificado__isnull=False), then=Value(1)),
+                When(Q(destacados__isnull=False), then=Value(2)),
+                When(Q(certificado__isnull=False), then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField(),
+            )
+        ).order_by('destacado_certificado')
     else:
         return redirect('home')
     

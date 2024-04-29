@@ -332,7 +332,7 @@
     {% if inmuebles_destacados %}
         {% for inmueble in inmuebles_destacados %}
             <section class="card col-10 col-md-4 col-xl-3 col-xxl-2 ">
-                <article class="inmueble-container h-100">
+                <article class="inmueble-container h-100 d-flex flex-column">
                     <section class="text-center pic-container">
                         {% if inmueble.imagenes.all %}
                             <article class="swiper imgSwiper">
@@ -349,9 +349,14 @@
                             <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
                         {% endif %}    
                     </section>
-                    <section class="card-body">
+                    <section class="card-body d-flex flex-column justify-content-center" >
                         {% if inmueble.certificado %}
-                        <span class="badge bg-tt-orange text-wrap mb-2">{{inmueble.certificado.tipo}} 
+                        <span class="badge bg-tt-orange text-wrap mb-2">
+                            {% if inmueble.certificado.tipo != None %}
+                                {{inmueble.certificado.tipo.badge}} 
+                            {% else %}
+                                Certificado no reconocido
+                            {% endif %}
                             {% if inmueble.certificado.tipo.id == 0 %}
                                 <i class='bx bx-check-shield'></i>
                             {% elif inmueble.certificado.tipo.id == 1 %}
@@ -410,7 +415,7 @@
     <h2 class="fw-bold text-white">Inmuebles más recientes</h2>
     {% for inmueble in inmuebles%}
         <section class="card col-10 col-md-4 col-xl-3 col-xxl-2 ">
-            <article class="inmueble-container h-100">
+            <article class="inmueble-container h-100 d-flex flex-column">
                 <section class="text-center pic-container">
                     {% if inmueble.imagenes.all %}
                         <article class="swiper imgSwiper">
@@ -427,9 +432,14 @@
                         <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
                     {% endif %}    
                 </section>
-                <section class="card-body">
+                <section class="card-body d-flex flex-column justify-content-center">
                     {% if inmueble.certificado %}
-                        <span class="badge bg-tt-orange text-wrap mb-2">{{inmueble.certificado.tipo}} 
+                        <span class="badge bg-tt-orange text-wrap mb-2">
+                            {% if inmueble.certificado.tipo != None %}
+                                {{inmueble.certificado.tipo.badge}} 
+                            {% else %}
+                                Certificado no reconocido
+                            {% endif %}
                             {% if inmueble.certificado.tipo.id == 0 %}
                                 <i class='bx bx-check-shield'></i>
                             {% elif inmueble.certificado.tipo.id == 1 %}
