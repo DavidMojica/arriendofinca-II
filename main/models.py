@@ -98,7 +98,7 @@ class Inmueble(models.Model):
     id = models.AutoField(primary_key=True)
     arriendo_venta = models.ForeignKey(ArriendoVenta, on_delete = models.CASCADE)
     tipo_inmueble = models.ForeignKey(TipoInmueble, on_delete = models.CASCADE)
-    precio = models.CharField(max_length=20)
+    precio = models.BigIntegerField()
     tipo_cobro = models.ForeignKey(TipoCobro, on_delete=models.CASCADE, default=1)
     municipio_ubicacion = models.ForeignKey(Municipio, on_delete = models.CASCADE, null=True, blank=True)
     direccion = models.CharField(max_length=80)
@@ -116,7 +116,7 @@ class TipoCertificado(models.Model):
     badge = models.CharField(max_length=50, null=True)
     
     def __str__(self):
-        return f"{self.badge}"
+        return f"{self.description}"
 
 class Certificado(models.Model):
     id = models.AutoField(primary_key=True)

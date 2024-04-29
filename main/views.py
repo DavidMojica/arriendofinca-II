@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from main.models import Inmueble, Municipio, SolicitudCertificados, TipoCertificado, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados, SolicitudDestacados
 from .forms import TipoCertificacionForm, FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Case, When, Value, IntegerField, Q
 
 #--Variables--#
 USERLENGTHMIN = 4
@@ -51,7 +52,7 @@ ERROR_16 = "No se pudo borrar el inmueble, no se pudo garantizar autenticidad."
 ERROR_17 = "Petición desconocida"
 ERROR_18 = "Este inmueble ya tiene una solicitud de destacados en proceso."
 ERROR_19 = "Este inmueble ya tiene una solicitud de certificado en proceso."
-
+ERROR_20 = "Este inmueble ya está certificado y no está habilitado para cambios."
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
 #-----------------------------------------------------------------------------------------#
@@ -409,44 +410,45 @@ def EditarInmueble(request,  inmueble_id):
     #--Si todo salió bien--#
     data = {'event' : '', 'alert_type': 'danger'}
     if request.method == 'POST':
-        if 'guardar_edicion' in request.POST:
-            form = EditarInmuebleForm(request.POST, instance=inmueble)
-            if form.is_valid():
-                inmueble_editar = form.save(commit=False)
-                inmueble_editar.save()
-                data['alert_type'] = 'success'
-                data['event'] = SUCCESS_1
-            else:
-                data['event'] = ERROR_2        
-        elif 'eliminarImagen' in request.POST:
-            imagen_id = request.POST.get('imagen_id')   
-            imagen = Imagenes.objects.get(pk=imagen_id)
+        if not inmueble.certificado:
+            if 'guardar_edicion' in request.POST:
+                form = EditarInmuebleForm(request.POST, instance=inmueble)
+                if form.is_valid():
+                    inmueble_editar = form.save(commit=False)
+                    inmueble_editar.save()
+                    data['alert_type'] = 'success'
+                    data['event'] = SUCCESS_1
+                else:
+                    data['event'] = ERROR_2        
+            elif 'eliminarImagen' in request.POST:
+                imagen_id = request.POST.get('imagen_id')   
+                imagen = Imagenes.objects.get(pk=imagen_id)
 
-            if imagen.img:     
-                imagen.img.delete()
-            imagen.delete()
-            data['alert_type'] = 'success'
-            data['event'] = SUCCESS_4
-            
-        elif 'agregar_imagenes' in request.POST:
-            #--Validación de imágenes--#
-            files = request.FILES.getlist('imagenes')
-            ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
-            ban_images, error_index = ValidarImagenes(files, inmueble.imagenes.count())
-            
-            if ban_images:
-                for file in files:
-                    imagen = Imagenes()
-                    imagen.img = file
-                    imagen.inmueble = inmueble
-                    imagen.save()
+                if imagen.img:     
+                    imagen.img.delete()
+                imagen.delete()
                 data['alert_type'] = 'success'
-                data['event'] = SUCCESS_3
+                data['event'] = SUCCESS_4          
+            elif 'agregar_imagenes' in request.POST:
+                #--Validación de imágenes--#
+                files = request.FILES.getlist('imagenes')
+                ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
+                ban_images, error_index = ValidarImagenes(files, inmueble.imagenes.count())
+                
+                if ban_images:
+                    for file in files:
+                        imagen = Imagenes()
+                        imagen.img = file
+                        imagen.inmueble = inmueble
+                        imagen.save()
+                    data['alert_type'] = 'success'
+                    data['event'] = SUCCESS_3
+                else:
+                    data['event'] = ERROR_LIST[error_index]
             else:
-                data['event'] = ERROR_LIST[error_index]
+                data['event'] = ERROR_17
         else:
-            data['event'] = ERROR_17
-    
+            data['event'] = ERROR_20
     form = EditarInmuebleForm(instance=inmueble)
     form.fields['tipo_inmueble'].choices = [(inmueble.tipo_inmueble.id, inmueble.tipo_inmueble.description)]
     form.fields['municipio_ubicacion'].choices = [(inmueble.municipio_ubicacion.id, inmueble.municipio_ubicacion.description)]
@@ -544,7 +546,15 @@ def Busqueda(request):
     form = BusquedaInmuebleForm(request.GET)
     #Campos obligatorios
     if tipo_inmueble:
-        inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble)
+        inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble).annotate(
+            destacado_certificado=Case(
+                When(Q(destacados__isnull=False) & Q(certificado__isnull=False), then=Value(1)),
+                When(Q(destacados__isnull=False), then=Value(2)),
+                When(Q(certificado__isnull=False), then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField(),
+            )
+        ).order_by('destacado_certificado')
     else:
         return redirect('home')
     
@@ -588,7 +598,7 @@ def Busqueda(request):
                 if area_max:
                     inmuebles= inmuebles.exclude(area__gt=area_max)
                 
-                data['form_filtro'] = form
+                data['form_filtro'] = form_post
             else:
                 data['event'] = ERROR_2
         else:
