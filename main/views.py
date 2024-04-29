@@ -597,7 +597,7 @@ def Busqueda(request):
                 if area_max:
                     inmuebles= inmuebles.exclude(area__gt=area_max)
                 
-                data['form_filtro'] = form
+                data['form_filtro'] = form_post
             else:
                 data['event'] = ERROR_2
         else:
