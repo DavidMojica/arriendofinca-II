@@ -130,7 +130,9 @@
                     </section> 
                     <section class="card-footer bg-white row gap-1 ">
                         <aside class="col-2 justify-content-center row gap-1">
-                            <a href="{% url 'editar_inmueble' inmueble_id=inmueble.id %}" class="btn bg-white border btn-sm" title="Editar inmueble"><i class='bx bx-edit-alt' ></i></a>
+                            <button class="btn bg-white border btn-sm" {% if inmueble.certificado %} disabled {% endif %} >
+                                <a href="{% url 'editar_inmueble' inmueble_id=inmueble.id %}" title="Editar inmueble" class="text-reset text-decoration-none" ><i class='bx bx-edit-alt' ></i></a>
+                            </button>
                             <!-- trigger -->
                             <button class="btn btn-danger btn-sm" title="Borrar inmueble" data-bs-toggle="modal" data-bs-target="#borrarPropiedad-{{ inmueble.id }}"><i class="bx bx-trash"></i></button>
                             <!-- modal -->

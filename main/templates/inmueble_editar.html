@@ -33,6 +33,10 @@
     <section class="card p-4 col col-md-6 mx-auto">
         <article class="card-header bg-white">
             <h2 class="card-title fw-bold text-orange">Editar inmueble</h2>
+            {% if inmueble.certificado %}
+                <small class="text-danger">Este inmueble ya está certificado, los cambios que haga no se guardarán.</small>
+            {% endif %}
+            
         </article>
         <article class="card-body">
             <form action="" class="row justify-content-center" method="POST" id="form-crear">
@@ -170,7 +174,7 @@
                         <article class="swiper-pagination"></article>
                     </article>
                 {% else %}
-                    <h4 class="display-5 text-center text-info">Inmueble sin imágenes</h4>
+                    <h4 class="display-5 text-center text-orange">Inmueble sin imágenes</h4>
                 {% endif %}  
             </section>
             <form action="" method="POST" class="text-center" enctype="multipart/form-data">
@@ -181,7 +185,7 @@
                         <i class='bx bxs-info-circle text-blue'></i> Subir imágenes es opcional, pero tus inmuebles atraerán más clientes potenciales.</small>
                 </fieldset>
                 <input type="hidden" name="agregar_imagenes">
-                <input type="submit" value="Subir imágenes" class="btn btn-warning py-4 mt-3 w-100">
+                <input type="submit" value="Subir imágenes" class="btn bg-tt-orange text-white py-4 mt-3 w-100">
                 {% csrf_token %}
             </form>
         </article>
