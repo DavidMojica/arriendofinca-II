@@ -1,9 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.dispatch import receiver
-from django.db.models.signals import pre_delete, post_save, post_delete
+from django.db.models.signals import pre_delete, post_save
 from django.core.files.storage import default_storage
-from django.forms import ValidationError
 
 class TipoUsuario(models.Model):
     id = models.IntegerField(primary_key=True)
