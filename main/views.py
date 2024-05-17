@@ -541,7 +541,7 @@ def Busqueda(request):
     solo_certificados = request.GET.get('solo_certificados')
     
     inmuebles = []
-    INMUEBLES_POR_PAGINA = 9
+    INMUEBLES_POR_PAGINA = 10
     data = { 'form_filtro': FiltrarInmueblesCaracteristicas()}
     form = BusquedaInmuebleForm(request.GET)
     #Campos obligatorios

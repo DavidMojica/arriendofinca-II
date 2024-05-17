@@ -12,6 +12,10 @@ MAX_IMAGES = 5
 #-------------------------------------------------
 #----------------------HOME-----------------------
 #-------------------------------------------------
+class ClientStrAV(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.__client_str__()
+
 class BusquedaInmuebleForm(forms.Form):
     tipo_inmueble = forms.ModelChoiceField(
         label="Busco un(a)",
@@ -20,7 +24,7 @@ class BusquedaInmuebleForm(forms.Form):
         empty_label=TEXT_SELECCIONAR,
         required=True
     )
-    arriendo_venta = forms.ModelChoiceField(
+    arriendo_venta = ClientStrAV(
         label="Para",
         widget=forms.Select(attrs={'class':'form-select'}),
         queryset=ArriendoVenta.objects.all(),
