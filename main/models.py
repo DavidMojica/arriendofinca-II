@@ -44,6 +44,14 @@ class ArriendoVenta(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=10)
     
+    def __client_str__(self):
+        if self.id == 0:
+            return "Arrendar"
+        elif self.id == 1: 
+            return "Comprar"
+        else:
+            return "No reconocido"
+    
     def __str__(self):
         return self.description
     
