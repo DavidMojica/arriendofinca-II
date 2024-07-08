@@ -27,7 +27,9 @@
     <section class="col-md-6 text-center d-flex flex-column justify-content-around" id="section1">
         <section class="mt-md-5">
             <h3 class="text-orange">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}} <br>
-                <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small>
+                <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small> <br>
+                <small>Dirección del inmueble: {{inmueble.direccion}}</small>
+                
             </h3>
             
             {% if inmueble.description %}
