@@ -27,13 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = [
-                 'arriendofinca.com',
-                  'www.arriendofinca.com',
-                  'arriendofinca.onrender.com',
-                  'www.arriendofinca.onrender.com',
-                  'arriendofinca.com.co',
-              ]
+ALLOWED_HOSTS = []
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
