@@ -22,8 +22,9 @@ let validationResult = undefined;
 form_crear.addEventListener('submit', e=>{
     e.preventDefault();
     validationResult = form_validators();
-    if (validationResult != "0") createToastNotify(1, "Error creando inmueble", validationResult);
-    else form_crear.submit();
+    if (validationResult != "0") createToastNotify(1, "Error en detalles del inmueble", validationResult);
+    else 
+    form_crear.submit();
 });
 //----------Validacion de imagenes---------//
 imagenes.addEventListener('change', e=>{
@@ -39,9 +40,6 @@ imagenes.addEventListener('change', e=>{
 
 const img_validators = files =>{
     const img_maxMB_size = 2;
-    
-
-
     //-----Cantidad de imágenes------//
     if (files.length > 5) return "Sólo se permiten un máximo de 5 imágenes.";
     
@@ -58,8 +56,6 @@ const img_validators = files =>{
             return 'El archivo "' + file.name + '" no es una imagen válida.';
         }
     }
-
-
     return "0";
 }
 
@@ -67,7 +63,6 @@ const img_validators = files =>{
 arriendo_venta.addEventListener('change', e=>{
     if (e.target.value == 1){
         tipo_cobro.value = 5;
-        tipo_cobro.disabled = true;
 
         for (let i = 0; i < tipo_cobro.options.length; i++) {
             if (tipo_cobro.options[i].value == 5) {

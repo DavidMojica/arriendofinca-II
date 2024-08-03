@@ -1,11 +1,13 @@
+import random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from main.models import Inmueble, Municipio, TipoDocumento, TipoUsuario, Usuario
-from .forms import FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
+from main.models import Inmueble, Municipio, SolicitudCertificados, TipoCertificado, TipoCobro, TipoUsuario, Usuario, Imagenes, Destacados, SolicitudDestacados
+from .forms import TipoCertificacionForm, FiltrarInmueblesCaracteristicas, EditarInmuebleForm, FiltrarInmuebles,CrearInmuebleForm, BusquedaInmuebleForm, LoginForm, RegisterForm, EditAccountBasics, EditAccountDangerZone
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Case, When, Value, IntegerField, Q
 
 #--Variables--#
 USERLENGTHMIN = 4
@@ -21,9 +23,16 @@ HTMLLOGIN = 'login.html'
 HTMLUSERAREA = 'user_area.html'
 HTMLUSEREDIT = 'user_edit.html'
 HTMLCREARINMUEBLE = 'inmueble_crear.html'
+HTMLEDITARINMUEBLE = 'inmueble_editar.html'
+HTMLBUSQUEDA = "busqueda.html"
+HTMLDETALLESINMUEBLE = 'detallesinmueble.html'
+HTMLFAQS = 'FAQS.html'
 
 #--MENSAJES--#
 SUCCESS_1 = "Guardado con éxito"
+SUCCESS_2 = "Inmueble borrado con éxito"
+SUCCESS_3 = "Imagenes guardadas correctamente"
+SUCCESS_4 = "Imagen borrada correctamente"
 
 ERROR_1 = "El nombre de usuario ya existe."
 ERROR_3 = "Error desconocido."
@@ -35,9 +44,15 @@ ERROR_8 = "La contraseña anterior no es la correcta."
 ERROR_9 = "Alguna(s) de las contraseñas no cumplen con la longitud minima."
 ERROR_10 = "Las contraseñas nuevas no coinciden"
 ERROR_11 = "Nombre o apellidos no cumplen con la longitud minima."
-ERROR_12 = f"Se excedió la cantida de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes."
+ERROR_12 = f"Se excedió la cantidad de imágenes. Maximo {MAX_IMAGES_PER_POST} imágenes por inmueble."
 ERROR_13 = f"Alguna imagen excede el peso permitido. Máximo {MAX_IMAGE_MB} Mb por imágen"
-
+ERROR_14 = "Algún archivo cargado NO es una imagen."
+ERROR_15 = "Este objeto no existe"
+ERROR_16 = "No se pudo borrar el inmueble, no se pudo garantizar autenticidad."
+ERROR_17 = "Petición desconocida"
+ERROR_18 = "Este inmueble ya tiene una solicitud de destacados en proceso."
+ERROR_19 = "Este inmueble ya tiene una solicitud de certificado en proceso."
+ERROR_20 = "Este inmueble ya está certificado y no está habilitado para cambios."
 #-----------------------------------------------------------------------------------------#
 #-------------------------------------DECORADORES-----------------------------------------#
 #-----------------------------------------------------------------------------------------#
@@ -71,13 +86,49 @@ def Logout(request):
     logout(request)
     return redirect(reverse('home'))
 
+def ValidarImagenes(files, cantidad_imagenes_inmueble=0):
+    """
+    Se encarga de validar las imágenes provenientes de los formularios.
+
+    Args:
+        files (FILE_LIST): Lista de imágenes provenientes de los formularios.
+
+    Returns:
+        bool: Bandera aprobatoria de las validaciones.
+        int: Número usado para mostrar errores en la salida.
+    """
+    if len(files) > MAX_IMAGES_PER_POST:
+        return False, 0
+
+    for f in files:
+        if f.size > MAX_IMAGE_MB * 1024 * 1024:
+            return False, 1
+        
+        if not f.content_type.startswith('image/'):
+            return False, 2
+    
+    if cantidad_imagenes_inmueble + len(files) > MAX_IMAGES_PER_POST:
+        return False, 0
+      
+    return True, 3
 #-----------------------------------------------------------------------------------------#
 #-----------------------------------------VISTAS------------------------------------------#
 #-----------------------------------------------------------------------------------------#
 #--HOME o Index--#
 def home(request):
-    data = { 'form': BusquedaInmuebleForm() }
+    data = { 'form': BusquedaInmuebleForm(),
+            'inmuebles': Inmueble.objects.all().order_by('-fecha_creacion')[:4]}
+    
+    inmuebles_destacados = Destacados.objects.all()
+    inmuebles_destacados = [destacado.inmueble for destacado in inmuebles_destacados]
+    inmuebles_destacados = random.sample(list(inmuebles_destacados), min(len(inmuebles_destacados), 4))
+    
+    data['inmuebles_destacados'] = inmuebles_destacados
     return render(request, HTMLHOME, {**data})
+
+def Faqs(request):
+    
+    return render(request, HTMLFAQS)
 
 #--Inicio de sesión - Registro--#
 @unloginRequired
@@ -169,6 +220,7 @@ def Login(request):
         return render(request, HTMLLOGIN, {**data})
 
 #--Área del usuario--#
+#-Borrar inmueble
 @login_required
 def UserArea(request):
     """
@@ -181,27 +233,78 @@ def UserArea(request):
     """
     
     #--Variables--#
-    INMUEBLES_POR_PAGINA = 12
-    data = {'form': FiltrarInmuebles(),
-            'event': ''}
+    INMUEBLES_POR_PAGINA = 9
+    data = {'form': FiltrarInmuebles(), 'event': '', 'alert_type': 'danger',
+            'tipo_certificacion_form': TipoCertificacionForm()}
     inmuebles_usuario = Inmueble.objects.filter(duenio=request.user.id)
-    form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
     
-    #--Procesamiento de formularios--#
-    if form.is_valid():
-        #--Form de filtro--#
-        id_inmueble = form.cleaned_data.get('id')
-        tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
-        municipio = form.cleaned_data.get('municipio')
-        
-        if id_inmueble:
-            inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
-        
-        if tipo_inmueble:
-            inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
     
-        if municipio:
-            inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion=municipio)
+    if request.method == 'POST':
+        if 'eliminarPropiedad' in request.POST:
+            propiedad_id = request.POST.get('propiedad_id')
+            try:
+                inmueble = get_object_or_404(Inmueble, pk=propiedad_id)
+                if inmueble.duenio.id == request.user.id:
+                    inmueble.delete()
+                    data['event'] = SUCCESS_2
+                    data['alert_type'] = 'success'
+                else:
+                    data['event'] = ERROR_16
+            except Inmueble.DoesNotExist:
+                data['event'] = ERROR_15
+                
+        elif 'solicitudDestacarPropiedad' in request.POST:
+            propiedad_id = request.POST.get('propiedad_id')
+            
+            solicitud_existente = SolicitudDestacados.objects.filter(inmueble_id=propiedad_id)
+            
+            if solicitud_existente:
+                data['event'] = ERROR_18
+            else:
+                SolicitudDestacados.objects.create(inmueble_id=propiedad_id)
+            
+        elif 'certificarPropiedad' in request.POST:
+            form_tipo_certificacion = TipoCertificacionForm(request.POST)
+            propiedad_id = request.POST.get('propiedad_id')
+            solicitud_existente = SolicitudCertificados.objects.filter(inmueble_id=propiedad_id)
+            
+            if solicitud_existente:
+                data['event'] = ERROR_19
+            else:
+                if form_tipo_certificacion.is_valid():
+                    tipo_certificacion = form_tipo_certificacion.cleaned_data.get('tipo_certificacion')
+                    tipo_certificacion_instance = get_object_or_404(TipoCertificado, pk=tipo_certificacion.id)
+
+                    SolicitudCertificados.objects.create(inmueble_id=propiedad_id, tipo_certificado=tipo_certificacion_instance)
+                else:
+                    data['event'] = ERROR_2
+    else:
+        form = FiltrarInmuebles(request.GET) #Si el formulario fue enviado por metodo get.
+        if 'municipio' in request.GET:
+            municipio_id = request.GET.get('municipio')
+            if municipio_id:
+                municipio_nombre = Municipio.objects.get(pk=municipio_id).description
+                form.fields['municipio'].choices = [(municipio_id, municipio_nombre)]
+        #--Procesamiento de formularios--#
+        if form.is_valid():
+            data['form'] = form
+            #--Form de filtro--#
+            id_inmueble = form.cleaned_data.get('id')
+            tipo_inmueble = form.cleaned_data.get('tipo_inmueble')
+            departamento = form.cleaned_data.get('departamento')
+            municipio = form.cleaned_data.get('municipio')
+
+            if id_inmueble:
+                inmuebles_usuario = inmuebles_usuario.filter(id=id_inmueble)
+            
+            if tipo_inmueble:
+                inmuebles_usuario = inmuebles_usuario.filter(tipo_inmueble=tipo_inmueble)
+        
+            if departamento and municipio:
+                inmuebles_usuario = inmuebles_usuario.filter(municipio_ubicacion_id=municipio)
+            
+        else:
+            data['event'] = ERROR_2
             
     paginator = Paginator(inmuebles_usuario, INMUEBLES_POR_PAGINA)
     page_number = request.GET.get('page')
@@ -214,8 +317,7 @@ def UserArea(request):
         inmuebles_paginados = paginator.page(paginator.num_pages)
         
     data['inmuebles'] = inmuebles_paginados
-    if request.method == 'POST':
-        pass #Aún no se le ha dado ninguna implementación a POST.
+    
 
     return render(request, HTMLUSERAREA, {**data})
 
@@ -247,30 +349,44 @@ def CrearInmueble(request):
             
             #--Validación de imágenes--#
             files = request.FILES.getlist('imagenes')
-            if len(files) > MAX_IMAGES_PER_POST:
-                data['event'] = ERROR_12
-                ban_images = False
-            else:
-                for f in files:
-                    if f.size > MAX_IMAGE_MB * 1024 * 1024:
-                        data['event'] = ERROR_13
-                        ban_images = False
+            ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
+            ban_images, error_index = ValidarImagenes(files)
             
             if ban_images:
                 if form.is_valid():
                     try:
                         inmueble_nuevo = form.save(commit=False)
+                        arriendo_venta = request.POST.get('arriendo_venta')
+                        
+                        print(f"{arriendo_venta} - {type(arriendo_venta)}")
+                        
+                        if arriendo_venta == '1':
+                            inmueble_nuevo.tipo_cobro = get_object_or_404(TipoCobro, pk= 5)
+                            
                         duenio_inmueble = get_object_or_404(Usuario, pk=request.user.id)
                         inmueble_nuevo.duenio = duenio_inmueble
-                        inmueble_nuevo.save()                
+                        inmueble_nuevo.save()     
+                        
+                        for file in files:
+                            imagen = Imagenes()
+                            imagen.img = file
+                            imagen.inmueble = inmueble_nuevo
+                            imagen.save()
+                               
                     except Exception as e:
                         print(e)
-                else:                    
+                else:
+                    print("Errores en el formulario:")
+                    for field, errors in form.errors.items():
+                        for error in errors:
+                            print(f"- {field}: {error}")                    
                     data['form'] = form
                     data['event'] = ERROR_2
             else:
+                data['event'] = ERROR_LIST[error_index]
                 data['form'] = form
         else:
+            
             data['form'] = form
             data['event'] = ERROR_3
     
@@ -280,6 +396,67 @@ def CrearInmueble(request):
         if departamento_id:
             form.fields['municipio_ubicacion'].queryset = Municipio.objects.filter(departamento_id=departamento_id)
     return render(request, HTMLCREARINMUEBLE, {**data})
+
+@login_required
+def EditarInmueble(request,  inmueble_id):
+    #Si no se proporciono id de inmueble
+    if inmueble_id is None:
+        return redirect('userarea')
+    #Si el usuario no es el dueño de la propiedad
+    inmueble = get_object_or_404(Inmueble, pk=inmueble_id)
+    if inmueble.duenio.id != request.user.id:
+        return redirect('userarea')
+    
+    #--Si todo salió bien--#
+    data = {'event' : '', 'alert_type': 'danger'}
+    if request.method == 'POST':
+        if not inmueble.certificado:
+            if 'guardar_edicion' in request.POST:
+                form = EditarInmuebleForm(request.POST, instance=inmueble)
+                if form.is_valid():
+                    inmueble_editar = form.save(commit=False)
+                    inmueble_editar.save()
+                    data['alert_type'] = 'success'
+                    data['event'] = SUCCESS_1
+                else:
+                    data['event'] = ERROR_2        
+            elif 'eliminarImagen' in request.POST:
+                imagen_id = request.POST.get('imagen_id')   
+                imagen = Imagenes.objects.get(pk=imagen_id)
+
+                if imagen.img:     
+                    imagen.img.delete()
+                imagen.delete()
+                data['alert_type'] = 'success'
+                data['event'] = SUCCESS_4          
+            elif 'agregar_imagenes' in request.POST:
+                #--Validación de imágenes--#
+                files = request.FILES.getlist('imagenes')
+                ERROR_LIST = [ERROR_12, ERROR_13, ERROR_14]
+                ban_images, error_index = ValidarImagenes(files, inmueble.imagenes.count())
+                
+                if ban_images:
+                    for file in files:
+                        imagen = Imagenes()
+                        imagen.img = file
+                        imagen.inmueble = inmueble
+                        imagen.save()
+                    data['alert_type'] = 'success'
+                    data['event'] = SUCCESS_3
+                else:
+                    data['event'] = ERROR_LIST[error_index]
+            else:
+                data['event'] = ERROR_17
+        else:
+            data['event'] = ERROR_20
+    form = EditarInmuebleForm(instance=inmueble)
+    form.fields['tipo_inmueble'].choices = [(inmueble.tipo_inmueble.id, inmueble.tipo_inmueble.description)]
+    form.fields['municipio_ubicacion'].choices = [(inmueble.municipio_ubicacion.id, inmueble.municipio_ubicacion.description)]
+    form.fields['departamento'].choices = [(inmueble.municipio_ubicacion.departamento.id, inmueble.municipio_ubicacion.departamento.description)]
+    data['form'] = form
+    data['inmueble'] = inmueble
+    
+    return render(request, HTMLEDITARINMUEBLE, {**data} )
 
 @login_required
 def UserEdit(request):
@@ -355,7 +532,104 @@ def UserEdit(request):
     data['edit_account_basics'] = EditAccountBasics(instance=user)
     data['edit_account_dangerzone'] = EditAccountDangerZone(initial=initial_danger_form)
     return render(request, HTMLUSEREDIT, {**data})
+    
+#----------BÚSQUEDA------------#
+def Busqueda(request):
+    tipo_inmueble = request.GET.get('tipo_inmueble')
+    arriendo_venta = request.GET.get('arriendo_venta')
+    municipio_ubicacion = request.GET.get('municipio_ubicacion')
+    solo_certificados = request.GET.get('solo_certificados')
+    
+    inmuebles = []
+    INMUEBLES_POR_PAGINA = 10
+    data = { 'form_filtro': FiltrarInmueblesCaracteristicas()}
+    form = BusquedaInmuebleForm(request.GET)
+    #Campos obligatorios
+    if tipo_inmueble:
+        inmuebles = Inmueble.objects.filter(tipo_inmueble=tipo_inmueble).annotate(
+            destacado_certificado=Case(
+                When(Q(destacados__isnull=False) & Q(certificado__isnull=False), then=Value(1)),
+                When(Q(destacados__isnull=False), then=Value(2)),
+                When(Q(certificado__isnull=False), then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField(),
+            )
+        ).order_by('destacado_certificado')
+    else:
+        return redirect('home')
+    
+    if arriendo_venta:
+        inmuebles = inmuebles.filter(arriendo_venta=arriendo_venta)
         
+    if municipio_ubicacion:
+        municipio_nombre = Municipio.objects.get(pk=municipio_ubicacion).description
+        form.fields['municipio_ubicacion'].choices = [(municipio_ubicacion, municipio_nombre)]
+        inmuebles = inmuebles.filter(municipio_ubicacion=municipio_ubicacion)
+    
+    if solo_certificados == 'on':
+        inmuebles = inmuebles.exclude(certificado__isnull=True)
+        
+    if request.method == "POST":
+        if 'filter_secondary' in request.POST:
+            form_post = FiltrarInmueblesCaracteristicas(request.POST)
+            if form_post.is_valid():
+                precio_min = form_post.cleaned_data['precio_min']
+                precio_max = form_post.cleaned_data['precio_max']
+                habitaciones = form_post.cleaned_data['habitaciones']
+                banios = form_post.cleaned_data['banios']
+                area_min = form_post.cleaned_data['area_min']
+                area_max = form_post.cleaned_data['area_max']
+                
+                if precio_min:
+                    inmuebles = inmuebles.exclude(precio__lt=precio_min)
+                
+                if precio_max:
+                    inmuebles =inmuebles.exclude(precio__gt=precio_max)
+                    
+                if habitaciones:
+                    inmuebles = inmuebles.filter(habitaciones=habitaciones)
+                    
+                if banios:
+                    inmuebles = inmuebles.filter(banios=banios)
+                    
+                if area_min:
+                    inmuebles = inmuebles.exclude(area__lt=area_min)
+                
+                if area_max:
+                    inmuebles= inmuebles.exclude(area__gt=area_max)
+                
+                data['form_filtro'] = form_post
+            else:
+                data['event'] = ERROR_2
+        else:
+            data['event'] = ERROR_17
+        
+    
+    paginator = Paginator(inmuebles, INMUEBLES_POR_PAGINA)
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        inmuebles_paginados = paginator.page(page_number)
+    except PageNotAnInteger:
+        inmuebles_paginados = paginator.page(1)
+    except EmptyPage:
+        inmuebles_paginados = paginator.page(paginator.num_pages)
+     
+    data['form'] = form
+    data['inmuebles'] = inmuebles_paginados
+    return render(request, HTMLBUSQUEDA, {**data})
+    
+def DetallesInmueble(request,inmueble_id):
+    #Si no hay ID del inmueble
+    if inmueble_id is None:
+        return redirect('home')
+    
+    inmueble = get_object_or_404(Inmueble, pk=inmueble_id)
+    data = {'inmueble':inmueble}
+    
+    return render(request, HTMLDETALLESINMUEBLE, {**data})
+    
+
 #--------------APIS-------------#
 def municipios_por_departamento(request):
     return JsonResponse(list(Municipio.objects.filter(departamento_id=request.GET.get('departamento_id')).values('id','description')), safe=False)

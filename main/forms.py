@@ -1,4 +1,4 @@
-from .models import Departamento, Imagenes, Inmueble, TipoCobro, TipoDocumento, TipoInmueble, ArriendoVenta, Municipio, Usuario
+from .models import Departamento, Imagenes, Inmueble, TipoCertificado, TipoCobro, TipoDocumento, TipoInmueble, ArriendoVenta, Municipio, Usuario
 from django import forms
 from django.db import models
 
@@ -12,6 +12,10 @@ MAX_IMAGES = 5
 #-------------------------------------------------
 #----------------------HOME-----------------------
 #-------------------------------------------------
+class ClientStrAV(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.__client_str__()
+
 class BusquedaInmuebleForm(forms.Form):
     tipo_inmueble = forms.ModelChoiceField(
         label="Busco un(a)",
@@ -20,26 +24,26 @@ class BusquedaInmuebleForm(forms.Form):
         empty_label=TEXT_SELECCIONAR,
         required=True
     )
-    arriendo_venta = forms.ModelChoiceField(
+    arriendo_venta = ClientStrAV(
         label="Para",
         widget=forms.Select(attrs={'class':'form-select'}),
         queryset=ArriendoVenta.objects.all(),
         empty_label=TEXT_SELECCIONAR,
-        required=True
+        required=False
     )
     departamento = forms.ModelChoiceField(
         label="Departamento",
         widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
         queryset=Departamento.objects.all(),
         empty_label=TEXT_SELECCIONAR,
-        required=True
+        required=False
     )
     
     municipio_ubicacion = forms.ChoiceField(
         label="Municipio",
         choices=[('', 'Selecciona un departamento...')],
         widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
-        required=True,
+        required=False,
     )
     
     solo_certificados = forms.BooleanField(
@@ -196,7 +200,7 @@ class FiltrarInmuebles(forms.Form):
         label="ID de inmobiliario",
         required=False,
         min_value=0,
-        widget=forms.NumberInput(attrs={'class':'form-control'})
+        widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder': 'ID de inmueble'})
     )
     
     tipo_inmueble = forms.ModelChoiceField(
@@ -207,12 +211,19 @@ class FiltrarInmuebles(forms.Form):
         empty_label="Todos"
     )
     
-    municipio = forms.ModelChoiceField(
-        label="Municipio",
+    departamento = forms.ModelChoiceField(
+        label="Departamento de ubicación",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select'}),
+        queryset=Departamento.objects.all(),
+        empty_label="Todos",
+        required=False
+    )
+    
+    municipio = forms.ChoiceField(
+        label="Municipio de ubicacion",
+        choices=[('', 'Todos')],
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select'}),
         required=False,
-        queryset=Municipio.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble_filter'}),
-        empty_label="Cualquiera"
     )
 
 # --- Usuario: Crear propiedad --- #
@@ -320,28 +331,150 @@ class CrearInmuebleForm(forms.ModelForm):
         model = Inmueble
         fields = ('tipo_inmueble', 'arriendo_venta', 'precio', 'tipo_cobro', 'municipio_ubicacion', 'direccion', 'area', 'area_construida', 'habitaciones', 'banios', 'description')
     
+class EditarInmuebleForm(forms.ModelForm):
+    tipo_inmueble = forms.ModelChoiceField(
+        label="Tipo de inmueble",
+        queryset=TipoInmueble.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_inmueble'}),
+        disabled=True,
+        required=False
+    )
     
-# #----imagenes de los inmuebles----#
-# class ImagenesInmuebleForm(forms.ModelForm):
-#     imagenes = forms.FileField(
-#         label="Subir imágenes (Hasta 5 imágenes de 2Mb cada una)",
-#         widget=forms.ClearableFileInput(attrs={'multiple':True}),
-#         required=False
-#     )
+    arriendo_venta = forms.ModelChoiceField(
+        label="¿Arrendar o vender?",
+        widget=forms.Select(attrs={'class':'form-select', 'id': 'arriendo_venta'}),
+        queryset=ArriendoVenta.objects.all(),
+        empty_label= TEXT_SELECCIONAR,
+        required=True
+    )
     
-#     def clean_imagenes(self):
-#         uploaded_images = self.cleaned_data.get('imagenes')
-#         total_images = len(uploaded_images) if uploaded_images else 0
+    precio = forms.IntegerField(
+        label="Precio (en COP)",
+        required=True,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'precio', 'class': 'form-control', 'placeholder': '¿Cuanto?'})
+    )
+    
+    tipo_cobro = forms.ModelChoiceField(
+        label="Perido de cobro",
+        required=True,
+        queryset=TipoCobro.objects.all(),
+        empty_label=TEXT_SELECCIONAR,
+        widget=forms.Select(attrs={'class':'form-select', 'id': 'tipo_cobro'}),
+    )
+    
+    departamento = forms.ChoiceField(
+        label="Departamento de ubicación",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'departamento-select', 'readonly':'readonly'}),
+        disabled=True,
+        required=False
+    )
+    
+    municipio_ubicacion = forms.ChoiceField(
+        label="Municipio de ubicacion",
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'municipio_select', 'readonly':'readonly'}),
+        disabled=True,
+        required=False
+    )
+    
+    direccion = forms.CharField(
+        label="Dirección del inmueble",
+        widget=forms.TextInput(attrs={'id': 'direccion', 'class': 'form-control', 'placeholder': 'Kilómetro 3 Via...'}),
+        required=True,
+        strip=True
+    )
+    
+    area = forms.IntegerField(
+        label="Area",
+        required=True,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id':'area', 'class': 'form-control', 'placeholder': 'Área total del terreno/inmueble'})
+    )
+    
+    area_construida = forms.IntegerField(
+        label="Area construida",
+        required=True,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id':'area_construida', 'class': 'form-control', 'placeholder': 'Área construida en el terreno/inmueble'}),
+    )
+    
+    habitaciones = forms.IntegerField(
+        label="# de Habitaciones",
+        required=True,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'habitaciones', 'class': 'form-control', 'placeholder': 'Entre 0 y 999 habitaciones'})
+    )
+    
+    banios = forms.IntegerField(
+        label="# de baños",
+        required=True,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'banios', 'class': 'form-control', 'placeholder': 'Entre 0 y 999 baños'}),
+    )
+    
+    
+    description = forms.CharField(
+        label="Descipcion del inmueble",
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Describa las carácteristicas del inmueble (opcional)'}),
+        max_length=500,
+        strip=True,
+    )
+    
+    class Meta:
+        model = Inmueble
+        fields = ('arriendo_venta', 'precio', 'tipo_cobro','direccion', 'area', 'area_construida', 'habitaciones', 'banios', 'description')
+        exclude= ['tipo_inmueble', 'municipio_ubicacion', 'duenio']
         
-#         if total_images > 5:
-#             raise forms.ValidationError("No se pueden subir más de 5 imágenes")
-        
-#         for image in uploaded_images:
-#             if image.size > 2 * 1024 * 1024:  # 2Mb en bytes
-#                 raise forms.ValidationError("El tamaño de la imagen no puede ser mayor a 2Mb")
-            
-#         return uploaded_images
-
-#     class Meta:
-#         model = Imagenes
-#         fields = ['imagenes']
+class TipoCertificacionForm(forms.Form):
+    tipo_certificacion = forms.ModelChoiceField(
+        label="Tipo de certificación",
+        queryset=TipoCertificado.objects.exclude(id=4),
+        widget=forms.Select(attrs={'class': 'form-select', 'id':'tipo_certificado'}),
+        required=True,
+        empty_label="Seleccione...",
+    )
+    
+#-------------------------------------------------
+#--------------------Búsqueda---------------------
+#-------------------------------------------------     
+class FiltrarInmueblesCaracteristicas(forms.Form):
+    precio_min = forms.IntegerField(
+        label="Precio desde (COP)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'precio_min', 'class': 'form-control', 'placeholder': '$ Desde'})
+    )
+    precio_max = forms.IntegerField(
+        label="Precio hasta (COP)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'precio_max', 'class': 'form-control', 'placeholder': '$ Hasta'})
+    )
+    habitaciones = forms.IntegerField(
+        label="Habitaciones",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'habitaciones', 'class': 'form-control', 'placeholder': '# Habitaciones'})
+    )
+    banios = forms.IntegerField(
+        label="Baños",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'banios', 'class': 'form-control', 'placeholder': '# Baños'})
+    )
+    area_min = forms.IntegerField(
+        label="Área mínima construida (m²)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'area_min', 'class': 'form-control', 'placeholder': '(m²)'})
+    )
+    area_max = forms.IntegerField(
+        label="Área máxima construida (m²)",
+        required=False,
+        min_value=0,
+        widget=forms.NumberInput(attrs={'id': 'area_max', 'class': 'form-control', 'placeholder': '(m²)'})
+    )
+    
+    
+    

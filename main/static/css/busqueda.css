@@ -1,0 +1,12 @@
+form fieldset span.badge{
+    width: 125px;
+}
+
+.default-inmueble-pic{
+    font-size: 12rem;
+}
+
+.aside-form{
+    position: sticky;
+    top: 48px;
+}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<!-- SwiperJS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/swiper-details.css' %}">
+<script src="{% static 'js/swiper.js' %}" defer></script>
+<!-- POPUP -->
+<link rel="stylesheet" href="{% static 'css/modal_img.css' %}">
+<script src="{% static 'js/modal_img.js' %}" defer></script>
+
+<script src="{% static 'js/utils.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/detalles.css' %}">
+
+<!-- POPUP MODAL -->
+<section class="popup">
+    <article class="top-bar">
+        <p class="image-name">Imagen del inmueble</p>
+        <span class="close-btn"><i class='bx bx-message-square-x' ></i></span>
+    </article>
+    <img src="" alt="" class="large-image">
+    <h1 class="index"></h1>
+</section>
+<!-- End POPUP MODAL -->
+<main class="col col-md-12 col-lg-10 col-xl-8 m-auto row bg-white py-5 my-5 broder rounded overflow-auto">
+    <section class="col-md-6 text-center d-flex flex-column justify-content-around" id="section1">
+        <section class="mt-md-5">
+            <h3 class="text-orange">{{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}} <br>
+                <small>{{inmueble.municipio_ubicacion}} - {{inmueble.municipio_ubicacion.departamento}} - {{inmueble.municipio_ubicacion.departamento.pais}}</small> <br>
+                <small>Dirección del inmueble: {{inmueble.direccion}}</small>
+                
+            </h3>
+            
+            {% if inmueble.description %}
+                <p class="text-muted">{{inmueble.description}}</p>
+            {% else %}
+                <p class="text-muted">Este inmueble no tiene descripción.</p>
+            {% endif %}
+        </section>
+        <section class="mx-2 row text-center justify-content-center">
+            <h3 class="text-orange">Detalles del interior</h3>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Habitaciones</small>
+                <p class="text-orange">{{inmueble.habitaciones}}</p>
+            </article>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Baños</small>
+                <p class="text-orange">{{inmueble.banios}}</p>
+            </article>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Área</small>
+                <p class="text-orange">{{inmueble.area}} m²</p>
+            </article>
+            <article class="col-5 col-lg-3 text-center border">
+                <small class="text-muted text-break">Área construida</small>
+                <p class="text-orange">{{inmueble.area_construida}} m²</p>
+            </article>
+        </section>
+        <section class="text-center mt-2">
+            <h4 class="text-orange">Precio {{inmueble.tipo_cobro.temporizar}}</h4>
+            <p class="text-muted">$ <span class="precio">{{inmueble.precio}}</span></p>
+        </section>
+        
+        <section>
+            <h3 class="text-orange">Contacto</h3>
+            <article class="text-center ms-4">
+                <p class="text-muted"><i class='bx bx-envelope'></i> {{inmueble.duenio.email}}</p>
+                <p class="text-muted">
+                    <i class='bx bxs-phone-call' ></i> {{inmueble.duenio.celular}}
+                    {% if inmueble.duenio.permitir_whatsapp %}
+                        <a href="https://api.whatsapp.com/send/?phone=57{{inmueble.duenio.celular}}&text=Hola 👋🏼. Vi tu {{ inmueble.tipo_inmueble.singular }} en {{inmueble.arriendo_venta}} en Arriendofinca.com estoy interesad@. ID inmueble: {{ inmueble.id  }}" class="btn btn-success btn-sm p-2 ms-2" target="_blank"><i class='bx bxl-whatsapp' ></i> Chat WhatsApp <i class="bx bx-whatsapp"></i></a>
+                    {% endif %}
+                </p>
+            </article>
+        </section>
+    </section>
+
+    <section class="col-md-6" id="section2">
+        {% if inmueble.certificado %}
+            <section class="alert alert-success text-center m-auto mb-2" role="alert">
+                Este inmueble está certificado por arriendofinca.com, todo lo que ofrece está verificado por nosotros. <br>
+                Fecha de certificación: {{inmueble.certificado.fecha_certificacion}}
+            </section>
+        {% else %}
+            <section class="alert alert-warning text-center m-auto mb-2" role="alert">Este inmueble no está certificado por Arriendofinca.com por lo tanto el sitio no se hace responsable de daños o perjuicos a terceros provenientes de este inmueble. Arriendofinca.com se hace responsable de daños y perjuicios sólo en inmuebles que están cerficados por nosotros. <br>
+                 Para buscar solamente inmuebles certificados active el filtro 'solo certificados' en la busqueda de inmuebles.</section>
+        {% endif %}
+        <section class="text-center pic-container mt-2">
+            {% if inmueble.imagenes.all %}
+                <article class="swiper imgSwiper">
+                    <section class="swiper-wrapper">
+                        {% for imagen in inmueble.imagenes.all %}
+                            <article class="swiper-slide image-container">
+                                <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                            </article>
+                        {% endfor %}
+                    </section>
+                    <article class="swiper-pagination"></article>
+                </article>
+            {% else %}
+                <i class='bx bx-image default-inmueble-pic inmueble-pic img-thumbnail card-img-top mt-2'></i>
+            {% endif %}    
+        </section>
+    </section>
+</main>
+{% endblock %}

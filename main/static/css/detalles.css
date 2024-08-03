@@ -1,0 +1,7 @@
+#section1{ order:2; }
+#section2{ order: 1; }
+
+/* @media (max-width: 768px) {
+    #section1{ order: 2;}
+    #section2{ order: 1;}
+} */

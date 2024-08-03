@@ -16,6 +16,7 @@
     box-sizing: border-box; 
     font-family: "Maven Pro", sans-serif;
     font-optical-sizing: auto;
+    scroll-behavior: smooth;
 }
 
 
@@ -75,3 +76,8 @@
 .min-main{
     min-height: 80vh;
 }
+
+.btn-logout:hover{
+    color: #fff;
+}
+

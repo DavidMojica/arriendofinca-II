@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<!-- SwiperJS CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/swiper.css' %}">
+<script src="{% static 'js/swiper.js' %}" defer></script>
+<!-- POPUP -->
+<link rel="stylesheet" href="{% static 'css/modal_img.css' %}">
+<script src="{% static 'js/modal_img.js' %}" defer></script>
+
+<link rel="stylesheet" href="{% static 'css/ToastNotify.css' %}">
+<script src="{% static 'js/ToastNotify.js' %}" defer></script>
+<script src="{% static 'js/inmueble_crear.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/editar_inmueble.css' %}">
+
+
+{% if event %}
+    <section class="alert alert-{{alert_type}} text-center w-75 m-auto mt-4" role="alert">{{event}}</section>
+{% endif %}
+<main class="d-flex justify-content-center my-4">
+    <!-- POPUP MODAL -->
+    <section class="popup">
+        <article class="top-bar">
+            <p class="image-name">Imagen del inmueble</p>
+            <span class="close-btn"><i class='bx bx-message-square-x' ></i></span>
+        </article>
+        <img src="" alt="" class="large-image">
+        <h1 class="index"></h1>
+    </section>
+    <!-- End POPUP MODAL -->
+    <section class="card p-4 col col-md-6 mx-auto">
+        <article class="card-header bg-white">
+            <h2 class="card-title fw-bold text-orange">Editar inmueble</h2>
+            {% if inmueble.certificado %}
+                <small class="text-danger">Este inmueble ya está certificado, los cambios que haga no se guardarán.</small>
+            {% endif %}
+            
+        </article>
+        <article class="card-body">
+            <form action="" class="row justify-content-center" method="POST" id="form-crear">
+                <!-- Detalles del inmueble -->
+                <fieldset class="col-md-10 col-lg-6 ">
+                    <small class="text-muted ms-2">
+                        {{form.tipo_inmueble.label_tag}}
+                    </small>
+                    {{form.tipo_inmueble}}
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-danger '></i> No se puede editar
+                    </small>
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.arriendo_venta.label_tag}}
+                    </small>
+                    {{form.arriendo_venta}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.tipo_cobro.label_tag}}
+                    </small>
+                    {{form.tipo_cobro}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.precio.label_tag}}
+                    </small>
+                    {{form.precio}}
+                </fieldset>
+
+                <!-- Ubicación -->
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.departamento.label_tag}}
+                    </small>
+                    {{form.departamento}}
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-danger '></i> No se puede editar
+                    </small>
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.municipio_ubicacion.label_tag}}
+                    </small>
+                    {{form.municipio_ubicacion}}
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-danger '></i> No se puede editar
+                    </small>
+                </fieldset>
+                
+                <!-- Detalles del inmueble -->
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.direccion.label_tag}}
+                    </small>
+                    {{form.direccion}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.area.label_tag}}
+                    </small>
+                    {{form.area}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.area_construida.label_tag}}
+                    </small>
+                    {{form.area_construida}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6">
+                    <small class="text-muted ms-2">
+                        {{form.habitaciones.label_tag}}
+                    </small>
+                    {{form.habitaciones}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-6 mb-3">
+                    <small class="text-muted ms-2">
+                        {{form.banios.label_tag}}
+                    </small>
+                    {{form.banios}}
+                </fieldset>
+                <fieldset class="col-md-10 col-lg-8">
+                    <small class="text-muted ms-2">Información adicional sobre el inmueble</small>
+                    {{form.description}}
+                </fieldset>
+                <span class="badge bg-danger my-3">{{event}}</span>
+                <input type="hidden" name="guardar_edicion">
+                <input type="submit" value="Guardar cambios en la información" class="btn btn-success py-4 mt-3">
+                {% csrf_token %}
+            </form>
+            <section class="text-center">
+                <!-- Imágenes del inmueble --> 
+                <h3 class=" mt-3">Área de imágenes</h3>
+                    
+                {% if inmueble.imagenes.all %}
+                    <strong class="text-center"><i class='bx bxs-info-circle text-blue '></i> El inmueble tiene {{ inmueble.imagenes.all|length }} / 5 imágenes.</strong>
+                    <article class="swiper imgSwiper my-4">
+                        <section class="swiper-wrapper">
+                            {% for imagen in inmueble.imagenes.all %}
+                                <article class="swiper-slide image-container">
+                                    <img src="{{ imagen.img.url }}" alt="Imagen del Inmueble" class="image inmueble-pic img-thumbnail rounded img-fluid card-img-top mt-2">
+                                    <!-- trigger -->
+                                    <button type="button" class="btn btn-danger btn-sm mx-3 cart-handler" data-bs-toggle="modal" data-bs-target="#borrarImagen-{{ imagen.id }}" title="Eliminar imagen">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    <!-- modal -->
+                                    <section class="modal fade" id="borrarImagen-{{ imagen.id }}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                                        <article class="modal-dialog modal-dialog-centered">
+                                            <article class="modal-content">
+                                                <section class="modal-header">
+                                                    <h5 class="modal-title">Confirmar borrar</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </section>
+                                                <section class="modal-body">
+                                                    <p>¿Realmente desea borrar la imagen?</p>
+                                                </section>
+                                                <section class="modal-footer ">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                                                    <form action="" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="eliminarImagen">   
+                                                        <input type="hidden" name="imagen_id" value="{{imagen.id}}">
+                                                        <button type="submit" class="btn btn-danger">Borrar</button>                             
+                                                    </form>
+                                                </section>
+                                            </article>
+                                        </article>
+                                    </section>
+                                    
+                                </article>
+                            {% endfor %}
+                        </section>
+                        <article class="swiper-pagination"></article>
+                    </article>
+                {% else %}
+                    <h4 class="display-5 text-center text-orange">Inmueble sin imágenes</h4>
+                {% endif %}  
+            </section>
+            <form action="" method="POST" class="text-center" enctype="multipart/form-data">
+                <fieldset class="my-3">
+                    <input type="file" name="imagenes" id="imagenes" multiple class="form-control mb-2">
+                    <small class="form-text text-muted">
+                        <i class='bx bxs-info-circle text-blue '></i> Máximo 5 imágenes por inmueble, 2Mb como máximo en cada una. <br>
+                        <i class='bx bxs-info-circle text-blue'></i> Subir imágenes es opcional, pero tus inmuebles atraerán más clientes potenciales.</small>
+                </fieldset>
+                <input type="hidden" name="agregar_imagenes">
+                <input type="submit" value="Subir imágenes" class="btn bg-tt-orange text-white py-4 mt-3 w-100">
+                {% csrf_token %}
+            </form>
+        </article>
+    </section>
+</main>
+{% endblock %}
