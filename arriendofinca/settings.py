@@ -83,7 +83,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ducaplast.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-AUTH_USER_MODEL = 'main.Usuarios'
+AUTH_USER_MODEL = 'main.Usuario'
 
 DATABASES = {
     'default': dj_database_url.config(
