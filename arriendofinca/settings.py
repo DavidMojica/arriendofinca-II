@@ -28,12 +28,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = [
-                 'https://arriendofinca.onrender.com',
                  'arriendofinca.com',
-                 'www.arriendofinca.com', 
-                 'https://arriendofinca.onrender.com/',
-                 'https://www.arriendofinca.com',
-                 'https://arriendofinca.com.co/'
+                  'www.arriendofinca.com',
+                  'arriendofinca.onrender.com',
+                  'www.arriendofinca.onrender.com',
+                  'arriendofinca.com.co',
               ]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
