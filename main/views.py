@@ -127,7 +127,6 @@ def home(request):
     return render(request, HTMLHOME, {**data})
 
 def Faqs(request):
-    
     return render(request, HTMLFAQS)
 
 #--Inicio de sesión - Registro--#
