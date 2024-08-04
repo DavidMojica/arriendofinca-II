@@ -1,5 +1,5 @@
 //----------DOMINIO---------//
-const domain = "http://127.0.0.1:8000/";
+const domain = "https://arriendofinca.onrender.com/";
 //-----VISTA OBJETIVO-----//
 const view = "municipios_por_departamento";
 

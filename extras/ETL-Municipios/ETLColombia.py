@@ -6,11 +6,11 @@ import sys, os
 #Variables gobables
 error_con = False
 #Parámetros de conexion
-v_host = "localhost"
-v_port = "5432"
-v_database = "arriendofinca"
-v_user = "postgres"
-v_password = "12345"
+v_host = ""
+v_port = ""
+v_database = ""
+v_user = ""
+v_password = ""
 
 #---------------------------------------------------------------------------------------------------------------
 #CONEXIÓN A BD
